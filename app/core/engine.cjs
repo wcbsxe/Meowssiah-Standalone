@@ -71,6 +71,7 @@ function normalizeState(input) {
     n.mode=s.mode==='chat'?'chat':'theater';n.deepThink=!!s.deepThink;n.note=text(s.note,10000);n.noteAutoClear=s.noteAutoClear!==false;
     n.chatAutoReturn=s.chatAutoReturn!==false;
     n.characterId=text(s.characterId,120);
+    if(s.detachedCharacter && typeof s.detachedCharacter==='object' && !Array.isArray(s.detachedCharacter))n.detachedCharacter=JSON.parse(JSON.stringify(s.detachedCharacter));
     if(s.runtime && typeof s.runtime==='object')n.runtime=JSON.parse(JSON.stringify(s.runtime));
     if(s.hostMetadata && typeof s.hostMetadata==='object'){
       const raw=JSON.stringify(s.hostMetadata);if(raw.length>5000000)throw new Error('单个故事的原版账本超过 5MB。');n.hostMetadata=JSON.parse(raw);

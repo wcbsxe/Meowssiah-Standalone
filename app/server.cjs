@@ -59,6 +59,12 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           const entries=E.normalizeWorldbook(body.json);if(!entries.length)throw Error('文件中没有找到世界书条目。');
           return json(res,200,{worldbook:{id:crypto.randomUUID(),name:String(body.json.name || body.name || '导入的世界书').slice(0,200),entries,source:'用户导入',createdAt:Date.now(),updatedAt:Date.now()}});
         }
+        case '/api/library/delete-character': {
+          if(jobs.size||preparing)throw Error('请在当前回复完成后删除角色卡。');
+          const state=E.normalizeState(body.state || store.snapshot()),result=Library.deleteCharacter(state,String(body.characterId),body.deleteChats===true);
+          if(!state.sessions.length){const blank=E.newSession();blank.characterId='';blank.detachedCharacter=Library.detachedCharacter({id:'blank-'+blank.id,profile:blank.profile},'blank-chat');state.sessions.push(blank);state.activeId=blank.id;}
+          return json(res,200,{...result,state:store.save(state)});
+        }
         case '/api/runtime/inspect': {
           const state=E.normalizeState(body.state || store.snapshot()),s=state.sessions.find(s=>s.id===state.activeId);
           const result=await Runtime.prepare(state,s,E.effectivePrompts(state));
@@ -86,7 +92,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             if(message.role==='assistant'){
               const prepared=await Runtime.prepare(state,s,E.effectivePrompts(state));
               const beforeGlobals=structuredClone(state.library.globalVariables || {}),result=await Runtime.complete(state,s,message.content,prepared);
-              const card=state.library.characters.find(c=>c.id===s.characterId);if(card&&result.characterVariables)card.variables=result.characterVariables;
+              const card=Library.characterState(state,s);if(card&&result.characterVariables)card.variables=result.characterVariables;
               message.renderedContent=result.renderedContent;message.displayContent=result.displayContent;
               message.runtime={before:result.before,after:result.current,errors:result.errors,warnings:result.warnings,commands:result.commands,
                 localVariables:result.localVariables || {},beforeGlobals,globalVariables:result.globalVariables || {}};
@@ -127,7 +133,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             answer.content=result.content;answer.usage=result.usage;
             if(result.providerCall)answer.providerCall=result.providerCall;
             const beforeGlobals=structuredClone(state.library.globalVariables || {}),processed=await Runtime.complete(state,session,answer.content,prepared);
-            const card=state.library.characters.find(c=>c.id===session.characterId);if(card&&processed.characterVariables)card.variables=processed.characterVariables;
+            const card=Library.characterState(state,session);if(card&&processed.characterVariables)card.variables=processed.characterVariables;
             answer.renderedContent=processed.renderedContent;answer.displayContent=processed.displayContent;
             answer.runtime={before:processed.before,after:processed.current,errors:processed.errors,warnings:processed.warnings,commands:processed.commands,
               localVariables:processed.localVariables || {},beforeGlobals,globalVariables:processed.globalVariables || {}};

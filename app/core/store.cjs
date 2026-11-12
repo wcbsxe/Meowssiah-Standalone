@@ -88,7 +88,7 @@ class Store {
     if(backup&&fs.existsSync(this.file))this.atomic(this.previous,this.state);
     const meta={storageVersion:2,schemaVersion:1,revision:state.revision,activeId:state.activeId,promptStates:state.promptStates,ui:state.ui,
       globalVariables:state.library.globalVariables,chats:[],characters:[],worldbooks:[]};
-    const write=(kind,items)=>{for(const item of items){const file=filename(item.id),data=clone(item);if(kind==='chats')delete data.profile;this.atomic(this.assetPath(kind,file),data);meta[kind].push(file);}};
+    const write=(kind,items)=>{for(const item of items){const file=filename(item.id),data=clone(item);if(kind==='chats'&&!data.detachedCharacter)delete data.profile;this.atomic(this.assetPath(kind,file),data);meta[kind].push(file);}};
     write('chats',state.sessions);write('characters',state.library.characters);write('worldbooks',state.library.worldbooks);
     this.atomic(this.file,meta);this.manifest=meta;
     if(fs.existsSync(this.journal))fs.unlinkSync(this.journal);

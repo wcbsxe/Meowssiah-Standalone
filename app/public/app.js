@@ -131,8 +131,10 @@ function newStory(p=null,characterId=null,save=true){
   if(state.activeId)chatDrafts.set(state.activeId,$('#message-input').value);
   clearTimeout(saveTimer);
   let card=characterId?state.library.characters.find(c=>c.id===characterId):null;
-  if(!p&&!card)card=currentCard();if(!card)card=registerProfile(p || blankProfile());p=card.profile;
-  const s={id:uid(),characterId:card.id,title:'未命名的故事',createdAt:Date.now(),updatedAt:Date.now(),profile:structuredClone(p),messages:[],mode:'theater',chatAutoReturn:true,deepThink:false,note:'',noteAutoClear:true};
+  if(!card&&characterId&&currentCard()?.id===characterId)card=currentCard();
+  if(!p&&!card)card=currentCard();if(!card)card=!p&&!state.library.characters.length?{id:'blank-'+uid(),origin:'blank-chat',profile:blankProfile(),variables:{},enabledWorldbookIds:[],createdAt:Date.now()}:registerProfile(p || blankProfile());p=card.profile;
+  const inLibrary=state.library.characters.some(c=>c.id===card.id);
+  const s={id:uid(),characterId:inLibrary?card.id:'',...(inLibrary?{}:{detachedCharacter:cardSnapshot(card)}),title:'未命名的故事',createdAt:Date.now(),updatedAt:Date.now(),profile:structuredClone(p),messages:[],mode:'theater',chatAutoReturn:true,deepThink:false,note:'',noteAutoClear:true};
   state.sessions.push(s);state.activeId=s.id;render();if(save)persist();$('#message-input').value='';$('#message-input').focus();
 }
 function setBusy(value,kind='generation'){busy=value;document.body.classList.toggle('busy',value);$('#send-message').hidden=value;$('#stop-generation').hidden=!value||kind!=='generation';$('#message-input').disabled=value;$('#generation-status').hidden=!value;
@@ -154,7 +156,7 @@ async function switchStory(id){
   await persist(true);await repairStory();scrollBottom();
 }
 function exportStory(s=session()){
-  const c=state.library.characters.find(c=>c.id===s.characterId);
+  const c=storyCard(s);
   download(s.title+'.json',JSON.stringify({format:'meowssiah-story',version:2,session:s,character:c,worldbooks:state.library.worldbooks.filter(b=>c?.enabledWorldbookIds.includes(b.id))},null,2),'application/json');
 }
 function renameStory(id=state.activeId,returnToManager=false){
@@ -239,7 +241,7 @@ function openConnection(){
 }
 function openProfile(){
   const body=openModal('角色与世界资料','profile'),card=currentCard(),p=card?.profile || session().profile,grid=element('div','form-grid');
-  body.append(notice('角色定义与世界书选择由角色卡库统一维护；当前故事的消息、MVU 变量快照单独保存。运行框架及脚本开关在角色卡库中设置。'));
+  body.append(notice(session().detachedCharacter?(session().detachedCharacter.origin==='blank-chat'?'这是空白聊天的角色资料，可以在这里编辑，或从角色卡库选择角色。':'角色卡已从库中删除。这段聊天保留角色、变量和选书快照，可以在这里继续编辑。'):'角色定义与世界书选择由角色卡库统一维护；当前故事的消息、MVU 变量快照单独保存。运行框架及脚本开关在角色卡库中设置。'));
   const fields={};
   for(const [k,label,kind,full] of [['name','故事角色名','text',false],['userName','你的角色名','text',false],['description','角色描述','textarea',true],['personality','角色性格','textarea',true],['scenario','开场场景','textarea',true],['persona','你的角色资料','textarea',true],['firstMessage','开场白','textarea',true],['examples','对话示例','textarea',true],['worldBefore','前置世界资料','textarea',true],['worldAfter','后置世界资料','textarea',true]]){
     fields[k]=field(label,p[k],kind,full);grid.append(fields[k].wrap);
@@ -289,7 +291,7 @@ function confirmAction(title,description,fn){const body=openModal(title,'confirm
 function editMessage(m){if(busy)return;const body=openModal('编辑这条消息','edit-message'),f=field('原文',m.content,'textarea',true);f.input.rows=14;body.append(notice('保留后续消息原文，保存后只重算本故事从此处开始的变量快照与动态显示，不调用模型。'),f.wrap,actions(button('保存编辑',async()=>{try{m.content=f.input.value;delete m.providerCall;const r=await api('runtime/recalculate',{state,fromIndex:session().messages.indexOf(m)});state=r.state;render();closeModal();}catch(e){toast(e.message);}},'primary'),button('取消',closeModal)));}
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.1：聊天管理与分类存储'),element('p','','聊天管理支持新建、切换、重命名、创建副本、导入、导出和删除。世界书总库统一保存资料，每张角色卡自行选书；MVU 与 EJS 按消息保存变量和显示结果。原 Meowssiah 请求处理、工具、签名字段与输出处理继续保留。'),
+  prose.append(element('h3','','1.1.2：角色卡删除与聊天保留'),element('p','','角色卡库支持删除，已有聊天可保留独立快照或随卡删除。聊天管理支持新建、切换、重命名、创建副本、导入、导出和删除。世界书总库统一保存资料，每张角色卡自行选书；MVU 与 EJS 按消息保存变量和显示结果。原 Meowssiah 请求处理、工具、签名字段与输出处理继续保留。'),
     element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
     element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);

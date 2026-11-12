@@ -1,6 +1,8 @@
 'use strict';
 const frameRegistry=new Map();
-function currentCard(){return state.library?.characters.find(c=>c.id===session()?.characterId);}
+function storyCard(s=session()){const card=state.library?.characters.find(c=>c.id===s?.characterId);return card || (s?.detachedCharacter?{...s.detachedCharacter,name:s.profile.name,profile:s.profile}:null);}
+function currentCard(){return storyCard();}
+function cardSnapshot(card){return {id:card.id,name:card.profile.name,origin:card.origin || 'deleted-card',variables:structuredClone(card.variables || {}),enabledWorldbookIds:[...(card.enabledWorldbookIds || [])],createdAt:card.createdAt,updatedAt:Date.now()};}
 function registerProfile(p){
   state.library ||= {version:1,worldbooks:[],characters:[],globalVariables:{}};
   const profile=structuredClone(p),card={id:uid(),name:profile.name,profile,variables:{},enabledWorldbookIds:[],createdAt:Date.now(),updatedAt:Date.now()};
@@ -8,7 +10,8 @@ function registerProfile(p){
   if(profile.worldbook?.length){const b={id:uid(),name:profile.name+' · 内置世界书',entries:structuredClone(profile.worldbook),source:'角色卡内置',createdAt:Date.now(),updatedAt:Date.now()};state.library.worldbooks.push(b);card.enabledWorldbookIds.push(b.id);}
   state.library.characters.push(card);return card;
 }
-function syncCard(card){card.name=card.profile.name;card.updatedAt=Date.now();for(const s of state.sessions)if(s.characterId===card.id)s.profile=structuredClone(card.profile);}
+function syncCard(card){card.name=card.profile.name;card.updatedAt=Date.now();if(state.library.characters.some(c=>c.id===card.id)){for(const s of state.sessions)if(s.characterId===card.id)s.profile=structuredClone(card.profile);}
+  else if(session()?.detachedCharacter?.id===card.id){session().profile=structuredClone(card.profile);session().detachedCharacter=cardSnapshot(card);}}
 async function startCardStory(card=currentCard()){
   if(busy)return;
   try{await persist(true);closeModal();newStory(card?.profile || null,card?.id || null,false);const s=session(),p=s.profile;
@@ -24,7 +27,7 @@ function openCharacters(){
   const body=openModal('角色卡库 · 每张卡独立选书','characters');body.append(notice('角色定义与世界书绑定保存在角色库；同一张卡可以开多个故事，各故事的 MVU 变量分开保存。'));
   body.append(actions(button('导入角色卡 JSON / PNG',()=>$('#character-file').click(),'primary'),button('创建空白角色卡',()=>{const c=registerProfile(blankProfile());persist();openCardSettings(c.id);} )));
   const list=element('div','library-list');body.append(list);
-  for(const card of state.library.characters){const row=element('section','library-card'),p=card.profile;const head=element('div','section-heading');head.append(element('h3','',p.name),element('span','pill',card.id===session().characterId?'当前角色':`${card.enabledWorldbookIds.length} 本世界书`));
+  for(const card of state.library.characters){const row=element('section','library-card'),p=card.profile;row.dataset.characterId=card.id;const head=element('div','section-heading');head.append(element('h3','',p.name),element('span','pill',card.id===session().characterId?'当前角色':`${card.enabledWorldbookIds.length} 本世界书`));
     row.append(head,element('p','about-prose',p.description?.slice(0,140) || '尚未填写角色描述。'),element('small','about-prose',`${p.compat?.mvu?'MVU 已开启':'MVU 未开启'} · ${p.compat?.ejs?'EJS 模板已开启':'EJS 模板未开启'} · ${p.helperScripts?.length || 0} 个脚本`),
       actions(button('用这张卡开新故事',()=>startCardStory(card)),button('编辑与世界书绑定',()=>openCardSettings(card.id)),button('导出角色卡',()=>{
         const raw=structuredClone(p.rawCard || {spec:'chara_card_v2',spec_version:'2.0',data:{}}),d=raw.data || raw;
@@ -32,12 +35,28 @@ function openCharacters(){
         d.extensions ||= {};d.extensions.regex_scripts=p.regexes || [];d.extensions.tavern_helper ||= {};d.extensions.tavern_helper.scripts=p.helperScripts || [];
         d.character_book={...(d.character_book || {}),name:p.name+' · 已启用世界书',entries:state.library.worldbooks.filter(b=>card.enabledWorldbookIds.includes(b.id)).flatMap(b=>b.entries)};
         download(p.name+'.json',JSON.stringify(raw,null,2),'application/json');
-      },'text-button')));list.append(row);
+      },'text-button'),button('删除角色卡',()=>openDeleteCharacter(card.id),'danger')));list.append(row);
   }
+  if(!state.library.characters.length)list.append(element('div','empty','角色库暂时为空，可以导入或新建角色卡。'));
+}
+function openDeleteCharacter(id){
+  if(busy)return;const card=state.library.characters.find(c=>c.id===id);if(!card)return;
+  const related=state.sessions.filter(s=>s.characterId===id),body=openModal('删除角色卡','delete-character');
+  body.append(notice(`从角色库删除「${card.profile.name}」。世界书继续留在总库。`));
+  const deleteChats=check(`同时删除这张卡的 ${related.length} 段聊天`,false);deleteChats.input.id='delete-character-chats';
+  if(related.length)body.append(element('p','about-prose',`已有 ${related.length} 段聊天。保留聊天时会保存角色快照，消息、变量和选书都可以继续使用。`),deleteChats.wrap);
+  const result=element('p','about-prose');let deleting=false;
+  body.append(actions(button('确认删除',async()=>{
+    if(deleting||busy)return;deleting=true;const oldActive=state.activeId;
+    try{await persist(true);const r=await api('library/delete-character',{state,characterId:id,deleteChats:deleteChats.input.checked});state=r.state;
+      for(const chatId of r.removedChatIds)chatDrafts.delete(chatId);if(oldActive!==state.activeId)$('#message-input').value=chatDrafts.get(state.activeId)||'';
+      render();openCharacters();toast(deleteChats.input.checked?'角色卡及关联聊天已删除。':'角色卡已删除，聊天已保留。');
+    }catch(e){deleting=false;result.textContent=e.message;}
+  },'danger'),button('取消',openCharacters)),result);
 }
 function openCardSettings(id){
-  const card=state.library.characters.find(c=>c.id===id);if(!card)return;const draft=structuredClone(card),p=draft.profile;
-  const body=openModal('角色设置 · '+p.name,'card-settings'),grid=element('div','form-grid'),fields={};
+  const card=state.library.characters.find(c=>c.id===id) || (currentCard()?.id===id?currentCard():null);if(!card)return;const draft=structuredClone(card),p=draft.profile,inLibrary=state.library.characters.some(c=>c.id===id);
+  const body=openModal((inLibrary?'角色设置 · ':'聊天角色快照 · ')+p.name,'card-settings'),grid=element('div','form-grid'),fields={};
   for(const [k,label,kind,full] of [['name','角色名','text',false],['userName','玩家名','text',false],['description','角色描述','textarea',true],['personality','角色性格','textarea',true],['scenario','场景','textarea',true],['persona','玩家资料','textarea',true],['firstMessage','开场白','textarea',true],['examples','对话示例','textarea',true]]){fields[k]=field(label,p[k],kind,full);grid.append(fields[k].wrap);}body.append(grid);
   body.append(element('h3','library-heading','为这张卡启用世界书'));
   body.append(element('p','about-prose','只勾选这张卡要用的书，不会自动给其他角色启用。修改后对该卡后续请求生效，已有消息的变量快照保留。'));
@@ -53,8 +72,8 @@ function openCardSettings(id){
     for(const [k,v] of Object.entries(fields))p[k]=v.input.value;
     p.compat={mvu:mvu.input.checked,ejs:ejs.input.checked,cardHtml:html.input.checked};p.helperScripts=JSON.parse(scripts.input.value);p.regexes=JSON.parse(regexes.input.value);
     if(!Array.isArray(p.helperScripts)||!Array.isArray(p.regexes))throw Error('脚本与正则 JSON 应是数组。');
-    draft.enabledWorldbookIds=[...selected];Object.assign(card,draft);syncCard(card);await persist(true);render();openCharacters();toast('角色与世界书绑定已保存。');
-  }catch(e){result.textContent=e.message;}},'primary'),button('返回角色库',openCharacters)),result);
+    draft.enabledWorldbookIds=[...selected];Object.assign(card,draft);syncCard(card);await persist(true);render();if(inLibrary)openCharacters();else closeModal();toast(inLibrary?'角色与世界书绑定已保存。':'当前聊天的角色快照已保存。');
+  }catch(e){result.textContent=e.message;}},'primary'),button('返回角色库',openCharacters),...(inLibrary?[button('删除角色卡',()=>openDeleteCharacter(id),'danger')]:[])),result);
 }
 function openWorldbooks(searchText=''){
   const body=openModal('世界书总库','worldbooks');body.append(notice('在这里统一保存和编辑世界书，再到“角色卡库 → 编辑与世界书绑定”为每张卡勾选。'));
@@ -119,7 +138,7 @@ window.addEventListener('message',async event=>{
     if(data.action==='replace'){
       const type=data.options?.type || 'message';
       if(!data.value || typeof data.value!=='object' || Array.isArray(data.value))throw Error('变量内容应为 JSON 对象。');
-      if(type==='character'){const card=currentCard();card.variables=structuredClone(data.value);await persist(true);return respond(card.variables);}
+      if(type==='character'){const card=currentCard();card.variables=structuredClone(data.value);if(session().detachedCharacter)session().detachedCharacter.variables=card.variables;await persist(true);return respond(card.variables);}
       if(type==='global'){state.library.globalVariables=structuredClone(data.value);await persist(true);return respond(state.library.globalVariables);}
       if(type==='chat'){message.runtime={...(message.runtime || {}),localVariables:structuredClone(data.value)};await persist(true);return respond(message.runtime.localVariables);}
       if(type!=='message')throw Error('未识别的变量类型。');

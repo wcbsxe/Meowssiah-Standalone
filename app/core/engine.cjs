@@ -33,6 +33,14 @@ function defaultState() {
       maxTokens:Original.source.openai_max_tokens,contextChars:2000000,timeoutSeconds:180,sendReasoning:false,reasoningEffort:'low',requestMode:'original',toolChoice:'required',signatureMode:'original'}};
   state.library=L.normalizeLibrary(null,state.sessions,profile,normalizeWorldbook);return state;
 }
+function normalizeSettings(cfg={}) {
+  return {baseUrl:text(cfg.baseUrl,2000).trim(),model:text(cfg.model,300).trim(),
+    temperature:number(cfg.temperature,1.09,0,2),topP:number(cfg.topP,.98,.01,1),maxTokens:Math.round(number(cfg.maxTokens,Original.source.openai_max_tokens,64,65536)),
+    contextChars:Math.round(number(cfg.contextChars,2000000,4000,10000000)),timeoutSeconds:number(cfg.timeoutSeconds,180,5,600),
+    sendReasoning:!!cfg.sendReasoning,reasoningEffort:['low','medium','high'].includes(cfg.reasoningEffort)?cfg.reasoningEffort:'low',
+    availableModels:Array.isArray(cfg.availableModels)?[...new Set(cfg.availableModels.map(m=>text(m,300)).filter(Boolean))].slice(0,2000):[],
+    requestMode:'original',toolChoice:'required',signatureMode:'original'};
+}
 function normalizeWorldbook(input) {
   const entries=Array.isArray(input) ? input : Object.values(input?.entries || {});
   return entries.slice(0,1000).map((e,i)=>({...JSON.parse(JSON.stringify(e)),id:text(e.id ?? e.uid ?? i,100),name:text(e.name || e.comment || `资料 ${i+1}`,300),
@@ -47,11 +55,7 @@ function normalizeState(input) {
   if (!input || typeof input!=='object' || input.schemaVersion!==1 || !Array.isArray(input.sessions)) throw new Error('这不是本程序的备份文件（需要 schemaVersion: 1）。');
   if (input.sessions.length>200) throw new Error('一次最多保留 200 个故事。请分批导入。');
   const output=defaultState(), cfg=input.settings || {};
-  output.settings={baseUrl:text(cfg.baseUrl,2000),model:text(cfg.model,300),
-    temperature:number(cfg.temperature,1.09,0,2),topP:number(cfg.topP,.98,.01,1),maxTokens:Math.round(number(cfg.maxTokens,Original.source.openai_max_tokens,64,65536)),
-    contextChars:Math.round(number(cfg.contextChars,2000000,4000,10000000)),timeoutSeconds:number(cfg.timeoutSeconds,180,5,600),
-    sendReasoning:!!cfg.sendReasoning,reasoningEffort:['low','medium','high'].includes(cfg.reasoningEffort) ? cfg.reasoningEffort : 'medium',
-    requestMode:'original',toolChoice:'required',signatureMode:'original'};
+  output.settings=normalizeSettings(cfg);
   output.ui={theme:input.ui?.theme==='dark'?'dark':'light'};
   output.promptStates={};
   for (const p of preset.prompts) {
@@ -127,7 +131,6 @@ function compileOriginal(state,session,prepared=null){
   for(const row of order){const value=byId.get(row.identifier);if(value)row.enabled=value.enabled;}
   settings.extensions.SPreset.LogUpload={enabled:false,url:''};
   const active=selectWorldbook(p.worldbook,session.messages);
-  if(p.worldbook.some(e=>e.regex))warnings.push('世界书正则触发条目尚未迁移；普通关键词、常驻与深度位置已接入。');
   const slots={personaDescription:p.persona,charDescription:p.description,charPersonality:p.personality,scenario:p.scenario,dialogueExamples:p.examples,
     worldInfoBefore:[p.worldBefore,...active.filter(e=>e.originalPosition===0).map(e=>e.content)].filter(Boolean).join('\n\n'),
     worldInfoAfter:[p.worldAfter,...active.filter(e=>e.originalPosition===1).map(e=>e.content)].filter(Boolean).join('\n\n')};
@@ -147,6 +150,7 @@ function compileOriginal(state,session,prepared=null){
   }
   const worldEntries=active.map(e=>({uid:e.id,world:e.sourceBook || '独立工作台',comment:e.name,content:expandMacros(e.content,p,lastUser,warnings),constant:e.constant,
     position:e.originalPosition,depth:e.depth,role:e.role}));
+  for(const entry of prepared?.injectedPrompts || [])if(typeof entry.content==='string')worldEntries.push({uid:'script-'+entry.id,world:'卡片脚本',comment:String(entry.id || '脚本注入'),content:entry.content,constant:true,position:4,depth:Number(entry.depth)||0,role:entry.role==='user'?1:entry.role==='assistant'?2:0});
   if(p.worldBefore)worldEntries.push({uid:'manual-before',comment:'前置世界资料',content:p.worldBefore,constant:true,position:0,depth:4,role:0});
   if(p.worldAfter)worldEntries.push({uid:'manual-after',comment:'后置世界资料',content:p.worldAfter,constant:true,position:1,depth:4,role:0});
   const chat=cleanHistory.map(m=>({mes:m.content,is_user:m.role==='user',is_system:false,name:m.role==='user'?p.userName:p.name,extra:m.extra || {}}));
@@ -160,7 +164,7 @@ function compileOriginal(state,session,prepared=null){
   return {request:result.request,hostMetadata:result.metadata,extras:result.extras,diagnostics:{compiler:'original-spreset-v1',characters:chars,
     enabledPreferences:order.filter(x=>x.enabled).length,retainedMessages:cleanHistory.length,activeWorldbook:active.map(e=>e.name),
     warnings:[...new Set(warnings)],sourceScriptSHA256:Original.hashes.FinalRequestProcessing,
-    selectedWorldbooks:L.selectedBooks(state,session).map(b=>b.name),runtime:{mvu:p.compat.mvu,ejs:p.compat.ejs,schemaRegistered:!!prepared?.schemaRegistered},
+    selectedWorldbooks:L.selectedBooks(state,session).map(b=>b.name),skippedWorldbookRegexEntries:p.worldbook.filter(e=>e.regex).map(e=>e.name),runtime:{mvu:p.compat.mvu,ejs:p.compat.ejs,schemaRegistered:!!prepared?.schemaRegistered},
     signatures:JSON.stringify(result.request).split('skip_thought_signature_validator').length-1}};
 }
 function parseReply(raw) {
@@ -219,5 +223,5 @@ function characterFromPng(buffer) {
   if(!found) throw new Error('这张 PNG 没有角色卡数据，请导入从酒馆导出的角色卡 PNG 或 JSON。');
   return importCharacter(found.data);
 }
-module.exports={preset,profile,newSession,defaultState,normalizeState,effectivePrompts,compile:compileOriginal,parseReply,formatToolCalls,stripAuxiliary,
+module.exports={preset,profile,newSession,defaultState,normalizeState,normalizeSettings,effectivePrompts,compile:compileOriginal,parseReply,formatToolCalls,stripAuxiliary,
   normalizeWorldbook,importCharacter,characterFromPng,sanitizeUsage};

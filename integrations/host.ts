@@ -10,7 +10,7 @@ export let extension_settings:any={variables:{global:{}}};
 export const settings={debug_enabled:false,autosave_enabled:false};
 export const yaml={parse:YAML.parse,stringify:YAML.stringify,dump:YAML.stringify,load:YAML.parse};
 export function configure(input:any){
-  ENV=input;chat=input.chat;chat_metadata={variables:input.localVariables || {}};extension_settings={variables:{global:input.globalVariables || {}}};
+  ENV=input;ENV.characterVariables=input.characterVariables || {};chat=input.chat;chat_metadata={variables:input.localVariables || {}};extension_settings={variables:{global:input.globalVariables || {}}};
 }
 export async function saveChatConditional(){}
 export const console={log(){},info(){},debug(){},warn(...args:any[]){ENV.warnings?.push(args.map(String).join(' '));},error(...args:any[]){ENV.warnings?.push(args.map(String).join(' '));}};

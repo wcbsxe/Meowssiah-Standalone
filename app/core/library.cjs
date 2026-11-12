@@ -20,7 +20,7 @@ function normalizeLibrary(input,sessions,normalizeProfile,normalizeEntries){
     const p=normalizeProfile(c.profile || {}),id=String(c.id || randomUUID()).slice(0,120);
     let ids=Array.isArray(c.enabledWorldbookIds)?c.enabledWorldbookIds.map(String):[addEmbedded(p)].filter(Boolean);
     ids=[...new Set(ids)].filter(id=>library.worldbooks.some(b=>b.id===id));
-    library.characters.push({id,name:p.name,profile:p,enabledWorldbookIds:ids,createdAt:Number(c.createdAt)||Date.now(),updatedAt:Number(c.updatedAt)||Date.now()});
+    library.characters.push({id,name:p.name,profile:p,variables:clone(c.variables || {}),enabledWorldbookIds:ids,createdAt:Number(c.createdAt)||Date.now(),updatedAt:Number(c.updatedAt)||Date.now()});
   }
   for(const s of sessions){
     let c=library.characters.find(c=>c.id===s.characterId);

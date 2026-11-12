@@ -22,7 +22,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
       const url=new URL(req.url,origin);
       if(req.method==='GET' && url.pathname.startsWith('/card-frame/')){
         const frame=frames.get(url.pathname.slice('/card-frame/'.length));if(!frame)return json(res,404,{error:'卡片显示页已过期，请重新打开这条消息。'});
-        res.removeHeader('X-Frame-Options');res.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: https: http:; font-src data:; connect-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors ${origin}`);
+        res.removeHeader('X-Frame-Options');res.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob: https: http:; font-src data:; connect-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors ${origin}`);
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'});return res.end(frame);
       }
       if(!url.pathname.startsWith('/api/')) {
@@ -48,6 +48,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           return json(res,200,{state:store.save(body.state)});
         }
         case '/api/key':apiKey=String(body.key || '').slice(0,10000).trim();return json(res,200,{configured:!!apiKey});
+        case '/api/connection':return json(res,200,{settings:store.saveConnection(body.settings)});
         case '/api/models': {
           const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
           try{return json(res,200,{models:await provider.models(body.settings || store.state.settings,apiKey,controller.signal)});}finally{clearTimeout(timer);}
@@ -85,6 +86,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             if(message.role==='assistant'){
               const prepared=await Runtime.prepare(state,s,E.effectivePrompts(state));
               const beforeGlobals=structuredClone(state.library.globalVariables || {}),result=await Runtime.complete(state,s,message.content,prepared);
+              const card=state.library.characters.find(c=>c.id===s.characterId);if(card&&result.characterVariables)card.variables=result.characterVariables;
               message.renderedContent=result.renderedContent;message.displayContent=result.displayContent;
               message.runtime={before:result.before,after:result.current,errors:result.errors,warnings:result.warnings,commands:result.commands,
                 localVariables:result.localVariables || {},beforeGlobals,globalVariables:result.globalVariables || {}};
@@ -125,6 +127,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             answer.content=result.content;answer.usage=result.usage;
             if(result.providerCall)answer.providerCall=result.providerCall;
             const beforeGlobals=structuredClone(state.library.globalVariables || {}),processed=await Runtime.complete(state,session,answer.content,prepared);
+            const card=state.library.characters.find(c=>c.id===session.characterId);if(card&&processed.characterVariables)card.variables=processed.characterVariables;
             answer.renderedContent=processed.renderedContent;answer.displayContent=processed.displayContent;
             answer.runtime={before:processed.before,after:processed.current,errors:processed.errors,warnings:processed.warnings,commands:processed.commands,
               localVariables:processed.localVariables || {},beforeGlobals,globalVariables:processed.globalVariables || {}};

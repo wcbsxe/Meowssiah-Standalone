@@ -1,6 +1,7 @@
 const {app,BrowserWindow,Menu,shell}=require('electron');
 const path=require('node:path');
 const {startServer}=require('./server.cjs');
+const {resolveDataDir}=require('./core/data-dir.cjs');
 let runtime;
 if(process.env.MEOW_USER_DATA_DIR)app.setPath('userData',process.env.MEOW_USER_DATA_DIR);
 if(!app.requestSingleInstanceLock())app.quit();
@@ -9,7 +10,7 @@ else {
   app.on('second-instance',()=>{if(win){if(win.isMinimized())win.restore();win.show();win.focus();}});
   app.whenReady().then(async()=>{
     const portable=process.env.PORTABLE_EXECUTABLE_DIR;
-    const dataDir=process.env.MEOW_DATA_DIR || (portable?path.join(portable,'Meowssiah-Data'):app.isPackaged?path.join(app.getPath('userData'),'Data'):path.join(__dirname,'../Data'));
+    const dataDir=resolveDataDir({override:process.env.MEOW_DATA_DIR,portableDir:portable,exeDir:app.isPackaged?path.dirname(app.getPath('exe')):null,developmentDir:path.join(__dirname,'../Data')});
     runtime=await startServer({dataDir});
     win=new BrowserWindow({width:1440,height:960,minWidth:860,minHeight:640,title:'Meowssiah · 小猫之神',
       backgroundColor:'#f7f4ef',icon:path.join(__dirname,'public/icon.ico'),

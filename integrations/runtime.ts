@@ -17,26 +17,45 @@ function install(seed:any){
   configure({...seed,errors:[],warnings:[]});listeners=new Map();ready=[];
   current=clone(seed.current || createEmptyGameData());
   const g=globalThis as any;
-  const on=(name:string,fn:Function)=>{const arr=listeners.get(name)||[];arr.push(fn);listeners.set(name,arr);return ()=>off(name,fn);};
+  // Tavern bundles expose both z.string and namespace-style z.z.string.
+  const zCompat:any=new Proxy(z,{get(target,key){return key==='z'||key==='default'?zCompat:Reflect.get(target,key);}});
+  const on=(name:string,fn:Function)=>{const arr=listeners.get(name)||[];arr.push(fn);listeners.set(name,arr);const stop=()=>off(name,fn);stop.stop=stop;return stop;};
   const off=(name:string,fn:Function)=>listeners.set(name,(listeners.get(name)||[]).filter(f=>f!==fn));
   const emit=async(name:string,...args:any[])=>{for(const fn of [...(listeners.get(name)||[])])await fn(...args);};
   g.__meowOn=on;g.__meowOff=off;g.__meowEmit=emit;
   const jq:any=(arg:any)=>{if(typeof arg==='function'){try{ready.push(Promise.resolve(arg()));}catch(e){ready.push(Promise.reject(e));}}return {length:0,prop:()=>false,on(){return this},off(){return this},ready(fn:Function){ready.push(Promise.resolve(fn()));return this}};};
   jq.extend=_.assign;jq.get=()=>{throw Error('卡片网络请求未映射到本机组件');};
-  const readVars=(options:any={type:'chat'})=>options.type==='global'?extension_settings.variables.global:options.type==='message'?current:options.type==='character'?(ENV.characterVariables ||= {}):chat_metadata.variables;
+  const readVars=(options:any={type:'chat'})=>{
+    if(options.type==='global')return extension_settings.variables.global;
+    if(options.type==='character')return ENV.characterVariables;
+    if(options.type!=='message')return chat_metadata.variables;
+    let n=options.message_id;if(n===undefined||n==='latest')return current;n=Number(n);if(n<0)n+=chat.length;
+    return n===chat.length-1?current:chat[n]?.variables?.[0] || {};
+  };
   const replaceVars=(value:any,options:any={type:'chat'})=>{if(options.type==='global')extension_settings.variables.global=value;else if(options.type==='message')current=value;else if(options.type==='character')ENV.characterVariables=value;else chat_metadata.variables=value;return Promise.resolve();};
-  Object.assign(g,{_,z,YAML,console,toastr,$:jq,eventOn:on,eventEmit:emit,eventRemoveListener:off,eventMakeLast:on,eventMakeFirst:on,eventOnce:(name:string,fn:Function)=>{const stop=on(name,(...args:any[])=>{stop();return fn(...args)});return stop;},
+  Object.assign(g,{_,z:zCompat,YAML,console,toastr,$:jq,eventOn:on,eventEmit:emit,eventRemoveListener:off,eventMakeLast:on,eventMakeFirst:on,eventOnce:(name:string,fn:Function)=>{const stop=on(name,(...args:any[])=>{stop();return fn(...args)});return stop;},
+    addEventListener:on,removeEventListener:off,
+    initializeGlobal:(name:string,value:any)=>{g[name]=value;},
+    errorCatched:(fn:Function)=>(...args:any[])=>{const task=Promise.resolve().then(()=>fn(...args));ready.push(task);return task;},
+    tavern_events:{GENERATION_AFTER_COMMANDS:'generation_after_commands',CHAT_CHANGED:'chat_id_changed',CHAT_COMPLETION_SETTINGS_READY:'chat_completion_settings_ready',GENERATION_STARTED:'generation_started',GENERATION_ENDED:'generation_ended',GENERATION_STOPPED:'generation_stopped'},
+    injectPrompts:(prompts:any[])=>{ENV.injectedPrompts ||= [];for(const p of prompts || []){ENV.injectedPrompts=ENV.injectedPrompts.filter((x:any)=>x.id!==p.id);ENV.injectedPrompts.push(clone(p));}},
+    uninjectPrompts:(ids:string[])=>{ENV.injectedPrompts=(ENV.injectedPrompts || []).filter((p:any)=>!ids.includes(p.id));},
     getVariables:readVars,getAllVariables:()=>({...extension_settings.variables.global,...chat_metadata.variables,...current}),replaceVariables:replaceVars,
     updateVariablesWith:async(fn:Function,o:any)=>replaceVars(fn(readVars(o)),o),insertOrAssignVariables:async(v:any,o:any)=>replaceVars({...readVars(o),...v},o),
     getCurrentMessageId:()=>chat.length-1,getMessageId:()=>chat.length-1,getLastMessageId:()=>chat.length-1,getScriptId:()=>ENV.scriptId || 'card-local',
     registerVariableSchema(){},waitGlobalInitialized:()=>Promise.resolve(),waitUntil:async(fn:Function)=>{if(!fn())throw Error('等待条件尚未就绪');},
-    getChatMessages:(id:any='latest')=>{let n=id==='latest'?chat.length-1:Number(id);if(n<0)n=chat.length+n;const m=chat[n];return m?[{...m,message_id:n,message:m.mes,data:m.variables?.[0]||current}]:[];},
+    getChatMessages:(id:any='latest',options:any={})=>{
+      const range=String(id).match(/^(\d+)-(\d+)$/);let start=id==='latest'?chat.length-1:Number(id),end=start;if(start<0)start=end=chat.length+start;
+      if(range){start=Number(range[1]);end=Number(range[2]);}
+      return chat.map((m:any,n:number)=>({...m,message_id:n,message:m.mes,role:m.is_user?'user':'assistant',data:m.variables?.[0]||current})).filter((m:any)=>m.message_id>=start&&m.message_id<=end&&(!options.role||m.role===options.role));
+    },
     getCharWorldbookNames:()=>({primary:ENV.books[0]?.name || null,additional:ENV.books.slice(1).map((b:any)=>b.name)}),
     getCharLorebooks:async()=>({primary:ENV.books[0]?.name || null,additional:ENV.books.slice(1).map((b:any)=>b.name)}),
     getLorebookSettings:()=>({selected_global_lorebooks:[],scan_depth:8,recursive_scan:false}),
     getLorebookEntries:async(name:string)=>ENV.books.find((b:any)=>b.name===name)?.entries.map((e:any)=>({...e,comment:e.name})) || [],
     getWorldbook:async(name:string)=>ENV.books.find((b:any)=>b.name===name)?.entries || [],
-    SillyTavern:{chat,chatMetadata:chat_metadata,saveChat(){},getContext(){return {chat,chatMetadata:chat_metadata}}},
+    getCurrentChatId:()=>ENV.sessionId,
+    SillyTavern:{chat,chatMetadata:chat_metadata,saveChat(){},getContext(){return {chat,chatMetadata:chat_metadata,chatId:ENV.sessionId}}},
   });g.window=g;g.parent=g;
   const mvu={events:variable_events,getMvuData:readVars,replaceMvuData:replaceVars,
     getCurrentMvuData:()=>current,replaceCurrentMvuData:(v:any)=>{current=v;return Promise.resolve();},
@@ -58,7 +77,8 @@ function mapImports(code:string){
     if(/MagVarUpdate|mag-var-update|mvu.*bundle/i.test(url))return 'globalThis.Mvu';
     throw Error('脚本依赖尚未映射：'+url);
   };
-  let value=code.replace(/import\s+([\s\S]*?)\s+from\s*['"]([^'"]+)['"]\s*;?/g,(_all,binding,url)=>{
+  const bindingPattern=String.raw`(?:\{[^}]*\}|\*\s+as\s+[\w$]+|[\w$]+(?:\s*,\s*(?:\{[^}]*\}|\*\s+as\s+[\w$]+))?)`;
+  let value=code.replace(new RegExp(String.raw`\bimport\s*(${bindingPattern})\s*from\s*['"]([^'"]+)['"]\s*;?`,'g'),(_all,binding,url)=>{
     let b=String(binding).trim();if(b.startsWith('{'))b=b.replace(/\bas\b/g,':');else if(b.startsWith('* as '))b=b.slice(5);
     return `const ${b} = ${lookup(url)};`;
   });
@@ -73,7 +93,7 @@ async function runScripts(){
       // A framework loader is replaced by the already loaded, pinned local core.
       if(!/registerMvuSchema|eventOn\(|const\s+Schema|let\s+Schema/.test(script.content))continue;
     }
-    try{ENV.scriptId=script.id;await (new Function('return (async()=>{'+mapImports(script.content)+'\n})()'))();await Promise.all(ready);ready=[];}
+    try{ENV.scriptId=script.id;await (new Function('return (async()=>{'+mapImports(script.content)+'\n})()'))();while(ready.length){const pending=ready;ready=[];await Promise.all(pending);}}
     catch(e:any){throw Error(`角色脚本「${script.name || script.id}」：${e.message}`);}
   }
 }
@@ -130,6 +150,7 @@ function regexOutput(value:string,prompt=false,depth=0){
 function finish(extra:any={}){
   return {...extra,current,errors:ENV.errors,warnings:ENV.warnings,
     globalVariables:extension_settings.variables.global,localVariables:chat_metadata.variables,
+    characterVariables:ENV.characterVariables || {},injectedPrompts:ENV.injectedPrompts || [],
     messageVariables:chat.at(-1)?.variables?.[0] || {},schemaRegistered:(listeners.get('mag_command_parsed_for_zod') || []).length>0};
 }
 async function initialize(){
@@ -141,6 +162,7 @@ async function initialize(){
 export async function execute(seed:any){
   install(seed);entryDepth=0;await runScripts();await initialize();setupTemplate(seed.phase);
   if(seed.phase==='prepare'){
+    await (globalThis as any).__meowEmit((globalThis as any).tavern_events.GENERATION_AFTER_COMMANDS);
     const profile={...seed.profile},books=clone(seed.books),promptStates=clone(seed.promptStates || {});
     for(const key of ['description','personality','scenario','persona','examples','worldBefore','worldAfter'])profile[key]=await render(profile[key]||'',key);
     const hay=chat.slice(-8).map(m=>m.mes).join('\n');
@@ -150,6 +172,13 @@ export async function execute(seed:any){
       if(active && !/\[initvar\]|\[InitialVariables\]/i.test(entry.name))entry.content=await render(entry.content,`${book.name} / ${entry.name}`);
     }
     for(const row of seed.prompts || [])if(row.enabled)promptStates[row.id]={...(promptStates[row.id]||{}),content:await render(promptStates[row.id]?.content ?? row.content,row.name)};
+    const bindings:any[]=[];
+    for(const key of ['description','personality','scenario','persona','examples','worldBefore','worldAfter'])bindings.push({get:()=>profile[key]||'',set:(value:string)=>profile[key]=value});
+    for(const book of books)for(const entry of book.entries)bindings.push({get:()=>entry.content,set:(value:string)=>entry.content=value});
+    for(const row of Object.values(promptStates) as any[])if(typeof row.content==='string')bindings.push({get:()=>row.content,set:(value:string)=>row.content=value});
+    const payload={messages:bindings.map(binding=>({role:'system',content:binding.get()}))};
+    await (globalThis as any).__meowEmit((globalThis as any).tavern_events.CHAT_COMPLETION_SETTINGS_READY,payload);
+    bindings.forEach((binding,index)=>binding.set(payload.messages[index]?.content ?? binding.get()));
     const history=Object.fromEntries(chat.filter(m=>m.id).map((m:any,i:number)=>[m.id,m.is_user?m.mes:regexOutput(m.mes,true,chat.length-i-1)]));
     return finish({profile,books,promptStates,history});
   }

@@ -45,7 +45,8 @@ function seedFor(state,session){
   const chat=session.messages.map(m=>({id:m.id,mes:m.renderedContent || m.content,is_user:m.role==='user',is_system:false,name:m.role==='user'?profile.userName:profile.name,
     swipe_id:0,swipes:[m.content],variables:[m.runtime?.after || m.variables?.[0] || {}]}));
   if(!chat.length)chat.push({mes:profile.firstMessage || '',is_user:false,swipe_id:0,swipes:[''],variables:[{}]});
-  return {profile,books,chat,current:previous.current,localVariables:previous.localVariables,
+  const character=state.library?.characters.find(c=>c.id===session.characterId);
+  return {profile,books,chat,sessionId:session.id,characterVariables:character?.variables || {},current:previous.current,localVariables:previous.localVariables,
     globalVariables:state.library?.globalVariables || {},model:state.settings.model,
     lastUser:session.messages.findLast(m=>m.role==='user')?.content || '',compat:profile.compat || {},scripts:profile.helperScripts || []};
 }

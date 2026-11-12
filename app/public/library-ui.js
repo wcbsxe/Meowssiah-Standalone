@@ -1,18 +1,20 @@
 'use strict';
 const frameRegistry=new Map();
-function currentCard(){return state.library?.characters.find(c=>c.id===session().characterId);}
+function currentCard(){return state.library?.characters.find(c=>c.id===session()?.characterId);}
 function registerProfile(p){
   state.library ||= {version:1,worldbooks:[],characters:[],globalVariables:{}};
-  const profile=structuredClone(p),card={id:uid(),name:profile.name,profile,enabledWorldbookIds:[],createdAt:Date.now(),updatedAt:Date.now()};
+  const profile=structuredClone(p),card={id:uid(),name:profile.name,profile,variables:{},enabledWorldbookIds:[],createdAt:Date.now(),updatedAt:Date.now()};
   profile.compat ||= {mvu:false,ejs:false,cardHtml:true};profile.regexes ||= [];profile.helperScripts ||= [];
   if(profile.worldbook?.length){const b={id:uid(),name:profile.name+' · 内置世界书',entries:structuredClone(profile.worldbook),source:'角色卡内置',createdAt:Date.now(),updatedAt:Date.now()};state.library.worldbooks.push(b);card.enabledWorldbookIds.push(b.id);}
   state.library.characters.push(card);return card;
 }
 function syncCard(card){card.name=card.profile.name;card.updatedAt=Date.now();for(const s of state.sessions)if(s.characterId===card.id)s.profile=structuredClone(card.profile);}
 async function startCardStory(card=currentCard()){
-  try{closeModal();newStory(card?.profile || null,card?.id || null);const s=session(),p=s.profile;
+  if(busy)return;
+  try{await persist(true);closeModal();newStory(card?.profile || null,card?.id || null,false);const s=session(),p=s.profile;
     if(p.firstMessage){s.messages.push({id:uid(),role:'assistant',content:p.firstMessage.replaceAll('{{user}}',p.userName).replaceAll('{{char}}',p.name),timestamp:Date.now(),mode:'theater',status:'complete'});
-      const r=await api('runtime/recalculate',{state,fromIndex:0});state=r.state;render();scrollBottom();}
+      renderMessages();await initializeStory(0);}
+    else await persist(true);
   }catch(e){showError('故事已创建，框架初始化提示：'+e.message);}
 }
 function updateLibraryBadges(){
@@ -55,7 +57,7 @@ function openCardSettings(id){
   }catch(e){result.textContent=e.message;}},'primary'),button('返回角色库',openCharacters)),result);
 }
 function openWorldbooks(searchText=''){
-  const body=openModal('世界书总库','worldbooks');body.append(notice('世界书在这里统一保存和编辑。每张角色卡在“角色卡库 → 编辑与世界书绑定”中自行勾选。导入到总库，不等于给所有角色启用。'));
+  const body=openModal('世界书总库','worldbooks');body.append(notice('在这里统一保存和编辑世界书，再到“角色卡库 → 编辑与世界书绑定”为每张卡勾选。'));
   const controls=element('div','preset-controls'),search=element('input');search.type='search';search.placeholder='搜索世界书或条目…';search.value=searchText;
   controls.append(search,button('导入 JSON',()=>$('#library-book-file').click(),'primary'),button('新建世界书',()=>editWorldbook({id:uid(),name:'新世界书',entries:[],source:'用户创建',createdAt:Date.now(),updatedAt:Date.now()},true)));body.append(controls);
   const list=element('div','library-list');body.append(list);
@@ -83,7 +85,7 @@ function editWorldbook(book,isNew=false){
     button('保存世界书',async()=>{draft.name=name.input.value.trim()||'未命名世界书';draft.updatedAt=Date.now();if(isNew)state.library.worldbooks.push(draft);else Object.assign(book,draft);await persist(true);updateLibraryBadges();openWorldbooks();toast('世界书已保存，绑定它的角色会共用这份内容。');},'primary'),button('返回',openWorldbooks)));
 }
 async function openVariables(){
-  const body=openModal('当前故事 · 变量与运行','variables');body.append(notice('变量归当前故事所有，不会与同卡的其他故事混用。下方读取最近一条已完成消息的快照；尚未开局时显示 InitVar 初始化结果。查看不调用模型。'));
+  const body=openModal('当前聊天 · 变量与运行','variables');body.append(notice('每段聊天单独保存变量。下方显示最近一条消息的变量快照，空白聊天显示初始化结果。'));
   const area=element('div','about-prose','正在读取本地框架状态…');body.append(area);
   try{const result=await api('runtime/inspect',{state}),last=session().messages.findLast(m=>m.role==='assistant'&&m.runtime),stats=element('div','stats');
     for(const [value,label] of [[result.compat.mvu?'开启':'关闭','MVU'],[result.compat.ejs?'开启':'关闭','EJS 提示词模板'],[result.schemaRegistered?'已注册':'未注册','Zod 变量结构'],[result.books.length,'启用世界书']]){const stat=element('div','stat');stat.append(element('strong','',value),document.createTextNode(label));stats.append(stat);}area.replaceChildren(stats);
@@ -96,7 +98,7 @@ async function openVariables(){
 }
 function cardFrame(html,message){
   const frame=element('iframe','card-frame');frame.setAttribute('sandbox','allow-scripts');frame.setAttribute('title','角色卡界面');frame.height='260';frame.setAttribute('loading','lazy');
-  const s=session(),index=s.messages.findIndex(m=>m.id===message.id),seed={messageId:index,current:message.runtime?.after || {stat_data:{}},localVariables:message.runtime?.localVariables || {},globalVariables:state.library.globalVariables || {},messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}}))};
+  const s=session(),index=s.messages.findIndex(m=>m.id===message.id),seed={messageId:index,current:message.runtime?.after || {stat_data:{}},characterVariables:currentCard()?.variables || {},localVariables:message.runtime?.localVariables || {},globalVariables:state.library.globalVariables || {},messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}}))};
   api('card-frame',{html,seed}).then(data=>{if(!frame.isConnected)return;frame.src=data.url;frameRegistry.set(data.nonce,{frame,sessionId:s.id,messageId:message.id});for(const [k,v] of frameRegistry)if(!v.frame.isConnected)frameRegistry.delete(k);}).catch(e=>{frame.replaceWith(element('div','notice','卡片界面加载出错：'+e.message));});return frame;
 }
 function splitCardDisplay(raw){
@@ -105,7 +107,8 @@ function splitCardDisplay(raw){
 }
 window.addEventListener('message',async event=>{
   const data=event.data;if(!data?.meowFrame)return;const reg=frameRegistry.get(data.nonce);if(!reg || event.source!==reg.frame.contentWindow)return;
-  if(data.type==='resize'){reg.frame.height=String(Math.max(100,Math.min(2000,Number(data.height)||260)));return;}
+  if(data.type==='resize'){reg.frame.height=String(Math.max(100,Math.min(2000,Number(data.height)||260)));if(followLatest&&reg.sessionId===state.activeId)requestAnimationFrame(scrollBottom);return;}
+  if(data.type==='scroll'){if(reg.sessionId===state.activeId){followLatest=false;$('#chat-scroll').scrollBy({top:Math.max(-2000,Math.min(2000,Number(data.deltaY)||0)),behavior:'instant'});}return;}
   if(data.type==='error'){toast('卡片界面：'+data.error);return;}
   if(data.type!=='request')return;
   const respond=(value,error)=>reg.frame.contentWindow?.postMessage({meowFrame:true,nonce:data.nonce,type:'response',id:data.id,value,error},'*');
@@ -114,13 +117,21 @@ window.addEventListener('message',async event=>{
     const story=state.sessions.find(s=>s.id===reg.sessionId),message=story?.messages.find(m=>m.id===reg.messageId);if(!message || story.id!==state.activeId)throw Error('这条卡片界面已离开当前故事。');
     if(data.action==='parse'){const r=await api('runtime/parse',{state,old:data.old,text:data.text});if(r.errors.length)throw Error(r.errors.join('\n'));return respond(r.current);}
     if(data.action==='replace'){
-      const reply=await api('runtime/parse',{state,old:message.runtime?.after || {stat_data:{}},text:'<UpdateVariable><JSONPatch>'+JSON.stringify([{op:'replace',path:'',value:data.value?.stat_data || {}}])+'</JSONPatch></UpdateVariable>'});
-      if(reply.errors.length)throw Error(reply.errors.join('\n'));message.runtime={...(message.runtime || {}),after:reply.current};await persist(true);return respond(true);
+      const type=data.options?.type || 'message';
+      if(!data.value || typeof data.value!=='object' || Array.isArray(data.value))throw Error('变量内容应为 JSON 对象。');
+      if(type==='character'){const card=currentCard();card.variables=structuredClone(data.value);await persist(true);return respond(card.variables);}
+      if(type==='global'){state.library.globalVariables=structuredClone(data.value);await persist(true);return respond(state.library.globalVariables);}
+      if(type==='chat'){message.runtime={...(message.runtime || {}),localVariables:structuredClone(data.value)};await persist(true);return respond(message.runtime.localVariables);}
+      if(type!=='message')throw Error('未识别的变量类型。');
+      let index=data.options?.message_id ?? story.messages.indexOf(message);if(index==='latest')index=story.messages.length-1;index=Number(index);if(index<0)index+=story.messages.length;
+      const target=story.messages[index];if(!target)throw Error('消息楼层不存在。');
+      const reply=await api('runtime/parse',{state,old:target.runtime?.after || {stat_data:{}},text:'<UpdateVariable><JSONPatch>'+JSON.stringify([{op:'replace',path:'',value:data.value.stat_data || {}}])+'</JSONPatch></UpdateVariable>'});
+      if(reply.errors.length)throw Error(reply.errors.join('\n'));target.runtime={...(target.runtime || {}),after:reply.current};await persist(true);return respond(reply.current);
     }throw Error('未识别的卡片状态操作。');
   }catch(e){respond(null,e.message);}
 });
 function bindLibrary(){
   $('#open-characters').onclick=openCharacters;$('#open-worldbooks').onclick=()=>openWorldbooks();$('#open-variables').onclick=openVariables;
   const input=element('input');input.type='file';input.accept='.json';input.multiple=true;input.id='library-book-file';input.hidden=true;document.body.append(input);
-  input.onchange=async()=>{try{let count=0;for(const file of input.files){const result=await api('library/import-worldbook',{name:file.name.replace(/\.json$/i,''),json:JSON.parse(await file.text())});state.library.worldbooks.push(result.worldbook);count++;}await persist(true);updateLibraryBadges();openWorldbooks();toast(`已导入 ${count} 本世界书，尚未自动绑定其他角色。`);}catch(e){toast(e.message);}finally{input.value='';}};
+  input.onchange=async()=>{try{let count=0;for(const file of input.files){const result=await api('library/import-worldbook',{name:file.name.replace(/\.json$/i,''),json:JSON.parse(await file.text())});state.library.worldbooks.push(result.worldbook);count++;}await persist(true);updateLibraryBadges();openWorldbooks();toast(`已导入 ${count} 本世界书，可在角色设置中勾选启用。`);}catch(e){toast(e.message);}finally{input.value='';}};
 }

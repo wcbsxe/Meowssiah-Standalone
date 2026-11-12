@@ -1,6 +1,6 @@
 {
   "name": "meowssiah-standalone",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Meowssiah 独立桌面写作工作台",
   "main": "app/electron.cjs",
@@ -24,7 +24,7 @@
     "productName": "Meowssiah",
     "asar": true,
     "directories": {
-      "output": "dist-1.1"
+      "output": "dist-1.1.1"
     },
     "files": [
       "app/**/*",
@@ -44,7 +44,7 @@
       "icon": "app/public/icon.ico"
     },
     "portable": {
-      "artifactName": "Meowssiah-1.1.0-Windows-x64.exe"
+      "artifactName": "Meowssiah-1.1.1-Windows-x64.exe"
     },
     "npmRebuild": false
   },

@@ -24,8 +24,8 @@
     }
   ],
   "hashes": {
-    "app/vendor/card-runtime.js": "e0d083ed3e7893d13a52da1d9deb78e76b0bdb89fe947fb03652d2f4c0e6745e",
+    "app/vendor/card-runtime.js": "d1b4178d5c933ef12f2fdf14ecdcbb2b3b6898a32d87661163ec95079798e70a",
     "app/public/frame-vendor.js": "b90b7d6fdcbec97da9b59ebc92580c55a2256037a1d86b48a44ebec21ab1760f"
   },
-  "hostVersion": "1.1.0"
+  "hostVersion": "1.1.1"
 }

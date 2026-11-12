@@ -5,11 +5,12 @@
 <div class="app-shell">
   <aside class="sidebar" aria-label="故事与设置">
     <a class="brand" href="/" aria-label="Meowssiah 首页"><img src="/logo.svg" alt=""><span>Meowssiah<small>小猫之神 · 独立工作台</small></span></a>
-    <button id="new-story" class="primary wide"><span>＋</span> 开启新故事</button>
-    <div class="nav-label">故事书架 <span id="story-count">0</span></div>
+    <button id="new-story" class="primary wide" title="新建聊天"><span>＋</span> 新建聊天</button>
+    <div class="nav-label">聊天记录 <span id="story-count">0</span></div>
     <input id="search-stories" class="search" type="search" placeholder="搜索你的故事…" aria-label="搜索故事">
     <nav id="story-list" class="story-list" aria-label="故事列表"></nav>
     <div class="sidebar-bottom">
+      <button id="open-chats" class="nav-button" title="聊天管理"><span>▤</span> 聊天管理</button>
       <button id="open-characters" class="nav-button"><span>♧</span> 角色卡库 <small id="character-library-count"></small></button>
       <button id="open-worldbooks" class="nav-button"><span>▥</span> 世界书总库 <small id="worldbook-library-count"></small></button>
       <button id="open-variables" class="nav-button"><span>ƒ</span> 变量与运行</button>
@@ -17,21 +18,21 @@
       <button id="open-connection" class="nav-button"><span>⌘</span> 模型连接 <i id="connection-dot" class="dot"></i></button>
       <button id="open-backup" class="nav-button"><span>▤</span> 导入与备份</button>
       <div class="sidebar-footer"><button id="theme-toggle" class="text-button" aria-label="切换深浅主题">◐ 外观</button><button id="open-about" class="text-button">关于 / 迁移说明</button></div>
-      <div class="local-badge"><span class="dot green"></span> 本机独立运行 <span>v1.1</span></div>
+      <div class="local-badge"><span class="dot green"></span> 本机独立运行 <span>v1.1.1</span></div>
     </div>
   </aside>
   <main class="main">
-    <header class="topbar"><div class="breadcrumb">我的故事 <span>/</span> <button id="rename-story" class="story-title">未命名的故事</button></div><div class="top-actions"><span id="save-status" role="status">已就绪</span><button id="open-request" class="outline small">查看实际请求</button><button id="toggle-details" class="icon-button" aria-label="显示或隐藏故事资料">☷</button></div></header>
+    <header class="topbar"><div class="breadcrumb">我的聊天 <span>/</span> <button id="rename-story" class="story-title">未命名的故事</button></div><div class="top-actions"><span id="save-status" role="status">已就绪</span><button id="manage-chats" class="outline small">聊天管理</button><button id="open-request" class="outline small">查看实际请求</button><button id="toggle-details" class="icon-button" aria-label="显示或隐藏故事资料">☷</button></div></header>
     <div class="workspace">
       <section class="chat-column" aria-label="对话工作区">
-        <div class="chat-heading"><div><span class="eyebrow">YOUR LITTLE STORY UNIVERSE</span><h1 id="workspace-heading">给想象，一个栖身之处。</h1></div><span id="mode-badge" class="pill">剧场模式</span></div>
+        <div class="chat-heading"><div><span class="eyebrow">YOUR LITTLE STORY UNIVERSE</span><h1 id="workspace-heading">给想象，一个栖身之处。</h1></div><div class="chat-navigation"><span id="mode-badge" class="pill">剧场模式</span><div><button id="jump-start" class="text-button">↑ 回到开头</button><button id="jump-latest" class="text-button">↓ 最新消息</button></div></div></div>
         <div id="chat-scroll" class="chat-scroll">
-          <div id="welcome" class="welcome"><div class="welcome-art"><img src="/logo.svg" alt="小猫之神"><span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">·</span></div><span class="eyebrow">THE STAGE IS YOURS</span><h2>故事，从你的一句话开始。</h2><p>带上一个角色、一小段设定，<br>或者只是一个天马行空的念头。剩下的，慢慢写。</p><div class="starter-grid"><button data-starter="黄昏时，我走进山间一间还亮着灯的旧书店。">☽ <span>推开故事的门<small>从一间山间书店开始</small></span>↗</button><button id="welcome-import">♧ <span>带上熟悉的角色<small>导入酒馆角色卡 JSON / PNG</small></span>↗</button></div><button id="load-demo" class="text-button">看看本地示例，不调用模型 →</button></div>
+          <div id="welcome" class="welcome"><div class="welcome-art"><img src="/logo.svg" alt="小猫之神"><span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">·</span></div><span class="eyebrow">THE STAGE IS YOURS</span><h2>故事，从你的一句话开始。</h2><p>带上一个角色、一小段设定，<br>或者只是一个天马行空的念头。剩下的，慢慢写。</p><div class="starter-grid"><button data-starter="黄昏时，我走进山间一间还亮着灯的旧书店。">☽ <span>推开故事的门<small>从一间山间书店开始</small></span>↗</button><button id="welcome-import">♧ <span>带上熟悉的角色<small>导入酒馆角色卡 JSON / PNG</small></span>↗</button></div><button id="load-demo" class="text-button">看看本地示例 →</button></div>
           <div id="messages" class="messages" aria-live="polite" aria-relevant="additions"></div>
         </div>
         <div id="generation-status" class="generation-status" role="status" hidden></div>
         <div id="error-banner" class="error-banner" role="alert" hidden></div>
-        <div class="composer-area"><div class="composer-tools"><div class="segmented" role="group" aria-label="工作模式"><button id="mode-theater" data-mode="theater" class="selected">◈ 剧场</button><button id="mode-chat" data-mode="chat">☏ 场外聊天</button></div><label class="check-inline"><input id="deep-think" type="checkbox"> 深思</label><span id="composer-model">尚未配置模型</span></div><form id="composer"><textarea id="message-input" rows="3" aria-label="输入消息" placeholder="下一幕，由你落笔…"></textarea><div class="composer-bottom"><span>Enter 发送 · Shift + Enter 换行</span><button id="send-message" class="send-button" type="submit">发送 <span>↑</span></button><button id="stop-generation" class="danger" type="button" hidden>■ 停止生成</button></div></form><div class="composer-foot"><span>原版请求处理 · 本地存档 · 无日志上传</span><button id="retry-message" class="text-button" hidden>↻ 重新生成上一条</button></div></div>
+        <div class="composer-area"><div class="composer-tools"><div class="segmented" role="group" aria-label="工作模式"><button id="mode-theater" data-mode="theater" class="selected">◈ 剧场</button><button id="mode-chat" data-mode="chat">☏ 场外聊天</button></div><label class="check-inline"><input id="deep-think" type="checkbox"> 深思</label><span id="composer-model">尚未配置模型</span></div><form id="composer"><textarea id="message-input" rows="3" aria-label="输入消息" placeholder="下一幕，由你落笔…"></textarea><div class="composer-bottom"><span>Enter 发送 · Shift + Enter 换行</span><button id="send-message" class="send-button" type="submit">发送 <span>↑</span></button><button id="stop-generation" class="danger" type="button" hidden>■ 停止生成</button></div></form><div class="composer-foot"><span>原版请求处理 · 本地自动存档</span><button id="retry-message" class="text-button" hidden>↻ 重新生成上一条</button></div></div>
       </section>
       <aside id="details-panel" class="details-panel" aria-label="故事资料"><div class="detail-title"><h2>故事的幕后</h2><span>STORY NOTES</span></div><section class="character-card"><div class="character-symbol">✧</div><span class="eyebrow">当前角色</span><h3 id="character-name">小猫之神</h3><p id="character-description">把角色和世界带进来，让每一次续写都有来处。</p><button id="open-profile" class="outline wide">编辑角色与世界资料 ↗</button><button id="import-character" class="text-button wide">导入角色卡</button></section><section class="note-card"><div class="section-heading"><h3>✎ 导演的小纸条</h3><span id="note-indicator"></span></div><p>只在下一轮，悄悄告诉小猫你的想法。</p><textarea id="director-note" rows="4" placeholder="例如：节奏慢一点，留意窗边那本旧书。" aria-label="导演小纸条"></textarea><label class="check-inline"><input id="note-auto-clear" type="checkbox" checked> 成功生成后自动清空</label></section><section class="continuity"><div class="section-heading"><h3>◷ 最近的场记</h3><span id="message-count">0 条消息</span></div><div id="latest-summary" class="summary-content">故事开始后，模型返回的场记会留在这里，方便接着写。</div></section><div class="details-foot">每个故事单独保存角色资料与历史。<br>预设开关和模型连接由工作台共用。</div></aside>
     </div>

@@ -1,22 +1,26 @@
 {
-  "version": "1.1.0",
+  "version": "1.1.1",
   "source": "local delivered source snapshot",
   "applicationFiles": [
     {
       "file": "app/core/card-frame.cjs",
-      "sha256": "df2c69a08cc80349b27d99080a0473d1a256ad9ab4d4572fe04ec0e3ea1f190a"
+      "sha256": "d5743e0ac62133d71c3d1433c64307b0f3fe651e09dd8a7b94fb0c1d259e27e5"
     },
     {
       "file": "app/core/card-runtime.cjs",
-      "sha256": "d61a6c2d10a313f9f7d1b9c4b29857cbcd37c6d5cdd4a92deffd01455ef0e76b"
+      "sha256": "55f250e16c6fdb94a0c4cc36c950d66d5817d87cd14ade7b66b5c7c19df182cb"
+    },
+    {
+      "file": "app/core/data-dir.cjs",
+      "sha256": "71aedef27c934f79a807c545e3ad539d14835a59cc143fa8e4d3e208b2b33e98"
     },
     {
       "file": "app/core/engine.cjs",
-      "sha256": "6f9c3ccf766d5b8e879d5a20c039a73c77c4f5b575d42355c673410f06518b71"
+      "sha256": "d31b378fc25ab1e16822d3bf365a57b55cef2ce35c8706fa7973d6091625552c"
     },
     {
       "file": "app/core/library.cjs",
-      "sha256": "16411b1271c4970950ebed6316788c63df7874123385b85837f9eaccacb238ef"
+      "sha256": "4afe0b1c25df8a16f200f53f8a6199d72a4e53dc3b93d5cc1a90ae0bfde726d9"
     },
     {
       "file": "app/core/original-runtime.cjs",
@@ -28,11 +32,11 @@
     },
     {
       "file": "app/core/store.cjs",
-      "sha256": "15392a1e3136d88130d77c699d076f402d2eec54d66d31160ddf5808ea02e1e6"
+      "sha256": "bf5c525bc0f154571d18a5a1886dc9f8be49cfd0ea38d175eacb4729cc97ed4a"
     },
     {
       "file": "app/data/integrations.json",
-      "sha256": "53aaaf7857b9254621f5a710ab0c99a617b96b51ecfb63033f47b604d5bfae4e"
+      "sha256": "5211dbb425a79192f514259aaafbba1ab6f7c3b8ff8e25b8af0897c336c9744f"
     },
     {
       "file": "app/data/original.json",
@@ -48,7 +52,7 @@
     },
     {
       "file": "app/electron.cjs",
-      "sha256": "bafb380e4acc70221d27a5854c72b8830efbb3a96d6e1c7ac84cd693c7d8ee09"
+      "sha256": "52383d787c0ca0823d46cec384d125d7364385a0b885934d6e82babc8eedb659"
     },
     {
       "file": "app/licenses/MagVarUpdate-MIT.txt",
@@ -64,7 +68,7 @@
     },
     {
       "file": "app/public/app.js",
-      "sha256": "d36bade860e7b54705898b438983d94fd32fce512778076c24517d41be16986b"
+      "sha256": "c93d678adef9ae3307110947f6e9d645b96d88f460b6cdc21acd2c42c3999939"
     },
     {
       "file": "app/public/frame-vendor.js",
@@ -76,11 +80,11 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "8c15ce038a9a73f904a3b0d175addea5f164fffc0d19351684eb6ec0182749b0"
+      "sha256": "23892e1b45227e718fbb06e3a9f7d3894816fec706db632bd1f25621b982f276"
     },
     {
       "file": "app/public/library-ui.js",
-      "sha256": "c35bd02fb6b620672c870544010b929aa54b300f76f72848ae680f91b337d0c7"
+      "sha256": "bbcabf54a00bb865fe30bc8116332feb80b1f6a6925d8d35134012fd066808a9"
     },
     {
       "file": "app/public/logo.svg",
@@ -88,15 +92,15 @@
     },
     {
       "file": "app/public/style.css",
-      "sha256": "dc6b462c0c2aac5441054423938f6fa77ba6fa14632d68485a7934d7ad7e797f"
+      "sha256": "384834ac627564fdf9415e179eecd81308ab3a9054232efeada6586a55243ba0"
     },
     {
       "file": "app/server.cjs",
-      "sha256": "2c91b833cefdb242dc9d829841fa570d56447c6c2428266266974f1ab50680df"
+      "sha256": "614f792330f03fff8023e604a2a5051633e9db84b49ea8cfcdaf21032300f00b"
     },
     {
       "file": "app/vendor/card-runtime.js",
-      "sha256": "e0d083ed3e7893d13a52da1d9deb78e76b0bdb89fe947fb03652d2f4c0e6745e"
+      "sha256": "d1b4178d5c933ef12f2fdf14ecdcbb2b3b6898a32d87661163ec95079798e70a"
     }
   ]
 }

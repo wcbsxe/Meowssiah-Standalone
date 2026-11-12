@@ -354,7 +354,7 @@ function editMessage(m){
 }
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.5：宽屏布局、最近 20 层与编辑定位'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏铺宽；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
+  prose.append(element('h3','','1.1.6：适中宽度、最近 20 层与编辑定位'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏以适中宽度居中；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
     element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
     element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);

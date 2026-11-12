@@ -1,6 +1,6 @@
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-let state,preset,keyConfigured=false,dataDir='',busy=false,jobId='',liveText='',liveMessageId='',saveTimer,toastTimer;
+let state,preset,keyConfigured=false,keyRemembered=false,dataDir='',busy=false,jobId='',liveText='',liveMessageId='',saveTimer,toastTimer;
 let saveChain=Promise.resolve(),lastDiagnostics=null,modalContext='',connectionFlush=null,followLatest=false;
 const chatDrafts=new Map();
 const MESSAGE_PAGE_SIZE=20;
@@ -14,7 +14,7 @@ function toast(message){$('#toast').textContent=message;$('#toast').hidden=false
 function showError(message){$('#error-banner').textContent=message;$('#error-banner').hidden=false;}
 async function api(path,body){
   const r=await fetch('/api/'+path,{method:body===undefined?'GET':'POST',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
-  let j;try{j=await r.json();}catch{throw Error('本机服务没有返回有效数据。请重新打开程序。');}if(Object.hasOwn(j,'undo')){undoPoint=j.undo;updateComposerActions();}if(!r.ok)throw Error(j.error || '本机请求出错。');return j;
+  let j;try{j=await r.json();}catch{throw Error('本机服务没有返回有效数据。请重新打开程序。');}if(Object.hasOwn(j,'undo')){undoPoint=j.undo;updateComposerActions();}if(Object.hasOwn(j,'keyConfigured'))keyConfigured=j.keyConfigured;if(Object.hasOwn(j,'keyRemembered'))keyRemembered=j.keyRemembered;if(!r.ok)throw Error(j.error || '本机请求出错。');return j;
 }
 function persist(immediate=false,allowBusy=false){
   clearTimeout(saveTimer);$('#save-status').textContent='保存中…';
@@ -289,28 +289,29 @@ async function send(retry=false){
   finally{if(temporaryChatReplay)session().mode='theater';setBusy(false);liveText='';liveMessageId='';jobId='';render();persist();if(followLatest&&messageRange().latest)scrollBottom();$('#message-input').focus();}
 }
 function openConnection(){
-  const body=openModal('模型连接','connection');body.append(notice('地址、模型和生成选项自动保存在“Meowssiah-Data / 连接”。密钥保留到本次退出。'));
-  const grid=element('div','form-grid'),cfg=structuredClone(state.settings);let timer,pending=false,chain=Promise.resolve();
-  const base=field('接口地址',cfg.baseUrl,'url',true,'例如 https://服务地址/v1。'),key=field('API 密钥','','password',true,keyConfigured?'本次已填写；留空保持当前密钥。':'本机免密接口可留空。'),model=field('模型名',cfg.model,'text',true,'输入模型 ID，或从读取的列表中选择。');
+  const body=openModal('模型连接','connection');body.append(notice('连接设置自动保存在“Meowssiah-Data / 连接”。勾选记住后，密钥由当前 Windows 用户加密保存，重开软件自动读取。'));
+  const grid=element('div','form-grid'),cfg=structuredClone(state.settings);let timer,pending=false,rememberDirty=false,chain=Promise.resolve();
+  const base=field('接口地址',cfg.baseUrl,'url',true,'例如 https://服务地址/v1。'),key=field('API 密钥','','password',true,keyRemembered?'已从本机配置载入；留空保持，填写可替换。':keyConfigured?'本次已填写；留空保持当前密钥。':'本机免密接口可留空。'),model=field('模型名',cfg.model,'text',true,'输入模型 ID，或从读取的列表中选择。');
   model.input.setAttribute('list','model-list');const dl=element('datalist');dl.id='model-list';model.wrap.append(dl);
   const fillModels=()=>dl.replaceChildren(...(cfg.availableModels || []).map(v=>{const o=element('option');o.value=v;return o;}));fillModels();
   const max=field('最大输出 tokens',cfg.maxTokens,'number',false,'本轮输出的长度预算。'),context=field('请求字符上限',cfg.contextChars,'number',false,'发送前检查请求总长度。'),temp=field('Temperature',cfg.temperature,'number',false,'采样随机性，源预设为 1.09。'),top=field('Top P',cfg.topP,'number'),timeout=field('请求超时 / 秒',cfg.timeoutSeconds,'number');
   temp.input.step='.01';top.input.step='.01';
-  const reasoning=check('发送 reasoning_effort 字段',cfg.sendReasoning);
-  grid.append(base.wrap,key.wrap,model.wrap,max.wrap,context.wrap,temp.wrap,top.wrap,timeout.wrap);body.append(grid,element('p',''),reasoning.wrap);
+  const reasoning=check('发送 reasoning_effort 字段',cfg.sendReasoning),remember=check('记住此连接的密钥（仅本机）',keyRemembered);
+  grid.append(base.wrap,key.wrap,model.wrap,max.wrap,context.wrap,temp.wrap,top.wrap,timeout.wrap);body.append(grid,remember.wrap,element('p',''),reasoning.wrap);
   const result=element('div','about-prose');result.setAttribute('role','status');
   const read=()=>({...cfg,baseUrl:base.input.value.trim(),model:model.input.value.trim(),maxTokens:Number(max.input.value),contextChars:Number(context.input.value),temperature:Number(temp.input.value),topP:Number(top.input.value),timeoutSeconds:Number(timeout.input.value),sendReasoning:reasoning.input.checked});
   function save(force=false){
     clearTimeout(timer);if(!pending&&!force)return chain;pending=false;
-    const settings=read(),secret=key.input.value.trim();key.input.value='';
-    chain=chain.catch(()=>{}).then(async()=>{if(secret){await api('key',{key:secret});keyConfigured=true;}
-      const r=await api('connection',{settings});state.settings=r.settings;$('#composer-model').textContent=r.settings.model || '选择模型';$('#connection-dot').classList.toggle('green',!!r.settings.baseUrl&&!!r.settings.model);result.textContent='连接设置已自动保存。';});
+    const settings=read(),secret=key.input.value.trim(),saveRemember=remember.input.checked,changedRemember=rememberDirty;key.input.value='';rememberDirty=false;
+    chain=chain.catch(()=>{}).then(async()=>{const r=await api('connection',{settings});state.settings=r.settings;
+      if(secret||changedRemember){const saved=await api('key',{baseUrl:settings.baseUrl,...(secret?{key:secret}:{}),remember:saveRemember});keyConfigured=saved.configured;keyRemembered=saved.remembered;}
+      remember.input.checked=keyRemembered;$('#composer-model').textContent=r.settings.model || '选择模型';$('#connection-dot').classList.toggle('green',!!r.settings.baseUrl&&!!r.settings.model);result.textContent=keyRemembered?'连接设置已保存，密钥已记住。':'连接设置已自动保存。';});
     return chain;
   }
   const changed=()=>{pending=true;result.textContent='正在保存连接设置…';clearTimeout(timer);timer=setTimeout(()=>save().catch(e=>{result.textContent=e.message;}),350);};
-  for(const input of grid.querySelectorAll('input,select')){input.addEventListener('input',changed);input.addEventListener('change',changed);}reasoning.input.onchange=changed;
+  for(const input of grid.querySelectorAll('input,select')){input.addEventListener('input',changed);input.addEventListener('change',changed);}reasoning.input.onchange=changed;remember.input.onchange=()=>{rememberDirty=true;changed();};
   connectionFlush=()=>save();
-  body.append(actions(button('保存连接',async()=>{try{await save(true);closeModal();toast('连接设置已保存。');}catch(e){result.textContent=e.message;}},'primary'),button('读取模型列表',async()=>{try{await save(true);result.textContent='正在读取模型列表…';const j=await api('models',{settings:read()});cfg.availableModels=j.models;fillModels();pending=true;await save();result.textContent=`读取到 ${j.models.length} 个模型。`;toast('模型列表已更新。');}catch(e){result.textContent=e.message;}}),button('清除本次密钥',async()=>{clearTimeout(timer);await save();await api('key',{key:''});keyConfigured=false;key.input.value='';toast('本次密钥已清除。');},'text-button')),result,element('p','about-prose','保存位置：'+dataDir+' / 连接 / 设置.json'));
+  body.append(actions(button('保存连接',async()=>{try{await save(true);closeModal();toast('连接设置已保存。');}catch(e){result.textContent=e.message;}},'primary'),button('读取模型列表',async()=>{try{await save(true);result.textContent='正在读取模型列表…';const j=await api('models',{settings:read()});cfg.availableModels=j.models;fillModels();pending=true;await save();result.textContent=`读取到 ${j.models.length} 个模型。`;toast('模型列表已更新。');}catch(e){result.textContent=e.message;}}),button('清除密钥（含本机保存）',async()=>{clearTimeout(timer);await save();await api('key',{baseUrl:read().baseUrl,clear:true});keyConfigured=false;keyRemembered=false;remember.input.checked=false;rememberDirty=false;key.input.value='';toast('密钥已清除。');},'text-button')),result,element('p','about-prose','保存位置：'+dataDir+' / 连接 / 设置.json'));
 }
 function openProfile(){
   const body=openModal('角色与世界资料','profile'),card=currentCard(),p=card?.profile || session().profile,grid=element('div','form-grid');
@@ -373,9 +374,9 @@ function editMessage(m){
 }
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.8：单步回撤与编辑重生成'),element('p','','撤回最近一次发送或重新生成，直接恢复本轮开始前的聊天、变量、账本、模式和便笺，并放回原输入。只保留一个回撤点，下次生成覆盖，使用后清除；从新版首次生成起记录。编辑保存后，重新生成按钮保持可见。'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏以适中宽度居中；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
+  prose.append(element('h3','','1.1.9：记住本机密钥'),element('p','','连接中勾选记住后，密钥由当前 Windows 用户加密保存到连接目录，重开自动读取；按服务地址隔离，可随时清除本机记录。未勾选时仍只保留到本次退出。'),element('h3','','单步回撤与编辑重生成'),element('p','','撤回最近一次发送或重新生成，直接恢复本轮开始前的聊天、变量、账本、模式和便笺，并放回原输入。只保留一个回撤点，下次生成覆盖，使用后清除；从新版首次生成起记录。编辑保存后，重新生成按钮保持可见。'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏以适中宽度居中；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
     element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。表单保存按钮可触发原卡的本机变量写入，服装资料按原卡规则保存。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
-    element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
+    element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。未勾选记住的密钥在退出时清除；已记住的密钥用当前 Windows 用户加密保存。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);
 }
 async function importCharacter(file){
@@ -419,5 +420,5 @@ function bind(){
   $('#backup-file').onchange=e=>{importBackup(e.target.files[0]).catch(e=>toast(e.message));e.target.value='';};$('#load-demo').onclick=loadDemo;
   $$('[data-starter]').forEach(b=>b.onclick=()=>{$('#message-input').value=b.dataset.starter;$('#message-input').focus();});
 }
-async function boot(){try{const b=await api('bootstrap');state=b.state;preset=b.preset;keyConfigured=b.keyConfigured;dataDir=b.dataDir;bind();render();if(b.notice)showError(b.notice);await repairStory();if(b.restoredView)restoreGenerationView(b.restoredView);else if(session().messages.length)scrollBottom();}catch(e){showError('载入出错：'+e.message);}}
+async function boot(){try{const b=await api('bootstrap');state=b.state;preset=b.preset;keyConfigured=b.keyConfigured;keyRemembered=b.keyRemembered;dataDir=b.dataDir;bind();render();if(b.notice)showError(b.notice);await repairStory();if(b.restoredView)restoreGenerationView(b.restoredView);else if(session().messages.length)scrollBottom();}catch(e){showError('载入出错：'+e.message);}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

@@ -4,6 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const crypto=require('node:crypto');
 const {Store}=require('./core/store.cjs');
+const {ApiKeyStore,origin:keyOrigin}=require('./core/api-key-store.cjs');
 const E=require('./core/engine.cjs');
 const provider=require('./core/provider.cjs');
 const Runtime=require('./core/card-runtime.cjs');
@@ -12,7 +13,10 @@ const {htmlDocument}=require('./core/card-frame.cjs');
 const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.ico':'image/x-icon'};
 const publicDir=path.join(__dirname,'public');
 function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
-  const store=new Store(dataDir),token=crypto.randomBytes(32).toString('hex');let apiKey='',origin='',preparing=false;const jobs=new Map(),frames=new Map();
+  const store=new Store(dataDir),keys=new ApiKeyStore(dataDir),token=crypto.randomBytes(32).toString('hex');let apiKey='',apiKeyOrigin='',origin='',preparing=false;const jobs=new Map(),frames=new Map();
+  const selectKey=base=>{const target=keyOrigin(base);if(apiKey&&!apiKeyOrigin){apiKeyOrigin=target;return apiKey;}if(target===apiKeyOrigin)return apiKey;apiKeyOrigin=target;apiKey='';if(target)try{apiKey=keys.load(base);}catch(e){store.notice=e.message;}return apiKey;};
+  const keyStatus=()=>{const configured=!!selectKey(store.state.settings.baseUrl);let remembered=false;try{remembered=keys.has(store.state.settings.baseUrl);}catch{}return {keyConfigured:configured,keyRemembered:remembered};};
+  try{apiKey=keys.load(store.state.settings.baseUrl);apiKeyOrigin=keyOrigin(store.state.settings.baseUrl);}catch(e){store.notice=[store.notice,e.message].filter(Boolean).join('\n');}
   const json=(res,status,body)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(body));};
   const readBody=async req=>{let size=0,chunks=[];for await(const c of req){size+=c.length;if(size>30*1024*1024)throw new Error('导入内容超过 30MB。');chunks.push(c);}try{return JSON.parse(Buffer.concat(chunks).toString('utf8')||'{}');}catch{throw new Error('JSON 格式有误。');}};
   const server=http.createServer(async(req,res)=>{
@@ -39,7 +43,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
       if(req.headers.origin && req.headers.origin!==origin)return json(res,403,{error:'来源地址不匹配。'});
       if(req.headers['sec-fetch-site']==='cross-site')return json(res,403,{error:'请在程序窗口操作。'});
       if(req.method==='GET' && url.pathname==='/api/bootstrap'){
-        const restoredView=store.restoredUndoView;store.restoredUndoView=null;return json(res,200,{state:store.snapshot(),undo:store.undoInfo(),restoredView,preset:E.preset,notice:store.notice,keyConfigured:!!apiKey,dataDir});
+        const restoredView=store.restoredUndoView;store.restoredUndoView=null;return json(res,200,{state:store.snapshot(),undo:store.undoInfo(),restoredView,preset:E.preset,notice:store.notice,...keyStatus(),dataDir});
       }
       if(req.method==='GET' && url.pathname==='/api/undo')return json(res,200,{undo:store.undoInfo()});
       if(req.method!=='POST')return json(res,405,{error:'请求方法不匹配。'});
@@ -55,11 +59,18 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           if(body.storyId!==store.state.activeId)throw Error('请在对应聊天中使用回撤。');
           return json(res,200,store.restoreUndo(String(body.id || ''),String(body.storyId || '')));
         }
-        case '/api/key':apiKey=String(body.key || '').slice(0,10000).trim();return json(res,200,{configured:!!apiKey});
-        case '/api/connection':return json(res,200,{settings:store.saveConnection(body.settings)});
+        case '/api/key': {
+          const base=String(body.baseUrl??store.state.settings.baseUrl),target=keyOrigin(base);selectKey(base);
+          if(body.clear===true){keys.remove(base);apiKey='';apiKeyOrigin=target;}
+          else{if(Object.hasOwn(body,'key')){apiKey=String(body.key||'').slice(0,10000).trim();apiKeyOrigin=target;}
+            if(body.remember===true){if(apiKey)keys.save(base,apiKey);else throw Error('请先填写 API 密钥。');}
+            else if(body.remember===false)keys.remove(base);}
+          return json(res,200,{configured:!!apiKey,remembered:keys.has(base)});
+        }
+        case '/api/connection': {const settings=store.saveConnection(body.settings);selectKey(settings.baseUrl);return json(res,200,{settings,...keyStatus()});}
         case '/api/models': {
           const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
-          try{return json(res,200,{models:await provider.models(body.settings || store.state.settings,apiKey,controller.signal)});}finally{clearTimeout(timer);}
+          try{const config=body.settings || store.state.settings;return json(res,200,{models:await provider.models(config,selectKey(config.baseUrl),controller.signal)});}finally{clearTimeout(timer);}
         }
         case '/api/import-character':return json(res,200,{profile:body.pngBase64?E.characterFromPng(Buffer.from(body.pngBase64,'base64')):E.importCharacter(body.json)});
         case '/api/import-worldbook':return json(res,200,{entries:E.normalizeWorldbook(body.json)});
@@ -125,6 +136,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           const state=E.normalizeState(body.state),session=state.sessions.find(s=>s.id===state.activeId);
           if(session.messages.at(-1)?.role!=='user')throw new Error('请先输入一条消息。');
           if(!state.settings.baseUrl || !state.settings.model)throw new Error('请先在“模型连接”里填写接口地址与模型名。');
+          const generationKey=selectKey(state.settings.baseUrl);
           if(session.id!==store.state.activeId||state.revision!==store.state.revision)throw Error('聊天状态刚有更新，请重新载入后再发送。');
           store.captureUndo(session.id,body.undoView,body.retry?'retry':'send');
           let prepared;preparing=true;try{prepared=await Runtime.prepare(state,session,E.effectivePrompts(state));}finally{preparing=false;}
@@ -143,7 +155,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           const emit=e=>{if(!disconnected)res.write(`data: ${JSON.stringify(e)}\n\n`);};
           emit({type:'start',jobId,messageId:answer.id,diagnostics:compiled.diagnostics,undo:store.undoInfo()});
           try {
-            const result=await provider.generate(state.settings,apiKey,compiled.request,controller.signal,e=>{if(e.type==='delta')answer.content+=e.text;if(e.type==='replace')answer.content=e.text;emit(e);});
+            const result=await provider.generate(state.settings,generationKey,compiled.request,controller.signal,e=>{if(e.type==='delta')answer.content+=e.text;if(e.type==='replace')answer.content=e.text;emit(e);});
             answer.content=result.content;answer.usage=result.usage;
             if(result.providerCall)answer.providerCall=result.providerCall;
             const beforeGlobals=structuredClone(state.library.globalVariables || {}),processed=await Runtime.complete(state,session,answer.content,prepared);
@@ -160,7 +172,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             if(session.mode==='chat' && session.chatAutoReturn!==false)session.mode='theater';
           } catch(error) {
             answer.status=controller.signal.aborted?'stopped':'error';
-            emit({type:'error',error:provider.cleanError(controller.signal.reason?.message || error.message,apiKey),stopped:controller.signal.aborted});
+            emit({type:'error',error:provider.cleanError(controller.signal.reason?.message || error.message,generationKey),stopped:controller.signal.aborted});
           } finally {
             clearTimeout(timer);jobs.delete(jobId);
             if(body.temporaryChatReplay)session.mode='theater';

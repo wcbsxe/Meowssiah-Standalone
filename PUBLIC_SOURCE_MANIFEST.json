@@ -1,7 +1,11 @@
 {
-  "version": "1.1.8",
+  "version": "1.1.9",
   "source": "maintained release source",
   "applicationFiles": [
+    {
+      "file": "app/core/api-key-store.cjs",
+      "sha256": "9872cfc23088f0327a9f0508939b4e837956f566d6ca02b7bb33ac4ed0325ab8"
+    },
     {
       "file": "app/core/card-frame.cjs",
       "sha256": "dac4e1cf2ee9f4105272b083c7bdf2786493f4eee5040c6534c9b0ad62b73b64"
@@ -76,7 +80,7 @@
     },
     {
       "file": "app/public/app.js",
-      "sha256": "fb370366ea2dd695db8d15f696d839726c79939d44f567e643fb1f638523378e"
+      "sha256": "ee14ad94ffc2252ee208e7d46a6aac5c73c740b44b090b6a1f8fb9499a327f32"
     },
     {
       "file": "app/public/frame-vendor.js",
@@ -88,7 +92,7 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "b8bce326f828cdb30950edba6fc4f3498f47bbc5dce4d09543aab6c53ede534c"
+      "sha256": "f47082698a937721f3e4aff934d9fab664fa67dc185b7d4799521689f70daf40"
     },
     {
       "file": "app/public/library-ui.js",
@@ -104,7 +108,7 @@
     },
     {
       "file": "app/server.cjs",
-      "sha256": "1f47157fb79aa93904dddd8f7db7f187c88c2f10f1b32ecf7cc7ae46269975cc"
+      "sha256": "313afd02a402862d86dba202b94b7ce06426b2e6a7efe23d3d89a197163f1eda"
     },
     {
       "file": "app/vendor/card-runtime.js",

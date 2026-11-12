@@ -70,6 +70,12 @@
       "tag": "v1.1.8",
       "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.8",
       "feature": "单步回撤生成前状态与原输入；修复编辑保存后重新生成按钮消失"
+    },
+    {
+      "version": "1.1.9",
+      "tag": "v1.1.9",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.9",
+      "feature": "本机加密记住密钥、重启自动读取与服务隔离；保持正文同轮 MVU"
     }
   ]
 }

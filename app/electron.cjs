@@ -2,6 +2,7 @@ const {app,BrowserWindow,Menu,shell}=require('electron');
 const path=require('node:path');
 const {startServer}=require('./server.cjs');
 let runtime;
+if(process.env.MEOW_USER_DATA_DIR)app.setPath('userData',process.env.MEOW_USER_DATA_DIR);
 if(!app.requestSingleInstanceLock())app.quit();
 else {
   let win;

@@ -7,7 +7,9 @@ class Store {
     fs.mkdirSync(dir,{recursive:true});
     this.state=defaultState();
     if(fs.existsSync(this.file)) {
-      try {this.state=normalizeState(JSON.parse(fs.readFileSync(this.file,'utf8')));}
+      try {const raw=JSON.parse(fs.readFileSync(this.file,'utf8'));
+        const old=path.join(dir,'workspace.before-1.1.json');if(!raw.library&&!fs.existsSync(old))fs.copyFileSync(this.file,old);
+        this.state=normalizeState(raw);}
       catch {
         fs.copyFileSync(this.file,path.join(dir,`workspace.corrupt-${Date.now()}.json`));
         try {this.state=normalizeState(JSON.parse(fs.readFileSync(this.previous,'utf8')));this.notice='主存档读取出错，已恢复上一份自动备份。出错文件已保留。';}

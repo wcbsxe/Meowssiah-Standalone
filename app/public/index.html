@@ -10,11 +10,14 @@
     <input id="search-stories" class="search" type="search" placeholder="搜索你的故事…" aria-label="搜索故事">
     <nav id="story-list" class="story-list" aria-label="故事列表"></nav>
     <div class="sidebar-bottom">
+      <button id="open-characters" class="nav-button"><span>♧</span> 角色卡库 <small id="character-library-count"></small></button>
+      <button id="open-worldbooks" class="nav-button"><span>▥</span> 世界书总库 <small id="worldbook-library-count"></small></button>
+      <button id="open-variables" class="nav-button"><span>ƒ</span> 变量与运行</button>
       <button id="open-presets" class="nav-button"><span>◈</span> 预设控制台 <small id="preset-count"></small></button>
       <button id="open-connection" class="nav-button"><span>⌘</span> 模型连接 <i id="connection-dot" class="dot"></i></button>
       <button id="open-backup" class="nav-button"><span>▤</span> 导入与备份</button>
       <div class="sidebar-footer"><button id="theme-toggle" class="text-button" aria-label="切换深浅主题">◐ 外观</button><button id="open-about" class="text-button">关于 / 迁移说明</button></div>
-      <div class="local-badge"><span class="dot green"></span> 本机独立运行 <span>v1.0</span></div>
+      <div class="local-badge"><span class="dot green"></span> 本机独立运行 <span>v1.1</span></div>
     </div>
   </aside>
   <main class="main">
@@ -37,5 +40,5 @@
 <dialog id="modal"><div class="modal-header"><div><span id="modal-kicker" class="eyebrow">MEOWSSIAH WORKSPACE</span><h2 id="modal-title"></h2></div><button id="close-modal" class="icon-button" aria-label="关闭窗口">×</button></div><div id="modal-body" class="modal-body"></div></dialog>
 <div id="toast" role="status" hidden></div>
 <input id="character-file" type="file" accept=".json,.png" hidden><input id="backup-file" type="file" accept=".json,.jsonl" hidden><input id="worldbook-file" type="file" accept=".json" hidden>
-<script src="/app.js"></script>
+<script src="/app.js"></script><script src="/library-ui.js"></script>
 </body></html>

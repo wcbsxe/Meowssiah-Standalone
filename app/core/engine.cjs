@@ -3,6 +3,8 @@ const {randomUUID} = require('node:crypto');
 const zlib = require('node:zlib');
 const preset = require('../data/preset.json');
 const Original=require('./original-runtime.cjs');
+const L=require('./library.cjs');
+const Runtime=require('./card-runtime.cjs');
 const text = (v, max=200000) => String(v ?? '').slice(0,max);
 const number = (v, fallback, min, max) => Number.isFinite(Number(v)) ? Math.max(min,Math.min(max,Number(v))) : fallback;
 const own = (o,k) => Object.prototype.hasOwnProperty.call(o || {},k);
@@ -12,6 +14,12 @@ function profile(input={}) {
   for (const k of ['name','userName','description','personality','scenario','persona','firstMessage','examples','worldBefore','worldAfter']) p[k]=text(input[k]);
   p.name ||= '小猫之神'; p.userName ||= '旅人';
   p.worldbook = normalizeWorldbook(input.worldbook || []);
+  p.regexes=Array.isArray(input.regexes)?JSON.parse(JSON.stringify(input.regexes)).slice(0,100):[];
+  p.helperScripts=Runtime.flattenScripts(input.helperScripts || []);
+  const material=JSON.stringify([p.worldbook,p.helperScripts,p.regexes,p.firstMessage]);
+  p.compat={mvu:typeof input.compat?.mvu==='boolean'?input.compat.mvu:/\[initvar\]|UpdateVariable|MagVarUpdate|\bMvu\b|mvu_zod/i.test(material),
+    ejs:typeof input.compat?.ejs==='boolean'?input.compat.ejs:material.includes('<%'),cardHtml:input.compat?.cardHtml!==false};
+  if(input.rawCard && typeof input.rawCard==='object')p.rawCard=JSON.parse(JSON.stringify(input.rawCard));
   return p;
 }
 function newSession(input={}) {
@@ -20,18 +28,19 @@ function newSession(input={}) {
 }
 function defaultState() {
   const s=newSession();
-  return {schemaVersion:1,revision:0,activeId:s.id,sessions:[s],promptStates:{},ui:{theme:'light'},
+  const state={schemaVersion:1,revision:0,activeId:s.id,sessions:[s],promptStates:{},ui:{theme:'light'},
     settings:{baseUrl:'',model:'',temperature:preset.parameters.temperature,topP:preset.parameters.top_p,
       maxTokens:Original.source.openai_max_tokens,contextChars:2000000,timeoutSeconds:180,sendReasoning:false,reasoningEffort:'low',requestMode:'original',toolChoice:'required',signatureMode:'original'}};
+  state.library=L.normalizeLibrary(null,state.sessions,profile,normalizeWorldbook);return state;
 }
 function normalizeWorldbook(input) {
   const entries=Array.isArray(input) ? input : Object.values(input?.entries || {});
-  return entries.slice(0,1000).map((e,i)=>({id:text(e.id ?? e.uid ?? i,100),name:text(e.name || e.comment || `资料 ${i+1}`,300),
+  return entries.slice(0,1000).map((e,i)=>({...JSON.parse(JSON.stringify(e)),id:text(e.id ?? e.uid ?? i,100),name:text(e.name || e.comment || `资料 ${i+1}`,300),
     content:text(e.content),keys:(Array.isArray(e.keys || e.key) ? e.keys || e.key : [e.keys || e.key || '']).map(k=>text(k,200)).filter(Boolean),
-    secondary:(Array.isArray(e.secondary || e.keysecondary) ? e.secondary || e.keysecondary : []).map(k=>text(k,200)).filter(Boolean),
+    secondary:(Array.isArray(e.secondary || e.secondary_keys || e.keysecondary) ? e.secondary || e.secondary_keys || e.keysecondary : []).map(k=>text(k,200)).filter(Boolean),
     selective:!!e.selective,constant:!!e.constant,enabled:e.enabled!==false && e.disable!==true,
     position:(e.position===1 || e.position==='after_char' || e.position==='after') ? 'after' : 'before',order:number(e.order ?? e.insertion_order,100,-10000,10000),
-    originalPosition:number(e.originalPosition ?? (typeof e.position==='number'?e.position:e.position==='after'?1:0),0,0,7),depth:number(e.depth,4,0,100),role:number(e.role,0,0,2),
+    originalPosition:number(e.originalPosition ?? e.extensions?.position ?? (typeof e.position==='number'?e.position:e.position==='after'?1:0),0,0,7),depth:number(e.depth ?? e.extensions?.depth,4,0,100),role:number(e.role ?? e.extensions?.role,0,0,2),
     caseSensitive:!!(e.case_sensitive || e.caseSensitive),regex:!!(e.use_regex || e.regex)}));
 }
 function normalizeState(input) {
@@ -57,6 +66,8 @@ function normalizeState(input) {
     n.title=text(s.title,100)||'未命名的故事';n.createdAt=number(s.createdAt,Date.now(),0,1e15);n.updatedAt=number(s.updatedAt,Date.now(),0,1e15);
     n.mode=s.mode==='chat'?'chat':'theater';n.deepThink=!!s.deepThink;n.note=text(s.note,10000);n.noteAutoClear=s.noteAutoClear!==false;
     n.chatAutoReturn=s.chatAutoReturn!==false;
+    n.characterId=text(s.characterId,120);
+    if(s.runtime && typeof s.runtime==='object')n.runtime=JSON.parse(JSON.stringify(s.runtime));
     if(s.hostMetadata && typeof s.hostMetadata==='object'){
       const raw=JSON.stringify(s.hostMetadata);if(raw.length>5000000)throw new Error('单个故事的原版账本超过 5MB。');n.hostMetadata=JSON.parse(raw);
     }
@@ -65,6 +76,10 @@ function normalizeState(input) {
       content:text(m.content,1000000),timestamp:number(m.timestamp,Date.now(),0,1e15),mode:m.mode==='chat'?'chat':'theater',
       status:['complete','stopped','error'].includes(m.status)?m.status:'complete',usage:sanitizeUsage(m.usage),
       ...(m.extra && typeof m.extra==='object'?{extra:JSON.parse(JSON.stringify(m.extra))}:{}),
+      ...(m.runtime && typeof m.runtime==='object'?{runtime:JSON.parse(JSON.stringify(m.runtime))}:{}),
+      ...(m.variables && typeof m.variables==='object'?{variables:JSON.parse(JSON.stringify(m.variables))}:{}),
+      ...(typeof m.renderedContent==='string'?{renderedContent:text(m.renderedContent,2000000)}:{}),
+      ...(typeof m.displayContent==='string'?{displayContent:text(m.displayContent,2000000)}:{}),
       ...(m.providerCall?.function?.name==='soliumbra_reply' ? {providerCall:{content:text(m.providerCall.content,1000000),
         function:{name:'soliumbra_reply',arguments:text(m.providerCall.function.arguments,2000000)},signature:text(m.providerCall.signature,500000)}} : {})}));
     return n;
@@ -72,6 +87,7 @@ function normalizeState(input) {
   if(!output.sessions.length) output.sessions=[newSession()];
   output.activeId=output.sessions.some(s=>s.id===input.activeId)?input.activeId:output.sessions[0].id;
   output.revision=number(input.revision,0,0,1e12);
+  output.library=L.normalizeLibrary(input.library,output.sessions,profile,normalizeWorldbook);
   return output;
 }
 function sanitizeUsage(v) {
@@ -95,17 +111,18 @@ function stripAuxiliary(raw) {
 function selectWorldbook(entries,messages) {
   const hay=messages.slice(-8).map(m=>m.content).join('\n');
   return entries.filter(e=>{
-    if(!e.enabled || e.regex) return false; // No arbitrary regular expressions from imported data.
+    if(!e.enabled || /\[initvar\]|\[InitialVariables\]/i.test(e.name) || e.regex) return false;
     if(e.constant) return true;
     const includes=k=>e.caseSensitive?hay.includes(k):hay.toLowerCase().includes(k.toLowerCase());
     return e.keys.some(includes) && (!e.selective || !e.secondary.length || e.secondary.some(includes));
   }).sort((a,b)=>a.order-b.order);
 }
-function compileOriginal(state,session){
-  const p=profile(session.profile), warnings=[], lastUser=session.messages.findLast(m=>m.role==='user')?.content || '';
+function compileOriginal(state,session,prepared=null){
+  const p=profile(prepared?.profile || L.resolveProfile(state,session)), warnings=[...(prepared?.warnings || [])], lastUser=session.messages.findLast(m=>m.role==='user')?.content || '';
+  if(prepared?.books)p.worldbook=prepared.books.flatMap(b=>b.entries.map(e=>({...e,sourceBook:b.name,sourceBookId:b.id})));
   const effective=effectivePrompts(state),byId=new Map(effective.map(p=>[p.id,p]));
   const settings=JSON.parse(JSON.stringify(Original.source));
-  for(const row of settings.prompts){const value=byId.get(row.identifier);if(value && !value.archivedConfig){row.content=value.content;row.enabled=value.enabled;}}
+  for(const row of settings.prompts){const value=byId.get(row.identifier);if(value && !value.archivedConfig){row.content=prepared?.promptStates?.[value.id]?.content ?? value.content;row.enabled=value.enabled;}}
   const order=settings.prompt_order.find(o=>o.character_id===100001).order;
   for(const row of order){const value=byId.get(row.identifier);if(value)row.enabled=value.enabled;}
   settings.extensions.SPreset.LogUpload={enabled:false,url:''};
@@ -119,7 +136,7 @@ function compileOriginal(state,session){
   for(const item of order){
     if(!item.enabled)continue;const row=settings.prompts.find(p=>p.identifier===item.identifier);if(!row)continue;
     if(row.identifier==='chatHistory'){
-      for(const m of cleanHistory)messages.push({role:m.role,content:m.role==='assistant'?stripAuxiliary(m.content):m.content});
+      for(const m of cleanHistory){const body=prepared?.history?.[m.id] ?? m.renderedContent ?? m.content;messages.push({role:m.role,content:m.role==='assistant'?stripAuxiliary(body):body});}
     }else{
       const content=expandMacros(row.marker?(slots[row.identifier] || ''):row.content,p,lastUser,warnings);
       // Unlike the native draft, preserve all catgodml markers until the original processor consumes them.
@@ -128,7 +145,7 @@ function compileOriginal(state,session){
       void content;if(raw)messages.push({role:row.role || 'system',content:raw});
     }
   }
-  const worldEntries=active.map(e=>({uid:e.id,world:'独立工作台',comment:e.name,content:expandMacros(e.content,p,lastUser,warnings),constant:e.constant,
+  const worldEntries=active.map(e=>({uid:e.id,world:e.sourceBook || '独立工作台',comment:e.name,content:expandMacros(e.content,p,lastUser,warnings),constant:e.constant,
     position:e.originalPosition,depth:e.depth,role:e.role}));
   if(p.worldBefore)worldEntries.push({uid:'manual-before',comment:'前置世界资料',content:p.worldBefore,constant:true,position:0,depth:4,role:0});
   if(p.worldAfter)worldEntries.push({uid:'manual-after',comment:'后置世界资料',content:p.worldAfter,constant:true,position:1,depth:4,role:0});
@@ -143,6 +160,7 @@ function compileOriginal(state,session){
   return {request:result.request,hostMetadata:result.metadata,extras:result.extras,diagnostics:{compiler:'original-spreset-v1',characters:chars,
     enabledPreferences:order.filter(x=>x.enabled).length,retainedMessages:cleanHistory.length,activeWorldbook:active.map(e=>e.name),
     warnings:[...new Set(warnings)],sourceScriptSHA256:Original.hashes.FinalRequestProcessing,
+    selectedWorldbooks:L.selectedBooks(state,session).map(b=>b.name),runtime:{mvu:p.compat.mvu,ejs:p.compat.ejs,schemaRegistered:!!prepared?.schemaRegistered},
     signatures:JSON.stringify(result.request).split('skip_thought_signature_validator').length-1}};
 }
 function parseReply(raw) {
@@ -176,7 +194,8 @@ function importCharacter(input) {
   const d=input?.data || input;
   if(!d || typeof d!=='object' || !(d.name || d.description || d.first_mes)) throw new Error('没有找到角色名称或角色描述，请选择角色卡 JSON 或 PNG。');
   return profile({name:d.name,description:d.description,personality:d.personality,scenario:d.scenario,firstMessage:d.first_mes,
-    examples:d.mes_example,worldbook:d.character_book?.entries || [],userName:'旅人'});
+    examples:d.mes_example,worldbook:d.character_book?.entries || [],userName:'旅人',regexes:d.extensions?.regex_scripts || [],
+    helperScripts:d.extensions?.tavern_helper?.scripts || [],rawCard:input});
 }
 function characterFromPng(buffer) {
   if(buffer.length>20*1024*1024 || buffer.subarray(0,8).toString('hex')!=='89504e470d0a1a0a') throw new Error('角色 PNG 格式不正确或超过 20MB。');

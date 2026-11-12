@@ -1,0 +1,31 @@
+{
+  "pins": [
+    {
+      "name": "mvu",
+      "repo": "MagicalAstrogy/MagVarUpdate",
+      "commit": "d03b7dc8a6ebf9bd611c7e2dc91f3b35462deebc",
+      "branch": "beta",
+      "license": "MIT",
+      "url": "https://github.com/MagicalAstrogy/MagVarUpdate"
+    },
+    {
+      "name": "mvu-zod",
+      "repo": "StageDog/tavern_resource",
+      "commit": "6fc46bab2e7d526d7ad4e7c7102209ae0763c440",
+      "license": "NOASSERTION"
+    },
+    {
+      "name": "prompt-template",
+      "repo": "zonde306/ST-Prompt-Template",
+      "commit": "d6f520d149aba146305b0b781ddd691d449c28d2",
+      "branch": "main",
+      "license": "AGPL-3.0",
+      "url": "https://github.com/zonde306/ST-Prompt-Template"
+    }
+  ],
+  "hashes": {
+    "app/vendor/card-runtime.js": "e0d083ed3e7893d13a52da1d9deb78e76b0bdb89fe947fb03652d2f4c0e6745e",
+    "app/public/frame-vendor.js": "b90b7d6fdcbec97da9b59ebc92580c55a2256037a1d86b48a44ebec21ab1760f"
+  },
+  "hostVersion": "1.1.0"
+}

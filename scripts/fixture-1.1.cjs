@@ -1,0 +1,11 @@
+function makeCard(){
+  const html=`<!doctype html><html><head><meta charset="utf-8"><style>body{font:14px system-ui;background:#f0eafa;border:1px solid #d9cde8;border-radius:12px;padding:18px;color:#4e3a65}button{border:0;border-radius:8px;background:#75608d;color:white;padding:7px 14px;margin-left:14px}</style></head><body><strong>角色卡原生状态栏</strong><p>好感度：<span id="aff">读取中</span><button id="plus">＋1</button></p><small>数据来自本条消息的 MVU 快照</small><script>function draw(){document.getElementById('aff').textContent=Mvu.getMvuData({type:'message',message_id:getMessageId()}).stat_data.好感度;}$(function(){draw();document.getElementById('plus').onclick=async function(){const data=Mvu.getMvuData({type:'message'});data.stat_data.好感度+=1;await Mvu.replaceMvuData(data,{type:'message'});draw();};});</script></body></html>`;
+  return {spec:'chara_card_v2',spec_version:'2.0',data:{name:'书店店主 · MVU/EJS 示例',description:'一位山间书店店主。',first_mes:'<game>“先坐下喝杯茶吧。”店主抬起头。</game><StatusPlaceHolderImpl/>',personality:'温和',scenario:'秋日黄昏',
+    character_book:{name:'店主内置变量',entries:[{id:0,name:'[initvar] 初始状态',enabled:false,constant:false,keys:[],content:'好感度: 10\n金钱: 20'},
+      {id:1,name:'[mvu] 当前状态',enabled:true,constant:true,keys:[],content:'当前状态：<%- JSON.stringify(getvar("stat_data")) %>。<% if(getvar("stat_data.好感度") >= 12){ %>店主把你当作熟客。<% } else { %>你们刚刚见面。<% } %>'}]},
+    extensions:{tavern_helper:{scripts:[{type:'script',id:'local-schema',name:'变量结构',enabled:true,content:'import {registerMvuSchema} from "https://raw.githubusercontent.com/StageDog/tavern_resource/main/dist/util/mvu_zod.js";const Schema=z.object({好感度:z.coerce.number().transform(x=>_.clamp(x,0,100)),金钱:z.coerce.number().min(0)});$(()=>registerMvuSchema(Schema));'}]},
+      regex_scripts:[{id:'status',scriptName:'状态栏',findRegex:'/<StatusPlaceHolderImpl\\s*\\/>/g',replaceString:'```html\n'+html+'\n```',placement:[2],disabled:false,markdownOnly:true,promptOnly:false},
+        {id:'hide-update',scriptName:'历史更新指令隐藏',findRegex:'/<UpdateVariable>[\\s\\S]*?<\\/UpdateVariable>/g',replaceString:'',placement:[2],disabled:false,markdownOnly:false,promptOnly:true}]}}};
+}
+function makeBook(){return {name:'山路公共设定',entries:{0:{comment:'天气',content:'山间一直下着细雨。',constant:true,disable:false,key:[],position:0}}};}
+module.exports={makeCard,makeBook};

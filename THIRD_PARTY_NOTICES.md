@@ -27,3 +27,14 @@ Electron 45.3.0，MIT 许可。Chromium 和相关第三方许可见发行目录�
 项目打包工具、依赖清单及精确版本见 `package-lock.json`。
 
 本包是本地独立宿主改装，不代表原预设作者或 Electron 项目的官方发行。
+
+## 1.1 运行组件
+
+本版使用固定上游模块，不声称原扩展在独立平台上全部兼容。对应原文许可位于 app/licenses，源码、修改与宿主适配随源码包提供。
+
+- MagicalAstrogy/MagVarUpdate @ d03b7dc8a6ebf9bd611c7e2dc91f3b35462deebc；来源 https://github.com/MagicalAstrogy/MagVarUpdate。
+- StageDog/tavern_resource @ 6fc46bab2e7d526d7ad4e7c7102209ae0763c440；来源 https://github.com/StageDog/tavern_resource。
+- zonde306/ST-Prompt-Template @ d6f520d149aba146305b0b781ddd691d449c28d2；来源 https://github.com/zonde306/ST-Prompt-Template。
+
+MagVarUpdate：MIT。MVU Zod / StageDog util：PolyForm Noncommercial 1.0.0，本包按个人非商业用途交付并保留完整声明。ST-Prompt-Template 的变量模块：AGPL-3.0；EJS 引擎原文声明 Apache-2.0。
+QuickJS-Emscripten、lodash、jQuery、YAML、Zod 等依赖的准确版本见 package-lock.json，许可保留在各依赖与生成包中。

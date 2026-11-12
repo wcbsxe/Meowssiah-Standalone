@@ -1,10 +1,22 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "source": "local delivered source snapshot",
   "applicationFiles": [
     {
+      "file": "app/core/card-frame.cjs",
+      "sha256": "df2c69a08cc80349b27d99080a0473d1a256ad9ab4d4572fe04ec0e3ea1f190a"
+    },
+    {
+      "file": "app/core/card-runtime.cjs",
+      "sha256": "d61a6c2d10a313f9f7d1b9c4b29857cbcd37c6d5cdd4a92deffd01455ef0e76b"
+    },
+    {
       "file": "app/core/engine.cjs",
-      "sha256": "4f6c1669cce3c73b1e0a60513f28ffb880441585f9e5be30f8311f838d3e48b7"
+      "sha256": "6f9c3ccf766d5b8e879d5a20c039a73c77c4f5b575d42355c673410f06518b71"
+    },
+    {
+      "file": "app/core/library.cjs",
+      "sha256": "16411b1271c4970950ebed6316788c63df7874123385b85837f9eaccacb238ef"
     },
     {
       "file": "app/core/original-runtime.cjs",
@@ -16,7 +28,11 @@
     },
     {
       "file": "app/core/store.cjs",
-      "sha256": "d9e6260c261953ef5deaccc5145ad68b8b265c9fcb73c184fd5183f442479ac7"
+      "sha256": "15392a1e3136d88130d77c699d076f402d2eec54d66d31160ddf5808ea02e1e6"
+    },
+    {
+      "file": "app/data/integrations.json",
+      "sha256": "53aaaf7857b9254621f5a710ab0c99a617b96b51ecfb63033f47b604d5bfae4e"
     },
     {
       "file": "app/data/original.json",
@@ -32,11 +48,27 @@
     },
     {
       "file": "app/electron.cjs",
-      "sha256": "d142fde6ee269fb74151fd7995b9ec80369ae1df2e1ffba37726c419aba86905"
+      "sha256": "bafb380e4acc70221d27a5854c72b8830efbb3a96d6e1c7ac84cd693c7d8ee09"
+    },
+    {
+      "file": "app/licenses/MagVarUpdate-MIT.txt",
+      "sha256": "47f7767a9980ac6664216671b531088a796df557a6bdffd23f4d8bac6af73c55"
+    },
+    {
+      "file": "app/licenses/MVU-Zod-PolyForm-Noncommercial.txt",
+      "sha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8"
+    },
+    {
+      "file": "app/licenses/ST-Prompt-Template-AGPL-3.0.txt",
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
     },
     {
       "file": "app/public/app.js",
-      "sha256": "dc374386c3c864f850f8cded65d28248d6b6a83dd2030df035dccec323369fea"
+      "sha256": "d36bade860e7b54705898b438983d94fd32fce512778076c24517d41be16986b"
+    },
+    {
+      "file": "app/public/frame-vendor.js",
+      "sha256": "b90b7d6fdcbec97da9b59ebc92580c55a2256037a1d86b48a44ebec21ab1760f"
     },
     {
       "file": "app/public/icon.ico",
@@ -44,7 +76,11 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "cfea2b5b19c10fe585d8e0cbdb957a2cc3502f4b6fca44ee7a5d37d7b5ab1407"
+      "sha256": "8c15ce038a9a73f904a3b0d175addea5f164fffc0d19351684eb6ec0182749b0"
+    },
+    {
+      "file": "app/public/library-ui.js",
+      "sha256": "c35bd02fb6b620672c870544010b929aa54b300f76f72848ae680f91b337d0c7"
     },
     {
       "file": "app/public/logo.svg",
@@ -52,11 +88,15 @@
     },
     {
       "file": "app/public/style.css",
-      "sha256": "d5d5ec0b5031133427393f4502b21554d204b43661f562180dd9f96f634a081e"
+      "sha256": "dc6b462c0c2aac5441054423938f6fa77ba6fa14632d68485a7934d7ad7e797f"
     },
     {
       "file": "app/server.cjs",
-      "sha256": "c34dd7d77300da193faa1c56b172ca7e1061904f2929582b6b1ee05691511d5b"
+      "sha256": "2c91b833cefdb242dc9d829841fa570d56447c6c2428266266974f1ab50680df"
+    },
+    {
+      "file": "app/vendor/card-runtime.js",
+      "sha256": "e0d083ed3e7893d13a52da1d9deb78e76b0bdb89fe947fb03652d2f4c0e6745e"
     }
   ]
 }

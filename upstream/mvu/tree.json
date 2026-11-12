@@ -1,0 +1,2598 @@
+{
+  "sha": "d03b7dc8a6ebf9bd611c7e2dc91f3b35462deebc",
+  "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/d03b7dc8a6ebf9bd611c7e2dc91f3b35462deebc",
+  "tree": [
+    {
+      "path": ".claude",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "86b18407fa481226d2d85f1b7b38bb4c29930b15",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/86b18407fa481226d2d85f1b7b38bb4c29930b15"
+    },
+    {
+      "path": ".claude/settings.local.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a44eae00a5434099c9863e01f3be7e25fd4755f9",
+      "size": 119,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a44eae00a5434099c9863e01f3be7e25fd4755f9"
+    },
+    {
+      "path": ".editorconfig",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b24661b54167d7a16402283994adebdf4e63e6ce",
+      "size": 392,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b24661b54167d7a16402283994adebdf4e63e6ce"
+    },
+    {
+      "path": ".gitattributes",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "560946323df62e0d5c3cc415ce592d6d55b72bf0",
+      "size": 113,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/560946323df62e0d5c3cc415ce592d6d55b72bf0"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dd52accd4c2f5d22105ba2e420553eed365e4bb7",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/dd52accd4c2f5d22105ba2e420553eed365e4bb7"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6fe817a7736907136b8d0cacb3a8e55c34b49316",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/6fe817a7736907136b8d0cacb3a8e55c34b49316"
+    },
+    {
+      "path": ".github/workflows/bundle.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd4b5e44a8c89d08166da2e3d6fff806ca6704e7",
+      "size": 1458,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/dd4b5e44a8c89d08166da2e3d6fff806ca6704e7"
+    },
+    {
+      "path": ".github/workflows/pr-test.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17230b4df994b4b3da4744b790a7daa3e630ea01",
+      "size": 10548,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/17230b4df994b4b3da4744b790a7daa3e630ea01"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "67c1e81d3aaa48f5eea64573440be0a39d8e9c86",
+      "size": 545,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/67c1e81d3aaa48f5eea64573440be0a39d8e9c86"
+    },
+    {
+      "path": ".gitmodules",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e0a5fc3d8f83c54ebfffc7897a91b10e406bfe5",
+      "size": 334,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9e0a5fc3d8f83c54ebfffc7897a91b10e406bfe5"
+    },
+    {
+      "path": ".prettierrc",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2621ffde1b1160ec423afb45006c15240db72beb",
+      "size": 255,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2621ffde1b1160ec423afb45006c15240db72beb"
+    },
+    {
+      "path": ".yarnrc.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3186f3f0795ab612d5508593672dc9ad94bccca0",
+      "size": 25,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3186f3f0795ab612d5508593672dc9ad94bccca0"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17005209bf3df877e9fb7a927542ca9863e851f5",
+      "size": 23808,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/17005209bf3df877e9fb7a927542ca9863e851f5"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd0320118496aa6eac62d169ef4f31eca49805f6",
+      "size": 1070,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/dd0320118496aa6eac62d169ef4f31eca49805f6"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7fefdfe950ba20a51115c60c3727cd185aaf4b0",
+      "size": 1283,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e7fefdfe950ba20a51115c60c3727cd185aaf4b0"
+    },
+    {
+      "path": "artifact",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c51717d5f1f176a9a1db4297fa707b03e9316f57",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/c51717d5f1f176a9a1db4297fa707b03e9316f57"
+    },
+    {
+      "path": "artifact/bundle.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b268825484f5034fa87ffd40a8abfa40c647250",
+      "size": 611598,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2b268825484f5034fa87ffd40a8abfa40c647250"
+    },
+    {
+      "path": "artifact/bundle.js.LICENSE.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af4391c00bbd5fc11b1ac13f50a81a2e136ec1d5",
+      "size": 107,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/af4391c00bbd5fc11b1ac13f50a81a2e136ec1d5"
+    },
+    {
+      "path": "artifact/bundle.js.map",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3306fd606e469c6afdadc8be2d4843ebcffe4d59",
+      "size": 1959425,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3306fd606e469c6afdadc8be2d4843ebcffe4d59"
+    },
+    {
+      "path": "auto-imports.zod.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24be87abc69506c93ff5326cc8b0871e3a34b585",
+      "size": 272,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/24be87abc69506c93ff5326cc8b0871e3a34b585"
+    },
+    {
+      "path": "doc",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2019de0fa69469906cee4bf2a641dfd91207ad57",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/2019de0fa69469906cee4bf2a641dfd91207ad57"
+    },
+    {
+      "path": "doc/generate.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c879d10aae5c7f8837b87c9d3f8aaeae3260ecbd",
+      "size": 28822,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c879d10aae5c7f8837b87c9d3f8aaeae3260ecbd"
+    },
+    {
+      "path": "doc/img.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd925f9884bd339d4b8cf05f1e67044946320086",
+      "size": 31618,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/dd925f9884bd339d4b8cf05f1e67044946320086"
+    },
+    {
+      "path": "doc/img_1.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "089c2f215c50d68ede9ca6ffdb41e50bf84ed634",
+      "size": 90492,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/089c2f215c50d68ede9ca6ffdb41e50bf84ed634"
+    },
+    {
+      "path": "doc/pi_multiprovider_integration.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6447deb06b82ff9cce7278af0ca3ca9caf408f68",
+      "size": 51122,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6447deb06b82ff9cce7278af0ca3ca9caf408f68"
+    },
+    {
+      "path": "doc/request_scoped_worldinfo_filter.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89af118781caf22b9afa554de385946b91069ddc",
+      "size": 6046,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/89af118781caf22b9afa554de385946b91069ddc"
+    },
+    {
+      "path": "doc/stat_var.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f01a3fb24e231c990a5b6c35f43706866cf5a6d7",
+      "size": 8246,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f01a3fb24e231c990a5b6c35f43706866cf5a6d7"
+    },
+    {
+      "path": "doc/supplementary-tutorial.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64964fd12d30759743ee8bdcc0f6371a98951395",
+      "size": 35194,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/64964fd12d30759743ee8bdcc0f6371a98951395"
+    },
+    {
+      "path": "doc/template.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b7a61963f656212596d05c626c5892a5be4e0cb",
+      "size": 11850,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2b7a61963f656212596d05c626c5892a5be4e0cb"
+    },
+    {
+      "path": "doc/title.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "221559d32ba34a38628f83eb846de7830182419e",
+      "size": 12193674,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/221559d32ba34a38628f83eb846de7830182419e"
+    },
+    {
+      "path": "doc/tutorial.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed76e137283f4b9ba284461c83c8a773446d74e1",
+      "size": 17130,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ed76e137283f4b9ba284461c83c8a773446d74e1"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0fdd65383ddc9ebcdecd318aea3876115b5489f2",
+      "size": 3421,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/0fdd65383ddc9ebcdecd318aea3876115b5489f2"
+    },
+    {
+      "path": "example",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "792c3588f98a0381d78d1474f35c19e1c7062402",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/792c3588f98a0381d78d1474f35c19e1c7062402"
+    },
+    {
+      "path": "example/Yuki.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "997ad4bde1a33a9cea2a35443ed9b58c44310d49",
+      "size": 3510,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/997ad4bde1a33a9cea2a35443ed9b58c44310d49"
+    },
+    {
+      "path": "example/artifact",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8598a75fee6bea3f01f989238710f91b849de843",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/8598a75fee6bea3f01f989238710f91b849de843"
+    },
+    {
+      "path": "example/artifact/青空 理.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f57fba1bcb9beee38a64853257dd0432ac10e75e",
+      "size": 1202728,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f57fba1bcb9beee38a64853257dd0432ac10e75e"
+    },
+    {
+      "path": "example/artifact/青空 理_cmd_parsed_update2.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0874e2610c74e504c2180d7a96c3ab58d23553ad",
+      "size": 1294944,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/0874e2610c74e504c2180d7a96c3ab58d23553ad"
+    },
+    {
+      "path": "example/artifact/青空 理_initvar_variant.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ce126549aa866f1943b549d4e27ca5e48be11b8",
+      "size": 1266440,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9ce126549aa866f1943b549d4e27ca5e48be11b8"
+    },
+    {
+      "path": "example/artifact/青空 理_mvu_update.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44db175dc65649820bc836e7d23d068ca9b1ce3d",
+      "size": 1234952,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/44db175dc65649820bc836e7d23d068ca9b1ce3d"
+    },
+    {
+      "path": "example/artifact/青空 理_plot.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c06b964ea6612decdf8cf4aaf20f8ee67241b46f",
+      "size": 1254752,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c06b964ea6612decdf8cf4aaf20f8ee67241b46f"
+    },
+    {
+      "path": "example/理理",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a4869497db5dc4ff17150ae655230b0e81100213",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/a4869497db5dc4ff17150ae655230b0e81100213"
+    },
+    {
+      "path": "example/理理/[initvar]初始变量1.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0467f8908b26e16e297c0dbf8edf7425e2991ec",
+      "size": 5840,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e0467f8908b26e16e297c0dbf8edf7425e2991ec"
+    },
+    {
+      "path": "example/理理/[initvar]初始变量2.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c38254995c5f98244a211e281bb98ce95626fa9",
+      "size": 265,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4c38254995c5f98244a211e281bb98ce95626fa9"
+    },
+    {
+      "path": "example/理理/[mvu_plot]格式强调-剧情演绎.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e85f8265547b4f946cfb77469528b9b02ee55050",
+      "size": 144,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e85f8265547b4f946cfb77469528b9b02ee55050"
+    },
+    {
+      "path": "example/理理/[mvu_update]变量更新规则.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "15d0d11b9bf92152d22896fe89b087a531dac54d",
+      "size": 1655,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/15d0d11b9bf92152d22896fe89b087a531dac54d"
+    },
+    {
+      "path": "example/理理/[mvu_update]格式强调-变量更新规则.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e96d518c8a3efc131ffc7a02b2206f598233d724",
+      "size": 362,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e96d518c8a3efc131ffc7a02b2206f598233d724"
+    },
+    {
+      "path": "example/理理/npc信息.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0572a7d04577e88ff79c6e3ff4db4fc9ba564ac",
+      "size": 1931,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a0572a7d04577e88ff79c6e3ff4db4fc9ba564ac"
+    },
+    {
+      "path": "example/理理/变量分阶段-好感度.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39d1506a4e6604dea7b249ed13034e0e1779b699",
+      "size": 28621,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/39d1506a4e6604dea7b249ed13034e0e1779b699"
+    },
+    {
+      "path": "example/理理/变量输出.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1b847f8e18a6ec23c0bdaad4dab9ecf3ae4dcf94",
+      "size": 166,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1b847f8e18a6ec23c0bdaad4dab9ecf3ae4dcf94"
+    },
+    {
+      "path": "example/理理/角色事件-告白.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a84d1c7f4b082dd6ccabf8022d7383d6afbf03b",
+      "size": 1534,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1a84d1c7f4b082dd6ccabf8022d7383d6afbf03b"
+    },
+    {
+      "path": "example/理理/角色信息.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8066a328b3bde2f6d2d9b7d1ec3f10aea1c08323",
+      "size": 12540,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/8066a328b3bde2f6d2d9b7d1ec3f10aea1c08323"
+    },
+    {
+      "path": "example_src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7149dd8e0b30f87e3b011069b9e2d486698fd12d",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/7149dd8e0b30f87e3b011069b9e2d486698fd12d"
+    },
+    {
+      "path": "example_src/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8c141469ad0976ecde85f4b32a4ffdad8f7eafd3",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/8c141469ad0976ecde85f4b32a4ffdad8f7eafd3"
+    },
+    {
+      "path": "example_src/src/main.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45eef816e846efbcc82758feee65ef1339f12036",
+      "size": 11896,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/45eef816e846efbcc82758feee65ef1339f12036"
+    },
+    {
+      "path": "example_src/status.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00cdf799840a07a21c78a4014cc067b4a2f7bdfc",
+      "size": 45861,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/00cdf799840a07a21c78a4014cc067b4a2f7bdfc"
+    },
+    {
+      "path": "example_src/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cfcbb44df4154a57b6ef7d37e9b683f552e0d0ff",
+      "size": 1092,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/cfcbb44df4154a57b6ef7d37e9b683f552e0d0ff"
+    },
+    {
+      "path": "example_src/webpack.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2e0a5857db4acec8d2b8167e2b17e679694d0cf",
+      "size": 1096,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a2e0a5857db4acec8d2b8167e2b17e679694d0cf"
+    },
+    {
+      "path": "global.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2cae789f819a10522c5aea04c10df0620d78275f",
+      "size": 1152,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2cae789f819a10522c5aea04c10df0620d78275f"
+    },
+    {
+      "path": "jest.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3033457fd56d338d8dee210017128c881fb38d89",
+      "size": 1124,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3033457fd56d338d8dee210017128c881fb38d89"
+    },
+    {
+      "path": "jest.pi-live.config.cjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "991ab7ee04094aaaeb62d700dcd9c8cf474e1cb1",
+      "size": 918,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/991ab7ee04094aaaeb62d700dcd9c8cf474e1cb1"
+    },
+    {
+      "path": "override_plan.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1df4341a61c6b7aa4638faaa4c48ce605ae4cb69",
+      "size": 24790,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1df4341a61c6b7aa4638faaa4c48ce605ae4cb69"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1b0d2ed33235790c791871c92c09cd0a722b5087",
+      "size": 5066,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1b0d2ed33235790c791871c92c09cd0a722b5087"
+    },
+    {
+      "path": "postcss.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc21e9b5ccd6160edf43cb7a2234d8ca84928eea",
+      "size": 198,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bc21e9b5ccd6160edf43cb7a2234d8ca84928eea"
+    },
+    {
+      "path": "ref",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c07a9aa62de86b18c50def29f120f96a3fe2d7fc",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/c07a9aa62de86b18c50def29f120f96a3fe2d7fc"
+    },
+    {
+      "path": "ref/template.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7d706e3d47c0b692125d6143a29c63ad9ef52644",
+      "size": 5168,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7d706e3d47c0b692125d6143a29c63ad9ef52644"
+    },
+    {
+      "path": "slash-runner",
+      "mode": "160000",
+      "type": "commit",
+      "sha": "c1d0953bf1a5ca4ff28eea513fc1362eef81b80c"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "25d4a144faf19a4d531cad390f0ea7a7967691e5",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/25d4a144faf19a4d531cad390f0ea7a7967691e5"
+    },
+    {
+      "path": "src/button.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9de427fbccd99287a59401b5b27ec7de27a4cfbb",
+      "size": 26733,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9de427fbccd99287a59401b5b27ec7de27a4cfbb"
+    },
+    {
+      "path": "src/function",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "348c1a419e5034b0df8e7e3e0a779f56ced71ac8",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/348c1a419e5034b0df8e7e3e0a779f56ced71ac8"
+    },
+    {
+      "path": "src/function/character_override",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4eea905ea5b20337cad4a87b224d602a228bfa07",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/4eea905ea5b20337cad4a87b224d602a228bfa07"
+    },
+    {
+      "path": "src/function/character_override/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6aba4a7a3801797d6dfbf3ba42eeb5a08b919a1d",
+      "size": 22491,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6aba4a7a3801797d6dfbf3ba42eeb5a08b919a1d"
+    },
+    {
+      "path": "src/function/character_override/schema.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "29e610398758463e54e9200acf5a3b9c67f53c07",
+      "size": 7389,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/29e610398758463e54e9200acf5a3b9c67f53c07"
+    },
+    {
+      "path": "src/function/chat_lifecycle.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1af8b47ed1a0a3c0264d51d9eaea19571e1e3f2c",
+      "size": 549,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1af8b47ed1a0a3c0264d51d9eaea19571e1e3f2c"
+    },
+    {
+      "path": "src/function/cleanup",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "452720792a1cbb25fc6108f0b14e4a7d49339f6a",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/452720792a1cbb25fc6108f0b14e4a7d49339f6a"
+    },
+    {
+      "path": "src/function/cleanup/chat_variables.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c77cee8eef6305d1cdcc1d132eec871253e80d25",
+      "size": 612,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c77cee8eef6305d1cdcc1d132eec871253e80d25"
+    },
+    {
+      "path": "src/function/cleanup/cleanup_variables.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fa1dd2cc678aaaf4a78dda007b4a5ca31021e9f",
+      "size": 1940,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4fa1dd2cc678aaaf4a78dda007b4a5ca31021e9f"
+    },
+    {
+      "path": "src/function/cleanup/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8f3a7cd13965bfa1cb05b34f5764f694f8b523f",
+      "size": 2118,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b8f3a7cd13965bfa1cb05b34f5764f694f8b523f"
+    },
+    {
+      "path": "src/function/cleanup/legacy_chat.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e80cd5e580b49ced150aea02e2c611d1cdced418",
+      "size": 3809,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e80cd5e580b49ced150aea02e2c611d1cdced418"
+    },
+    {
+      "path": "src/function/cleanup/restore_variables.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95c3250deb02595b82fdd1fa28168a1291188c5d",
+      "size": 4314,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/95c3250deb02595b82fdd1fa28168a1291188c5d"
+    },
+    {
+      "path": "src/function/exported_events.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eea9feb1ae214a59362917cf5fceef471b75b9cf",
+      "size": 993,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/eea9feb1ae214a59362917cf5fceef471b75b9cf"
+    },
+    {
+      "path": "src/function/function_call.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6503d278f7fc42329a0a187d1c5a192c6deb863e",
+      "size": 20639,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6503d278f7fc42329a0a187d1c5a192c6deb863e"
+    },
+    {
+      "path": "src/function/global",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e6a07822efb94a743b292190b74b726f2328b421",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/e6a07822efb94a743b292190b74b726f2328b421"
+    },
+    {
+      "path": "src/function/global/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "caf3097b1b516c202d32f7faf5eb58cc166295c9",
+      "size": 7805,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/caf3097b1b516c202d32f7faf5eb58cc166295c9"
+    },
+    {
+      "path": "src/function/initvar",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "660ce79796709ecd801a7a45d8f59d4eb8557fef",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/660ce79796709ecd801a7a45d8f59d4eb8557fef"
+    },
+    {
+      "path": "src/function/initvar/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a78601deb1be79ba7cf4118024c0e084f4e621dd",
+      "size": 590,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a78601deb1be79ba7cf4118024c0e084f4e621dd"
+    },
+    {
+      "path": "src/function/initvar/variable_init.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c3ddcb5f1d64c09cdea4b5151b99ca408d561598",
+      "size": 15882,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c3ddcb5f1d64c09cdea4b5151b99ca408d561598"
+    },
+    {
+      "path": "src/function/is_extra_model_supported.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d6bbaa2b7ff53abf888b1954da077d9956eba5e",
+      "size": 632,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9d6bbaa2b7ff53abf888b1954da077d9956eba5e"
+    },
+    {
+      "path": "src/function/is_function_calling_supported.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "031e6d415a5f8133937abcd1750d7a2dcf173051",
+      "size": 970,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/031e6d415a5f8133937abcd1750d7a2dcf173051"
+    },
+    {
+      "path": "src/function/notification",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "920271a780183f921a353fca52ab75e446fdbb37",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/920271a780183f921a353fca52ab75e446fdbb37"
+    },
+    {
+      "path": "src/function/notification/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "461cfc5894549f76fa2771711a2ae58f279711af",
+      "size": 2548,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/461cfc5894549f76fa2771711a2ae58f279711af"
+    },
+    {
+      "path": "src/function/request",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "06805a278cb8ecc1da59aa081eb403ead5b76f5c",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/06805a278cb8ecc1da59aa081eb403ead5b76f5c"
+    },
+    {
+      "path": "src/function/request/entry_comment_regex.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86d4edc5e6a31b272b858677a6bbaa2442873d23",
+      "size": 923,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/86d4edc5e6a31b272b858677a6bbaa2442873d23"
+    },
+    {
+      "path": "src/function/request/extra_model_request_override.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6a0a364137581ae71c179d46fb6c734259ae4ca",
+      "size": 1263,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a6a0a364137581ae71c179d46fb6c734259ae4ca"
+    },
+    {
+      "path": "src/function/request/filter_entries.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b2d30fd71ba60a5b7551e2d9e12aa50f4ad96df9",
+      "size": 11403,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b2d30fd71ba60a5b7551e2d9e12aa50f4ad96df9"
+    },
+    {
+      "path": "src/function/request/filter_prompts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89e8c9894114a7b90c3fecdc94e77c8f2d442913",
+      "size": 1086,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/89e8c9894114a7b90c3fecdc94e77c8f2d442913"
+    },
+    {
+      "path": "src/function/request/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b36cd23421a502031e82f8762126c06b3c631c58",
+      "size": 1754,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b36cd23421a502031e82f8762126c06b3c631c58"
+    },
+    {
+      "path": "src/function/request/worldinfo_request.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50f780a241f896eeb7e7307ec74df8c0388d808e",
+      "size": 6975,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/50f780a241f896eeb7e7307ec74df8c0388d808e"
+    },
+    {
+      "path": "src/function/request/worldinfo_scan.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12a7769b93996ed12eda8f303da043a912e9ec35",
+      "size": 9384,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/12a7769b93996ed12eda8f303da043a912e9ec35"
+    },
+    {
+      "path": "src/function/schema.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a9374947f6ce794df93cab8d2e6ef5b6c047c989",
+      "size": 12755,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a9374947f6ce794df93cab8d2e6ef5b6c047c989"
+    },
+    {
+      "path": "src/function/update",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "26b3b2527843003f187e692bb733d2ddbcf0afff",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/26b3b2527843003f187e692bb733d2ddbcf0afff"
+    },
+    {
+      "path": "src/function/update/extra_model_api_profiles.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a8239b96b30a49b8c48b5aec020b28387c5bcce",
+      "size": 28136,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/8a8239b96b30a49b8c48b5aec020b28387c5bcce"
+    },
+    {
+      "path": "src/function/update/extra_model_preset.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95513103edfe333965d1c77d70cebc1d35dd7ef2",
+      "size": 8783,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/95513103edfe333965d1c77d70cebc1d35dd7ef2"
+    },
+    {
+      "path": "src/function/update/incremental_repair.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0500f2d74cd8b62b88b6529b19b7aa48e0bd44f",
+      "size": 35285,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e0500f2d74cd8b62b88b6529b19b7aa48e0bd44f"
+    },
+    {
+      "path": "src/function/update/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03de1b59384910dca02d4f3c7b1f4a71ff07fabf",
+      "size": 1787,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/03de1b59384910dca02d4f3c7b1f4a71ff07fabf"
+    },
+    {
+      "path": "src/function/update/invoke_extra_model.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c099dd34dcbddbcc97c29685fda0a54feff0f06e",
+      "size": 42118,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c099dd34dcbddbcc97c29685fda0a54feff0f06e"
+    },
+    {
+      "path": "src/function/update/model_list.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "75a2260e71be731d9c39e222211942e44a0300bd",
+      "size": 27724,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/75a2260e71be731d9c39e222211942e44a0300bd"
+    },
+    {
+      "path": "src/function/update/on_message_received.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1d6369d996008f704d46ee3b2b5ece1b878b4de8",
+      "size": 6858,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1d6369d996008f704d46ee3b2b5ece1b878b4de8"
+    },
+    {
+      "path": "src/function/update/pi",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "46a3e5b99d0262bd41abaf685b5f5cc595b58474",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/46a3e5b99d0262bd41abaf685b5f5cc595b58474"
+    },
+    {
+      "path": "src/function/update/pi/abort_signal.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef301ec6a54173496ce490aa9b66a4d009af2f50",
+      "size": 3232,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ef301ec6a54173496ce490aa9b66a4d009af2f50"
+    },
+    {
+      "path": "src/function/update/pi/config_parser.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a405cc30dabd31cba0a84529a930cc502cfcde2",
+      "size": 3079,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/0a405cc30dabd31cba0a84529a930cc502cfcde2"
+    },
+    {
+      "path": "src/function/update/pi/context_adapter.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e63bc63a0bd2a6eda45991bac6b8a6bae08ba24",
+      "size": 29014,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7e63bc63a0bd2a6eda45991bac6b8a6bae08ba24"
+    },
+    {
+      "path": "src/function/update/pi/controller_registry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f874a2411aa61116b88d9dc0291fa39e825ffe6a",
+      "size": 8037,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f874a2411aa61116b88d9dc0291fa39e825ffe6a"
+    },
+    {
+      "path": "src/function/update/pi/credential_refs.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae78cc97c2ad423a6b3f7159bdc1e8daa781f1b1",
+      "size": 1630,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ae78cc97c2ad423a6b3f7159bdc1e8daa781f1b1"
+    },
+    {
+      "path": "src/function/update/pi/credential_store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36743fd340919e86aae04a5a50e93a2300f3c22e",
+      "size": 14687,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/36743fd340919e86aae04a5a50e93a2300f3c22e"
+    },
+    {
+      "path": "src/function/update/pi/error_localization.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "591b4683709e9712a7f01444827f22307194c111",
+      "size": 15593,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/591b4683709e9712a7f01444827f22307194c111"
+    },
+    {
+      "path": "src/function/update/pi/feature_flag.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac23c53c6d219607cb20f956a6d3f1a82e6a0069",
+      "size": 524,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ac23c53c6d219607cb20f956a6d3f1a82e6a0069"
+    },
+    {
+      "path": "src/function/update/pi/google_proxy_adapter.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44b7b400228d03f25b8c44cd961d906750e3614c",
+      "size": 27198,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/44b7b400228d03f25b8c44cd961d906750e3614c"
+    },
+    {
+      "path": "src/function/update/pi/model_resolver.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9a28d17ab4686509f75cb340cdf26d789ded2c0",
+      "size": 15024,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f9a28d17ab4686509f75cb340cdf26d789ded2c0"
+    },
+    {
+      "path": "src/function/update/pi/non_streaming_fetch.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c00175ac4e173e6ded948fe62f4a777bfd62fae1",
+      "size": 9008,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c00175ac4e173e6ded948fe62f4a777bfd62fae1"
+    },
+    {
+      "path": "src/function/update/pi/oauth.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7ebdcf8eecde49985964e12f81922f7333a41c5",
+      "size": 36033,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c7ebdcf8eecde49985964e12f81922f7333a41c5"
+    },
+    {
+      "path": "src/function/update/pi/payload.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dceb4cb55037416fa6782d0ae1cdb7616c5a3f0c",
+      "size": 12402,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/dceb4cb55037416fa6782d0ae1cdb7616c5a3f0c"
+    },
+    {
+      "path": "src/function/update/pi/pi_gateway.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "737f837f49bb5d9fa446bda3f770a7f1d44d7eaa",
+      "size": 5860,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/737f837f49bb5d9fa446bda3f770a7f1d44d7eaa"
+    },
+    {
+      "path": "src/function/update/pi/prompt_capture.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0328368863176e2c17a5b6719bfbd47b00a3e75f",
+      "size": 12203,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/0328368863176e2c17a5b6719bfbd47b00a3e75f"
+    },
+    {
+      "path": "src/function/update/pi/provider_registry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "706b9b9c34ddfd5b9205f1c0de714a736757530d",
+      "size": 26179,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/706b9b9c34ddfd5b9205f1c0de714a736757530d"
+    },
+    {
+      "path": "src/function/update/pi/provider_target.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a12c67b97959541c631ab3ada352dff7b35d2d59",
+      "size": 25888,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a12c67b97959541c631ab3ada352dff7b35d2d59"
+    },
+    {
+      "path": "src/function/update/pi/result_adapter.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5795e42200b583ea49bf131fead9ea6829f6acde",
+      "size": 7046,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5795e42200b583ea49bf131fead9ea6829f6acde"
+    },
+    {
+      "path": "src/function/update/pi/runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8f4a42cc6d41ec9ae731fa9e40261490026961e",
+      "size": 38609,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b8f4a42cc6d41ec9ae731fa9e40261490026961e"
+    },
+    {
+      "path": "src/function/update/pi/sillytavern_proxy.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5c61d9c75d567e6fbc33e5e63caf2d9b7923337",
+      "size": 19947,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f5c61d9c75d567e6fbc33e5e63caf2d9b7923337"
+    },
+    {
+      "path": "src/function/update/pi/system_messages.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d50009a621ecb2b0947abb0511c45a3c15d0e83a",
+      "size": 12940,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d50009a621ecb2b0947abb0511c45a3c15d0e83a"
+    },
+    {
+      "path": "src/function/update/pi/thinking.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ca31c5ca5545ff43317131289a9f11299e4b70e",
+      "size": 1265,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7ca31c5ca5545ff43317131289a9f11299e4b70e"
+    },
+    {
+      "path": "src/function/update/pi/thinking_setting.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a54a7540b863bf80e3af40628d3c2b31f7e963eb",
+      "size": 674,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a54a7540b863bf80e3af40628d3c2b31f7e963eb"
+    },
+    {
+      "path": "src/function/update/pi/token_preflight.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbc34492993e12b1a8c840ec508e67f81319cebf",
+      "size": 9272,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/cbc34492993e12b1a8c840ec508e67f81319cebf"
+    },
+    {
+      "path": "src/function/update/pi/tool_choice.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "033e2efb3f0491af956009e09e8924392781c878",
+      "size": 2080,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/033e2efb3f0491af956009e09e8924392781c878"
+    },
+    {
+      "path": "src/function/update/structured_update.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eed8c6149da827cb1ec4edfa6cd2de69b02a9e1d",
+      "size": 15026,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/eed8c6149da827cb1ec4edfa6cd2de69b02a9e1d"
+    },
+    {
+      "path": "src/function/update_variables.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d14ac824e83afd59eeca806469c998facecea35a",
+      "size": 76429,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d14ac824e83afd59eeca806469c998facecea35a"
+    },
+    {
+      "path": "src/i18n",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cbc15221e30e14da69b3e45b4a036d5a54cc1622",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/cbc15221e30e14da69b3e45b4a036d5a54cc1622"
+    },
+    {
+      "path": "src/i18n/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "530bd0bb89810319b01eb1dd7424969b92bf4c33",
+      "size": 2595,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/530bd0bb89810319b01eb1dd7424969b92bf4c33"
+    },
+    {
+      "path": "src/i18n/messages",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b162e66fb328b86e6ee2db1f92ecc586943f2974",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/b162e66fb328b86e6ee2db1f92ecc586943f2974"
+    },
+    {
+      "path": "src/i18n/messages/common.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5958ee7f520aa5e5d4d04ae46f01a3b984f3412f",
+      "size": 570,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5958ee7f520aa5e5d4d04ae46f01a3b984f3412f"
+    },
+    {
+      "path": "src/i18n/messages/panel.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95aafc7bf56d8336fda47283f333ced50b46a3ac",
+      "size": 42761,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/95aafc7bf56d8336fda47283f333ced50b46a3ac"
+    },
+    {
+      "path": "src/i18n/messages/runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a103e19fbf64301cf9f14a30c608e6548e03cef",
+      "size": 58548,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6a103e19fbf64301cf9f14a30c608e6548e03cef"
+    },
+    {
+      "path": "src/i18n/messages/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dcc53b3d45f15232d3929176fca095baa4c17e20",
+      "size": 340,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/dcc53b3d45f15232d3929176fca095baa4c17e20"
+    },
+    {
+      "path": "src/jest.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4350e4e84e461cd21ea2383145a76b9bea3de207",
+      "size": 198,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4350e4e84e461cd21ea2383145a76b9bea3de207"
+    },
+    {
+      "path": "src/main.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68c4efd2ceb617836a08b0b9504378c86173a0ec",
+      "size": 5645,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/68c4efd2ceb617836a08b0b9504378c86173a0ec"
+    },
+    {
+      "path": "src/normalize_base_url.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6129741158ed1fdb96ba35e1ab97fffb9484a6b5",
+      "size": 459,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6129741158ed1fdb96ba35e1ab97fffb9484a6b5"
+    },
+    {
+      "path": "src/panel",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3a9dfa6304a57b28251a2de4fa7d86d4262c3ba2",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/3a9dfa6304a57b28251a2de4fa7d86d4262c3ba2"
+    },
+    {
+      "path": "src/panel/Button.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "304bf0b95e6282d97f336420b38b1ea97551399d",
+      "size": 1474,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/304bf0b95e6282d97f336420b38b1ea97551399d"
+    },
+    {
+      "path": "src/panel/CharacterOverride.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81a80fc20a3a6eb5190b8d30bf2a8272e5e591bb",
+      "size": 9624,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/81a80fc20a3a6eb5190b8d30bf2a8272e5e591bb"
+    },
+    {
+      "path": "src/panel/Cleanup.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6a15cbfcfce34a1dad2daf40c774f18bea53dea",
+      "size": 2310,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a6a15cbfcfce34a1dad2daf40c774f18bea53dea"
+    },
+    {
+      "path": "src/panel/Compatibility.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "615dd4d60813722f31244a3d7fa03c02c379f36e",
+      "size": 5459,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/615dd4d60813722f31244a3d7fa03c02c379f36e"
+    },
+    {
+      "path": "src/panel/Notification.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7f6ecf3920ec987b5af96d0c792f4c6dbb6a134",
+      "size": 1256,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f7f6ecf3920ec987b5af96d0c792f4c6dbb6a134"
+    },
+    {
+      "path": "src/panel/Panel.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a4c8e8583ad58023795795448c5f42e849207232",
+      "size": 1183,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a4c8e8583ad58023795795448c5f42e849207232"
+    },
+    {
+      "path": "src/panel/Update.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a940ca1aa1686143947e245fd88d2c57c50ab44",
+      "size": 1843,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9a940ca1aa1686143947e245fd88d2c57c50ab44"
+    },
+    {
+      "path": "src/panel/Version.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4130b3fde0d16247dff297b4006839b5833f1c8",
+      "size": 545,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f4130b3fde0d16247dff297b4006839b5833f1c8"
+    },
+    {
+      "path": "src/panel/character_override_help.en.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de5f3207119244c6c6f6558ead96a8f5c20f4e89",
+      "size": 1295,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/de5f3207119244c6c6f6558ead96a8f5c20f4e89"
+    },
+    {
+      "path": "src/panel/character_override_help.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "808b0b16de3541a65acc036de028ef55680e9123",
+      "size": 1105,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/808b0b16de3541a65acc036de028ef55680e9123"
+    },
+    {
+      "path": "src/panel/compatibility_sandas_message.en.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "deb95564307fab313d4e1b4f5a69bc56c96baca1",
+      "size": 85,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/deb95564307fab313d4e1b4f5a69bc56c96baca1"
+    },
+    {
+      "path": "src/panel/compatibility_sandas_message.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "14191b6f5f18e5dc4ad6e0e6f194afa39602be90",
+      "size": 89,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/14191b6f5f18e5dc4ad6e0e6f194afa39602be90"
+    },
+    {
+      "path": "src/panel/component",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8d5e3fba3c98bf8197a13287f7ca2f4ea94172ce",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/8d5e3fba3c98bf8197a13287f7ca2f4ea94172ce"
+    },
+    {
+      "path": "src/panel/component/Checkbox.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd496cb5bc9a0f6dac75deccbf5ddbeb761703e4",
+      "size": 413,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/dd496cb5bc9a0f6dac75deccbf5ddbeb761703e4"
+    },
+    {
+      "path": "src/panel/component/Detail.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7857c8f26c9096a115771a10f9ab9f801ac2f2d2",
+      "size": 1301,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7857c8f26c9096a115771a10f9ab9f801ac2f2d2"
+    },
+    {
+      "path": "src/panel/component/Field.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b8385ec568e256f79e03556473bd74651f547b6",
+      "size": 812,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2b8385ec568e256f79e03556473bd74651f547b6"
+    },
+    {
+      "path": "src/panel/component/HelpIcon.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "361272065c0d3b64e3b70c20ff90c70ad547b988",
+      "size": 561,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/361272065c0d3b64e3b70c20ff90c70ad547b988"
+    },
+    {
+      "path": "src/panel/component/ModelSelect.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df6e90e8aef5c6a5631395bc89382c3c0d226d9b",
+      "size": 5571,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/df6e90e8aef5c6a5631395bc89382c3c0d226d9b"
+    },
+    {
+      "path": "src/panel/component/OverrideBadge.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ef1c8f5087720b3b0fd2c3ee712fa8a1f654264",
+      "size": 1338,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5ef1c8f5087720b3b0fd2c3ee712fa8a1f654264"
+    },
+    {
+      "path": "src/panel/component/RangeNumber.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e2cde7831b4e7c8b41313cf0f7a01e9932f40b3",
+      "size": 1599,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3e2cde7831b4e7c8b41313cf0f7a01e9932f40b3"
+    },
+    {
+      "path": "src/panel/component/Section.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf196058355cdbd888bd71731f9a986e5461a972",
+      "size": 992,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bf196058355cdbd888bd71731f9a986e5461a972"
+    },
+    {
+      "path": "src/panel/component/Select.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fce83187e2ba0c272f16897d39c33e5a17054fa6",
+      "size": 722,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/fce83187e2ba0c272f16897d39c33e5a17054fa6"
+    },
+    {
+      "path": "src/panel/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8d9fb7bb90ede8769fb4629ec48d0c8c80d7142",
+      "size": 600,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f8d9fb7bb90ede8769fb4629ec48d0c8c80d7142"
+    },
+    {
+      "path": "src/panel/open_source_licenses.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c1b3b29fe487ca114c4f6701fa1a2d13d7c7d88b",
+      "size": 4588,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c1b3b29fe487ca114c4f6701fa1a2d13d7c7d88b"
+    },
+    {
+      "path": "src/panel/update",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "00aba3f942ea07efb5e0d7af90c43672aa5746c9",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/00aba3f942ea07efb5e0d7af90c43672aa5746c9"
+    },
+    {
+      "path": "src/panel/update/ApiOptions.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f35943d8c12043266c700889b2fddfd5c4a5ddee",
+      "size": 7445,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f35943d8c12043266c700889b2fddfd5c4a5ddee"
+    },
+    {
+      "path": "src/panel/update/Method.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68fbee467aac3a352a839809644771b08126fd12",
+      "size": 2070,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/68fbee467aac3a352a839809644771b08126fd12"
+    },
+    {
+      "path": "src/panel/update/Prompt.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5777ebfa2545c31f778496cf4e01f60414058ded",
+      "size": 8104,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5777ebfa2545c31f778496cf4e01f60414058ded"
+    },
+    {
+      "path": "src/panel/update/Request.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "91d42fd41fa44ac19163f3288bed11329833660d",
+      "size": 5553,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/91d42fd41fa44ac19163f3288bed11329833660d"
+    },
+    {
+      "path": "src/panel/update/Source.vue",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0d57b9123dfaa9f8e8226b2b8aed46fde985a53",
+      "size": 71370,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a0d57b9123dfaa9f8e8226b2b8aed46fde985a53"
+    },
+    {
+      "path": "src/panel/update/pi_source_form.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96cc5329667ea87bf364f156081f75a7ab538460",
+      "size": 10308,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/96cc5329667ea87bf364f156081f75a7ab538460"
+    },
+    {
+      "path": "src/panel/update/prompt_break.en.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8edb6e225f6dd149f3679c8f29b3358d85a43ba7",
+      "size": 1387,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/8edb6e225f6dd149f3679c8f29b3358d85a43ba7"
+    },
+    {
+      "path": "src/panel/update/prompt_break.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e5f4cd3ce28a7d7a2ef11faa493b32a8747aff6",
+      "size": 1360,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3e5f4cd3ce28a7d7a2ef11faa493b32a8747aff6"
+    },
+    {
+      "path": "src/panel/update/prompt_toolcall.en.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90bc78c80cfab4b8831bacf10046662c926dea1e",
+      "size": 1187,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/90bc78c80cfab4b8831bacf10046662c926dea1e"
+    },
+    {
+      "path": "src/panel/update/prompt_toolcall.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c1e28ed7e6a8a28a1bbfef99150dbef0b3232c0b",
+      "size": 1063,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c1e28ed7e6a8a28a1bbfef99150dbef0b3232c0b"
+    },
+    {
+      "path": "src/panel/update/request_method.en.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f089d1c09edede7ba7eb339c3215780905876c6e",
+      "size": 1714,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f089d1c09edede7ba7eb339c3215780905876c6e"
+    },
+    {
+      "path": "src/panel/update/request_method.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ac925761da3f2925674022e35fcdb6e9644244b",
+      "size": 1668,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2ac925761da3f2925674022e35fcdb6e9644244b"
+    },
+    {
+      "path": "src/panel/update_method.en.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c914550bf08db72fb3b23b50cb4ec5dd05c7fc0",
+      "size": 1947,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6c914550bf08db72fb3b23b50cb4ec5dd05c7fc0"
+    },
+    {
+      "path": "src/panel/update_method.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "329a8bf68968a696f788a59b7c7b4b43fb40950a",
+      "size": 1708,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/329a8bf68968a696f788a59b7c7b4b43fb40950a"
+    },
+    {
+      "path": "src/prompts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2c5bef0d7efe44abfce52318a12acc7ce10cd4fd",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/2c5bef0d7efe44abfce52318a12acc7ce10cd4fd"
+    },
+    {
+      "path": "src/prompts/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "907e8b8184bf3fda39cd2eb32d795f4a04c57867",
+      "size": 117,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/907e8b8184bf3fda39cd2eb32d795f4a04c57867"
+    },
+    {
+      "path": "src/prompts/claude_head.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2437385ed0463dbb018da29974aeb16075c1f243",
+      "size": 2965,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2437385ed0463dbb018da29974aeb16075c1f243"
+    },
+    {
+      "path": "src/prompts/claude_tail.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e03eb6cea17fa5b1b47a858a208edfd8bc1af6ee",
+      "size": 777,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e03eb6cea17fa5b1b47a858a208edfd8bc1af6ee"
+    },
+    {
+      "path": "src/prompts/extra_model_task.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9340eced6f499ddf0277d70705b8b2289591528",
+      "size": 1089,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c9340eced6f499ddf0277d70705b8b2289591528"
+    },
+    {
+      "path": "src/prompts/gemini_head.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d57bdf92db9e47d4af96d0bde7ef1dbb35298b94",
+      "size": 3185,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d57bdf92db9e47d4af96d0bde7ef1dbb35298b94"
+    },
+    {
+      "path": "src/prompts/gemini_tail.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bdd9fc84e30c3a4a780459a4896e590645b1b0c4",
+      "size": 493,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bdd9fc84e30c3a4a780459a4896e590645b1b0c4"
+    },
+    {
+      "path": "src/store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ded485567a39cba0d735ab80aad4e0cffe40a5e",
+      "size": 21064,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5ded485567a39cba0d735ab80aad4e0cffe40a5e"
+    },
+    {
+      "path": "src/util.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a796d3d1a4e908e536987b5c855249ecd3c7ed1",
+      "size": 2177,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7a796d3d1a4e908e536987b5c855249ecd3c7ed1"
+    },
+    {
+      "path": "src/util",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2726b5e712445212972e27065881dc1371b87728",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/2726b5e712445212972e27065881dc1371b87728"
+    },
+    {
+      "path": "src/util/regex.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af162a116910b5d065d90a4ee4678ffe1a309865",
+      "size": 1296,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/af162a116910b5d065d90a4ee4678ffe1a309865"
+    },
+    {
+      "path": "src/variable_def.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a94688cad864f46da808227f3f299a94694d8882",
+      "size": 10415,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a94688cad864f46da808227f3f299a94694d8882"
+    },
+    {
+      "path": "tailwind.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0fdd508b353392c08302a0e65ec0e9b56254f3b",
+      "size": 100,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e0fdd508b353392c08302a0e65ec0e9b56254f3b"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f5e9c300a6af7f1faaab365e8d8244e450cb0f59",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/f5e9c300a6af7f1faaab365e8d8244e450cb0f59"
+    },
+    {
+      "path": "tests/button.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c45d481a578c8a301d51f35affe16c84775a5d33",
+      "size": 155,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c45d481a578c8a301d51f35affe16c84775a5d33"
+    },
+    {
+      "path": "tests/button_mvu_zod.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f5bb91988b00c3395af017c8e196f7bf355195d",
+      "size": 265,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7f5bb91988b00c3395af017c8e196f7bf355195d"
+    },
+    {
+      "path": "tests/button_pi_gate.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "876db08070ccf072d56a9afa90f8b8eea7696605",
+      "size": 3160,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/876db08070ccf072d56a9afa90f8b8eea7696605"
+    },
+    {
+      "path": "tests/character_override_manager.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e33ca5720255a9531f7a838fb9eff405a4be570",
+      "size": 26438,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/8e33ca5720255a9531f7a838fb9eff405a4be570"
+    },
+    {
+      "path": "tests/character_override_schema.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2bc1626a04f9bc0048bfac4e5982f467362ad6b",
+      "size": 9493,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f2bc1626a04f9bc0048bfac4e5982f467362ad6b"
+    },
+    {
+      "path": "tests/chat_lifecycle.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82df394c7249e5f32d7ff5bfeffbdbd3cd165d0b",
+      "size": 965,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/82df394c7249e5f32d7ff5bfeffbdbd3cd165d0b"
+    },
+    {
+      "path": "tests/compat.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5efb1f6beac5b5f18868cf531bc515f9fd7505c",
+      "size": 41,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f5efb1f6beac5b5f18868cf531bc515f9fd7505c"
+    },
+    {
+      "path": "tests/compatibility_license.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb74d73b91d9e693f9dd6f2601251637b0ddfe1c",
+      "size": 4288,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/cb74d73b91d9e693f9dd6f2601251637b0ddfe1c"
+    },
+    {
+      "path": "tests/export_globals.integration.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8b3a6955db5aaca473ebd91804d42290e1b5c99",
+      "size": 211,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f8b3a6955db5aaca473ebd91804d42290e1b5c99"
+    },
+    {
+      "path": "tests/export_globals.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb314b30a530b8fa09476c6c43018d2e6ba6abd7",
+      "size": 15545,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/cb314b30a530b8fa09476c6c43018d2e6ba6abd7"
+    },
+    {
+      "path": "tests/export_globals_mvu_zod.integration.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af753accf0cb7baaa06513e79dd0038ac2b91f4e",
+      "size": 321,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/af753accf0cb7baaa06513e79dd0038ac2b91f4e"
+    },
+    {
+      "path": "tests/extra_model_api_profiles.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "500ddee6873d4bbb2bdd5ee6af4e011b6ef0f333",
+      "size": 53662,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/500ddee6873d4bbb2bdd5ee6af4e011b6ef0f333"
+    },
+    {
+      "path": "tests/extra_model_concurrency.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f60f9252e33064f7866c2f025e8c944ff0c5c209",
+      "size": 6132,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f60f9252e33064f7866c2f025e8c944ff0c5c209"
+    },
+    {
+      "path": "tests/extra_model_max_chat_history.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4169c64413fdb43dd7599211a7a79ebf03f4563a",
+      "size": 22592,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4169c64413fdb43dd7599211a7a79ebf03f4563a"
+    },
+    {
+      "path": "tests/extra_model_preset.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a12df7d992d9fa3b52637423290840533d8d8ab7",
+      "size": 7405,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a12df7d992d9fa3b52637423290840533d8d8ab7"
+    },
+    {
+      "path": "tests/extractSetCommands.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09fd095f23d8fb825e44ccc4b7c836b5616620c8",
+      "size": 191,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/09fd095f23d8fb825e44ccc4b7c836b5616620c8"
+    },
+    {
+      "path": "tests/extractSetCommands_mvu_zod.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fca301e774c3b7c1348b097d7f79f27503535d8a",
+      "size": 301,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/fca301e774c3b7c1348b097d7f79f27503535d8a"
+    },
+    {
+      "path": "tests/fixtures",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "06e71442368c5ce9fb1eb23cd8223dd63695babb",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/06e71442368c5ce9fb1eb23cd8223dd63695babb"
+    },
+    {
+      "path": "tests/fixtures/pi_non_streaming_transport.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d59204e7dded97a0b427d755f2724d070c30a996",
+      "size": 20730,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d59204e7dded97a0b427d755f2724d070c30a996"
+    },
+    {
+      "path": "tests/fixtures/pi_prompt_capture",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "53aa87ad76e4646333d81603ad3750732a7fd590",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/53aa87ad76e4646333d81603ad3750732a7fd590"
+    },
+    {
+      "path": "tests/fixtures/pi_prompt_capture/builtin_jailbreak.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c4dad1920a93459d25e25f52ff43ad9111c5279",
+      "size": 11744,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7c4dad1920a93459d25e25f52ff43ad9111c5279"
+    },
+    {
+      "path": "tests/fixtures/pi_prompt_capture/current_preset.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0e8e2e0053c435675dade4c7b563f1d9a202680",
+      "size": 7368,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a0e8e2e0053c435675dade4c7b563f1d9a202680"
+    },
+    {
+      "path": "tests/fixtures/pi_prompt_capture/other_preset.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81aa28178b755fea56676cc2e71fdda5250557fa",
+      "size": 7258,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/81aa28178b755fea56676cc2e71fdda5250557fa"
+    },
+    {
+      "path": "tests/fixtures/pi_system_messages_transport.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e9b58fcbbda33bb11f616ac4b6533c3bacc1ee3",
+      "size": 14612,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9e9b58fcbbda33bb11f616ac4b6533c3bacc1ee3"
+    },
+    {
+      "path": "tests/function.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f3c079345c5690e341353621f91f5511de3dc58",
+      "size": 161,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2f3c079345c5690e341353621f91f5511de3dc58"
+    },
+    {
+      "path": "tests/function_mvu_zod.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a4f747f06ead5f816689d3de17d758f5f5fbad9",
+      "size": 271,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3a4f747f06ead5f816689d3de17d758f5f5fbad9"
+    },
+    {
+      "path": "tests/helpers",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c34f6ef2adc91e65e414fc0c032a41b3b99d7728",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/c34f6ef2adc91e65e414fc0c032a41b3b99d7728"
+    },
+    {
+      "path": "tests/helpers/button_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3cc44fe3775e9712127d179269b52fff9eea361",
+      "size": 30384,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a3cc44fe3775e9712127d179269b52fff9eea361"
+    },
+    {
+      "path": "tests/helpers/export_globals_integration_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b85b980810cfafd2f226ee54ca251c369c7ef85",
+      "size": 28674,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9b85b980810cfafd2f226ee54ca251c369c7ef85"
+    },
+    {
+      "path": "tests/helpers/extract_set_commands_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d00cf356a7b776d97c9181af5cad7305e8a510d6",
+      "size": 43051,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d00cf356a7b776d97c9181af5cad7305e8a510d6"
+    },
+    {
+      "path": "tests/helpers/function_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6b572b56713f8c789fe5a8f0046633532482adc9",
+      "size": 58682,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6b572b56713f8c789fe5a8f0046633532482adc9"
+    },
+    {
+      "path": "tests/helpers/json_patch_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd4e175060337c960b89e409f3d58482651319ce",
+      "size": 11610,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/fd4e175060337c960b89e409f3d58482651319ce"
+    },
+    {
+      "path": "tests/helpers/load_remote_mvu_zod.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d02c6d7943982281287f32dd4737e2298cc7d46a",
+      "size": 6513,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d02c6d7943982281287f32dd4737e2298cc7d46a"
+    },
+    {
+      "path": "tests/helpers/schema_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc1c7bce9fbb2c608e9a0d0dce2f095ee79a7a54",
+      "size": 36167,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bc1c7bce9fbb2c608e9a0d0dce2f095ee79a7a54"
+    },
+    {
+      "path": "tests/helpers/template_suite.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77b3cc8cdff9a3bc22d602e80bee4266e24bd96e",
+      "size": 66569,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/77b3cc8cdff9a3bc22d602e80bee4266e24bd96e"
+    },
+    {
+      "path": "tests/helpers/typescript-extension-loader.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8f2a04d90b6790584eb2d150764947c3dcebce4",
+      "size": 723,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d8f2a04d90b6790584eb2d150764947c3dcebce4"
+    },
+    {
+      "path": "tests/helpers/worldinfo_host.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce51a2e2df9c981d854dd20e3fefab6c6e1ec540",
+      "size": 7866,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ce51a2e2df9c981d854dd20e3fefab6c6e1ec540"
+    },
+    {
+      "path": "tests/i18n.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "944707fc1d87fc5f8bfc5fe6b45cf6ccc8b45ad2",
+      "size": 8368,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/944707fc1d87fc5f8bfc5fe6b45cf6ccc8b45ad2"
+    },
+    {
+      "path": "tests/incremental_repair.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "837d990cbf0a94ce1467894015250e84c1bdb085",
+      "size": 11139,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/837d990cbf0a94ce1467894015250e84c1bdb085"
+    },
+    {
+      "path": "tests/incremental_repair_append.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6df95c87c0e430a40fbcf739a7474d2350e099ad",
+      "size": 13994,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6df95c87c0e430a40fbcf739a7474d2350e099ad"
+    },
+    {
+      "path": "tests/incremental_repair_cancel.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7db4944ff54ab3ab3c7cd8129b78b7e6d99f071b",
+      "size": 8239,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7db4944ff54ab3ab3c7cd8129b78b7e6d99f071b"
+    },
+    {
+      "path": "tests/incremental_repair_execution.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "516abf5a127d1e9f91821a886b1f68c7ae897566",
+      "size": 12044,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/516abf5a127d1e9f91821a886b1f68c7ae897566"
+    },
+    {
+      "path": "tests/invoke_extra_model.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31ead2b5835ecb964eb2c0a35feb881c68e5250b",
+      "size": 37416,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/31ead2b5835ecb964eb2c0a35feb881c68e5250b"
+    },
+    {
+      "path": "tests/invoke_extra_model_pi.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e19a824e784ac5cf06091a7546922fd6fcb76434",
+      "size": 31259,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e19a824e784ac5cf06091a7546922fd6fcb76434"
+    },
+    {
+      "path": "tests/invoke_extra_model_pi_boundary.integration.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03219e34b6ddee2e69b7e61317a0cdefaca17b67",
+      "size": 35300,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/03219e34b6ddee2e69b7e61317a0cdefaca17b67"
+    },
+    {
+      "path": "tests/invoke_extra_model_pi_cancel_race.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "22f40f46ec7a9cf1d1a5a0807bda47dbea35cf5e",
+      "size": 13222,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/22f40f46ec7a9cf1d1a5a0807bda47dbea35cf5e"
+    },
+    {
+      "path": "tests/is_function_calling_supported.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e542f90371d611c8e689773a5f756b34b2faebcf",
+      "size": 1155,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e542f90371d611c8e689773a5f756b34b2faebcf"
+    },
+    {
+      "path": "tests/json-patch-tests",
+      "mode": "160000",
+      "type": "commit",
+      "sha": "2a928f9044aad35c74e2788d498bcf2c6b91adea"
+    },
+    {
+      "path": "tests/json5-tests",
+      "mode": "160000",
+      "type": "commit",
+      "sha": "c9af328e6d77286d78b77b520c4622d588b544c0"
+    },
+    {
+      "path": "tests/json_patch.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f71c2e4b5701b971f2c5de3a1b46ac97bd3c134",
+      "size": 165,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9f71c2e4b5701b971f2c5de3a1b46ac97bd3c134"
+    },
+    {
+      "path": "tests/json_patch_mvu_zod.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f21c3716a54d081e4f6733e08b1af3bff62fdddd",
+      "size": 251,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f21c3716a54d081e4f6733e08b1af3bff62fdddd"
+    },
+    {
+      "path": "tests/live",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f451dfdd2f1757c451ebbed805d2f215f494d10d",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/f451dfdd2f1757c451ebbed805d2f215f494d10d"
+    },
+    {
+      "path": "tests/live/pi_google_proxy_adapter_live.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "672216ba04e432ec97b08049ff5a186c8a0aefb1",
+      "size": 9189,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/672216ba04e432ec97b08049ff5a186c8a0aefb1"
+    },
+    {
+      "path": "tests/live/pi_live_cases.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1947f6fc6ffe1edd52aa95e933f67766608fbef6",
+      "size": 3061,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1947f6fc6ffe1edd52aa95e933f67766608fbef6"
+    },
+    {
+      "path": "tests/live/pi_openrouter_smoke.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "61cc1800be557a8fc6488e2ee82c79b302557f64",
+      "size": 8584,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/61cc1800be557a8fc6488e2ee82c79b302557f64"
+    },
+    {
+      "path": "tests/live/pi_runtime_chains.test.mts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60cd3bc45423511a58cec63fbd4834ebb9f4d95e",
+      "size": 27937,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/60cd3bc45423511a58cec63fbd4834ebb9f4d95e"
+    },
+    {
+      "path": "tests/live/pi_st_configured_live_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a0ad9d89e5339e4d2019fb48b8b9738497d4383",
+      "size": 25183,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/8a0ad9d89e5339e4d2019fb48b8b9738497d4383"
+    },
+    {
+      "path": "tests/live/pi_st_feature_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6e6bc167982415aee94322c9e71202d5b2f409f",
+      "size": 79765,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a6e6bc167982415aee94322c9e71202d5b2f409f"
+    },
+    {
+      "path": "tests/live/pi_st_oauth_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2878c5980f7e5e307688e238d51c51a04c9eb6b8",
+      "size": 70705,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2878c5980f7e5e307688e238d51c51a04c9eb6b8"
+    },
+    {
+      "path": "tests/live/pi_st_server_cancel_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "21575816b8fe8280e47b3d0c52acd57dac1aead5",
+      "size": 31891,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/21575816b8fe8280e47b3d0c52acd57dac1aead5"
+    },
+    {
+      "path": "tests/live/run_pi_coverage.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "73bb569b5d44df6586c1d482c8529bb349a7971d",
+      "size": 6986,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/73bb569b5d44df6586c1d482c8529bb349a7971d"
+    },
+    {
+      "path": "tests/live/run_pi_esm_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "41ec553e5f106dae9738625ca3c61ac8c972ebff",
+      "size": 18556,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/41ec553e5f106dae9738625ca3c61ac8c972ebff"
+    },
+    {
+      "path": "tests/live/run_pi_openrouter_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4375ad851c5f86d10c9b486be26f1215cb11a46f",
+      "size": 3964,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4375ad851c5f86d10c9b486be26f1215cb11a46f"
+    },
+    {
+      "path": "tests/live/run_pi_st_capture_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b292abf9bb72f1f175eb35dc67b315a0e01c4141",
+      "size": 73462,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b292abf9bb72f1f175eb35dc67b315a0e01c4141"
+    },
+    {
+      "path": "tests/live/run_pi_st_configured_live_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1428bcb3e5e2ee189bf69d6b3cce5e570b54f5dc",
+      "size": 1194,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1428bcb3e5e2ee189bf69d6b3cce5e570b54f5dc"
+    },
+    {
+      "path": "tests/live/run_pi_st_feature_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d9b3a2b1c1d788db5343719e3303ba26ff028e5",
+      "size": 229,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9d9b3a2b1c1d788db5343719e3303ba26ff028e5"
+    },
+    {
+      "path": "tests/live/run_pi_st_oauth_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6b35a3bd6de8cc219d0eccf0396091c6f09624b",
+      "size": 230,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/b6b35a3bd6de8cc219d0eccf0396091c6f09624b"
+    },
+    {
+      "path": "tests/live/run_pi_st_openrouter_browser_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e83356d6735515819bb98d12ee4ade854d6cfd69",
+      "size": 138835,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e83356d6735515819bb98d12ee4ade854d6cfd69"
+    },
+    {
+      "path": "tests/live/run_pi_st_prompt_fixtures.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f1a7361e8f933a6210304a7c9335e5b4e9ecb55",
+      "size": 56964,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/8f1a7361e8f933a6210304a7c9335e5b4e9ecb55"
+    },
+    {
+      "path": "tests/live/run_pi_st_server_cancel_smoke.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d9ed1f5ad53a09dda97b933e16a9d56fbb68e92",
+      "size": 247,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3d9ed1f5ad53a09dda97b933e16a9d56fbb68e92"
+    },
+    {
+      "path": "tests/mocks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bf93935f2baeb563edc81483499ebfddf2ae5ff4",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/bf93935f2baeb563edc81483499ebfddf2ae5ff4"
+    },
+    {
+      "path": "tests/mocks/rawTextMock.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ab76f3c9b30f5e075b337677d9f62c38b1b48a7",
+      "size": 53,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9ab76f3c9b30f5e075b337677d9f62c38b1b48a7"
+    },
+    {
+      "path": "tests/model_list.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fbe0ef2a6d2a62ad97fdf2d5c08269e95c337d33",
+      "size": 38776,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/fbe0ef2a6d2a62ad97fdf2d5c08269e95c337d33"
+    },
+    {
+      "path": "tests/on_message_received_conditions.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c62166ef4d96b7fe038402a862d2bef100b47157",
+      "size": 7292,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c62166ef4d96b7fe038402a862d2bef100b47157"
+    },
+    {
+      "path": "tests/on_message_received_pi_gate.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ddadcabbafb8d6fea262352a4b8cdd859c7c0a6",
+      "size": 13161,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5ddadcabbafb8d6fea262352a4b8cdd859c7c0a6"
+    },
+    {
+      "path": "tests/on_message_received_rendered.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c8fac38b9c1318e997b54f7e4b92970435665222",
+      "size": 16262,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c8fac38b9c1318e997b54f7e4b92970435665222"
+    },
+    {
+      "path": "tests/parse_command_value.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3461ac29036937ea4f7a318dd1e83fa71b14275e",
+      "size": 3628,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3461ac29036937ea4f7a318dd1e83fa71b14275e"
+    },
+    {
+      "path": "tests/pi_abort_signal.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82b2d96b392b42ca924428aa5a57a223df339187",
+      "size": 2547,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/82b2d96b392b42ca924428aa5a57a223df339187"
+    },
+    {
+      "path": "tests/pi_config_parser.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf9993e7250995cc25aef424d2f739d84944c783",
+      "size": 2243,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bf9993e7250995cc25aef424d2f739d84944c783"
+    },
+    {
+      "path": "tests/pi_context_adapter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e37fb8f9767fda881b6d2a96e240beeb6f58246c",
+      "size": 22332,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e37fb8f9767fda881b6d2a96e240beeb6f58246c"
+    },
+    {
+      "path": "tests/pi_controller_registry.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2164873725ab46d63ee1ccbe888a3ae5f5a41ffa",
+      "size": 5991,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2164873725ab46d63ee1ccbe888a3ae5f5a41ffa"
+    },
+    {
+      "path": "tests/pi_credential_store.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "511e5ec586d80b6c7987ff057ac811b80d342817",
+      "size": 14127,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/511e5ec586d80b6c7987ff057ac811b80d342817"
+    },
+    {
+      "path": "tests/pi_dependency_boundary.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b342c1fc08153e034cce84d15d8a70237bd4800",
+      "size": 6673,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9b342c1fc08153e034cce84d15d8a70237bd4800"
+    },
+    {
+      "path": "tests/pi_error_localization.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77e5222738e278fc6c381fdf89b24ccf93f94d9c",
+      "size": 12012,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/77e5222738e278fc6c381fdf89b24ccf93f94d9c"
+    },
+    {
+      "path": "tests/pi_feature_flag.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e9e4fdfc79c0de038dcc8b84758f81f0976e46c",
+      "size": 728,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9e9e4fdfc79c0de038dcc8b84758f81f0976e46c"
+    },
+    {
+      "path": "tests/pi_google_proxy_adapter.live.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f841626999284b9b94eae0b70792884abad38eaf",
+      "size": 1801,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f841626999284b9b94eae0b70792884abad38eaf"
+    },
+    {
+      "path": "tests/pi_google_proxy_adapter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "869ec255d2d430c6bc4f9730cef1561d9836b3b9",
+      "size": 31543,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/869ec255d2d430c6bc4f9730cef1561d9836b3b9"
+    },
+    {
+      "path": "tests/pi_non_streaming_fetch.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1ec5ddc7b5595346b11dc1ea6c668ec4f9ac567e",
+      "size": 1036,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1ec5ddc7b5595346b11dc1ea6c668ec4f9ac567e"
+    },
+    {
+      "path": "tests/pi_oauth.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4cd2a1efb7f21107abcee1daee7bfc3ae54d199",
+      "size": 34417,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f4cd2a1efb7f21107abcee1daee7bfc3ae54d199"
+    },
+    {
+      "path": "tests/pi_payload.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec8b62e2bda4665734e634bc4ff79fef8060a1cd",
+      "size": 18519,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ec8b62e2bda4665734e634bc4ff79fef8060a1cd"
+    },
+    {
+      "path": "tests/pi_prompt_capture.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3425cc266ddd3bbe28013bdd6675a60462523eac",
+      "size": 19082,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3425cc266ddd3bbe28013bdd6675a60462523eac"
+    },
+    {
+      "path": "tests/pi_prompt_capture_fixtures.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffb849a178dedc6d782220e9955273c23acec5c9",
+      "size": 9458,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ffb849a178dedc6d782220e9955273c23acec5c9"
+    },
+    {
+      "path": "tests/pi_provider_catalog_contract.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aca650514115e37a9ccfeff1de8448f2f953cbf7",
+      "size": 6754,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/aca650514115e37a9ccfeff1de8448f2f953cbf7"
+    },
+    {
+      "path": "tests/pi_provider_registry.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19d0892df9509a92bfd087ba85bae7a107ad87cf",
+      "size": 58999,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/19d0892df9509a92bfd087ba85bae7a107ad87cf"
+    },
+    {
+      "path": "tests/pi_runtime.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c57f22c57211afa508abd77770b4035498c8287e",
+      "size": 64296,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c57f22c57211afa508abd77770b4035498c8287e"
+    },
+    {
+      "path": "tests/pi_sillytavern_proxy.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aac1671de1f7548e0e73f4b72c16ae5b07a9e715",
+      "size": 20279,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/aac1671de1f7548e0e73f4b72c16ae5b07a9e715"
+    },
+    {
+      "path": "tests/pi_slash_capture_contract.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a995f1fca61c4a50f50b93a2616dcd32b78a60e",
+      "size": 2525,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7a995f1fca61c4a50f50b93a2616dcd32b78a60e"
+    },
+    {
+      "path": "tests/pi_source_form.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5af869e6761b1c736cf2bc3aaaa03875a903403e",
+      "size": 23674,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/5af869e6761b1c736cf2bc3aaaa03875a903403e"
+    },
+    {
+      "path": "tests/pi_source_ui_contract.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffac7ae59ce81cec54189d382c1c1390ef2ef15f",
+      "size": 9510,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/ffac7ae59ce81cec54189d382c1c1390ef2ef15f"
+    },
+    {
+      "path": "tests/pi_system_messages.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4946add2df4a98ed2558b204dbf246c12a9f4267",
+      "size": 7561,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4946add2df4a98ed2558b204dbf246c12a9f4267"
+    },
+    {
+      "path": "tests/pi_token_preflight.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9249fcc1c13b5a6942fc93bacd0e8dc64fc86b98",
+      "size": 7206,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9249fcc1c13b5a6942fc93bacd0e8dc64fc86b98"
+    },
+    {
+      "path": "tests/pi_tool_choice.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1b036d9965bdc09856f830bded82d87651d1b75",
+      "size": 2204,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/d1b036d9965bdc09856f830bded82d87651d1b75"
+    },
+    {
+      "path": "tests/pi_tools.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f72425088fa8ca280ba3005afab30c898a1da23",
+      "size": 9929,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/2f72425088fa8ca280ba3005afab30c898a1da23"
+    },
+    {
+      "path": "tests/prompt_filter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e1222ce946368fc5918507330bfdd51fd5f441c2",
+      "size": 26249,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/e1222ce946368fc5918507330bfdd51fd5f441c2"
+    },
+    {
+      "path": "tests/schema.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "867f28c491e9408bbc4fa4e29695dbc6b067aa46",
+      "size": 155,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/867f28c491e9408bbc4fa4e29695dbc6b067aa46"
+    },
+    {
+      "path": "tests/schema_mvu_zod.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bbcc441746cdae724e0656aebb8255e737f9771f",
+      "size": 265,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bbcc441746cdae724e0656aebb8255e737f9771f"
+    },
+    {
+      "path": "tests/setup.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a0c49057c9616cae2fe84839cca3971afd50fa5",
+      "size": 8889,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/1a0c49057c9616cae2fe84839cca3971afd50fa5"
+    },
+    {
+      "path": "tests/store_passthrough.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a606a448ba38aa8b64df8576bcafc5605e682409",
+      "size": 33229,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a606a448ba38aa8b64df8576bcafc5605e682409"
+    },
+    {
+      "path": "tests/store_response_format.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92953ad195993f76f5e8218afa7e5c102c084345",
+      "size": 6040,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/92953ad195993f76f5e8218afa7e5c102c084345"
+    },
+    {
+      "path": "tests/template.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65ab6eb7a2e6ab3d3dec4565ed1a8fdf3d9d5eb1",
+      "size": 161,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/65ab6eb7a2e6ab3d3dec4565ed1a8fdf3d9d5eb1"
+    },
+    {
+      "path": "tests/template_mvu_zod.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6f546e9571f7bbc205034765b8586eb322172a6c",
+      "size": 271,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6f546e9571f7bbc205034765b8586eb322172a6c"
+    },
+    {
+      "path": "tests/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "206aeaf88e5c714448cd78dbd8ae8d2b773c5d01",
+      "size": 43,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/206aeaf88e5c714448cd78dbd8ae8d2b773c5d01"
+    },
+    {
+      "path": "tests/update-descriptions.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ac23a4abeab59b96c33b0bc101ec50ea463e3c6",
+      "size": 33761,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/6ac23a4abeab59b96c33b0bc101ec50ea463e3c6"
+    },
+    {
+      "path": "tests/update_receive_throttle.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c8818d96271b482bb991c1c3a1db0a6ff1d98d18",
+      "size": 3151,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/c8818d96271b482bb991c1c3a1db0a6ff1d98d18"
+    },
+    {
+      "path": "tests/update_variables_errors.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0fc8ed2ed61738ada0effa3c3369ee0adf1fe36b",
+      "size": 3414,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/0fc8ed2ed61738ada0effa3c3369ee0adf1fe36b"
+    },
+    {
+      "path": "tests/util_normalize_base_url.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e24e24003c42585db09d33e1f4f4f7737cdb961",
+      "size": 1447,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/3e24e24003c42585db09d33e1f4f4f7737cdb961"
+    },
+    {
+      "path": "tests/util_parseString.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11577cee5dd029d85bafeb9db90d71e663339139",
+      "size": 8025,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/11577cee5dd029d85bafeb9db90d71e663339139"
+    },
+    {
+      "path": "tests/variable_init.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "21d258e134504ced06a08d4fcd2eaa33043c5a86",
+      "size": 7931,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/21d258e134504ced06a08d4fcd2eaa33043c5a86"
+    },
+    {
+      "path": "tests/worldinfo_host.integration.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc0a967fde450746d76d9e1cfb39bd163814811c",
+      "size": 14175,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/bc0a967fde450746d76d9e1cfb39bd163814811c"
+    },
+    {
+      "path": "tests/worldinfo_lifecycle.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b094b4f078357c040f3938408b52a90b564dcc0",
+      "size": 5482,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/0b094b4f078357c040f3938408b52a90b564dcc0"
+    },
+    {
+      "path": "tests/worldinfo_request_filter.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "107cd4b69ac8eb99fc6deee156f3e312995afdbb",
+      "size": 18148,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/107cd4b69ac8eb99fc6deee156f3e312995afdbb"
+    },
+    {
+      "path": "tsconfig.dts.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4575c782a5a7bf2997cabb64d1a18bb0a699f25c",
+      "size": 264,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/4575c782a5a7bf2997cabb64d1a18bb0a699f25c"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7940f594210a10f3c70e02707d4048be726679ac",
+      "size": 1219,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/7940f594210a10f3c70e02707d4048be726679ac"
+    },
+    {
+      "path": "tsconfig.test.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc3f252cdcd74106cd22872cb5e5406b5f6c026a",
+      "size": 499,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/fc3f252cdcd74106cd22872cb5e5406b5f6c026a"
+    },
+    {
+      "path": "util",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1022f7bdcb69691f9126b16581d48096ffe0cace",
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/trees/1022f7bdcb69691f9126b16581d48096ffe0cace"
+    },
+    {
+      "path": "util/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a35cf3cf22c4568c707d009f46eabd6ddc5d68af",
+      "size": 131,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/a35cf3cf22c4568c707d009f46eabd6ddc5d68af"
+    },
+    {
+      "path": "util/common.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f04d1972de4a89900a516be22103db7270556ca8",
+      "size": 2829,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f04d1972de4a89900a516be22103db7270556ca8"
+    },
+    {
+      "path": "util/script.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "541d89f9b8a7f5e0efb5eae0bce0a32f4941f28b",
+      "size": 3335,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/541d89f9b8a7f5e0efb5eae0bce0a32f4941f28b"
+    },
+    {
+      "path": "webpack.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9cc9d33722c8392c675385e6f5ce1f2b72e1c4d0",
+      "size": 17761,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/9cc9d33722c8392c675385e6f5ce1f2b72e1c4d0"
+    },
+    {
+      "path": "yarn.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4b9847603022c3f5821b8fba61eddb5e49d0273",
+      "size": 368516,
+      "url": "https://api.github.com/repos/MagicalAstrogy/MagVarUpdate/git/blobs/f4b9847603022c3f5821b8fba61eddb5e49d0273"
+    }
+  ],
+  "truncated": false
+}

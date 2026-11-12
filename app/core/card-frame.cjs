@@ -10,9 +10,11 @@ function bridge(seed){
   const emit=async(name,...args)=>{for(const fn of events.get(name)||[])await fn(...args);};
   window.addEventListener('message',e=>{
     if(e.source!==parent || !e.data?.meowFrame || e.data.nonce!==seed.nonce)return;
+    if(e.data.type==='context-refresh'){seed.messages=copy(e.data.messages);seed.characterVariables=copy(e.data.characterVariables);seed.globalVariables=copy(e.data.globalVariables);seed.localVariables=copy(e.data.localVariables);current=copy(e.data.current);return;}
     if(e.data.type==='response'){const cb=callbacks.get(e.data.id);if(!cb)return;callbacks.delete(e.data.id);e.data.error?cb.reject(Error(e.data.error)):cb.resolve(e.data.value);}
   });
   window.addEventListener('error',e=>notify('error',{error:e.message}));window.addEventListener('unhandledrejection',e=>notify('error',{error:String(e.reason?.message || e.reason)}));
+  window.addEventListener('pointerdown',()=>notify('interaction'));
   const id=()=>seed.messageId;
   const messageIndex=options=>{let n=options?.message_id ?? seed.messageId;if(n==='latest')n=seed.messages.length-1;n=Number(n);return n<0?seed.messages.length+n:n;};
   const getVars=(options={})=>{

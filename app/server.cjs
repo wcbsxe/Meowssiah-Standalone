@@ -77,6 +77,10 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           frames.set(id,htmlDocument(body.html,{...body.seed,nonce:id}));while(frames.size>60)frames.delete(frames.keys().next().value);
           return json(res,200,{url:origin+'/card-frame/'+id,nonce:id});
         }
+        case '/api/card-frame/release': {
+          let released=0;for(const nonce of (Array.isArray(body.nonces)?body.nonces:[]).slice(0,512))if(typeof nonce==='string'&&/^[a-f0-9]{40}$/.test(nonce)&&frames.delete(nonce))released++;
+          return json(res,200,{released,remaining:frames.size});
+        }
         case '/api/runtime/parse': {
           const state=E.normalizeState(body.state),s=state.sessions.find(s=>s.id===state.activeId);
           const prepared=await Runtime.prepare(state,s,E.effectivePrompts(state));

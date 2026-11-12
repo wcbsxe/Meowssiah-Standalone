@@ -1,10 +1,10 @@
 {
-  "version": "1.1.4",
+  "version": "1.1.5",
   "source": "local delivered source snapshot",
   "applicationFiles": [
     {
       "file": "app/core/card-frame.cjs",
-      "sha256": "d5743e0ac62133d71c3d1433c64307b0f3fe651e09dd8a7b94fb0c1d259e27e5"
+      "sha256": "dac4e1cf2ee9f4105272b083c7bdf2786493f4eee5040c6534c9b0ad62b73b64"
     },
     {
       "file": "app/core/card-runtime.cjs",
@@ -72,7 +72,7 @@
     },
     {
       "file": "app/public/app.js",
-      "sha256": "c5208ef2f1b5ad9b537517ea6e1adeda424511c6c406acbc4f6a5d6910e927ff"
+      "sha256": "05dc0a62cac059b6b679c3bb9c2cb233166ad94b2238ab87e2dc535089ddb590"
     },
     {
       "file": "app/public/frame-vendor.js",
@@ -84,11 +84,11 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "d6adf869b859111f03378cf37eaf515b1338d7daa8d317ae06a3c5319f6fb0ca"
+      "sha256": "96024af5469310df795f356eb36f615f45d1452eee5258ff7a2e4ee0e0db254e"
     },
     {
       "file": "app/public/library-ui.js",
-      "sha256": "c652ce5c9d440e6247e893bf70ee0e5754d99f6519a08aded92ca4c81e3b5196"
+      "sha256": "6f61877c80ca125fb8b47c946014ee220219cd8c76ecaae8dacaf19d12e85ae7"
     },
     {
       "file": "app/public/logo.svg",
@@ -96,11 +96,11 @@
     },
     {
       "file": "app/public/style.css",
-      "sha256": "33c84811776b63c464de602174e5ea894c234d7d9289b51aba5c786adb1f1020"
+      "sha256": "a6b87c10ed1c06f055aeb3d3ea95760dc376a016812f97991b4db4853c7627aa"
     },
     {
       "file": "app/server.cjs",
-      "sha256": "a23b1128483806a716bfcf8b156c4b544e2067fe6bb67503ea3400f6ebe5876d"
+      "sha256": "3c18d17287c1d9cce3f6f2e7de5e23f1cb5e39015501c4843b29827ce9683a69"
     },
     {
       "file": "app/vendor/card-runtime.js",

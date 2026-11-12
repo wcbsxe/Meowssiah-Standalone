@@ -1,5 +1,22 @@
 'use strict';
 const frameRegistry=new Map();
+let framePageClosing=false;
+function releaseFrameNonces(nonces,keepalive=false){
+  if(!nonces.length)return Promise.resolve();
+  return fetch('/api/card-frame/release',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nonces}),keepalive}).catch(()=>{});
+}
+function releaseDisconnectedCardFrames(){
+  const nonces=[];for(const [nonce,reg] of frameRegistry)if(!reg.frame.isConnected){frameRegistry.delete(nonce);nonces.push(nonce);}return releaseFrameNonces(nonces);
+}
+function cardContextVersion(){return session().id+':'+state.revision+':'+session().messages.length;}
+function syncCardFrameContext(){
+  const s=session(),version=cardContextVersion();let shared;
+  for(const [nonce,reg] of frameRegistry){if(!reg.frame.isConnected||reg.sessionId!==s.id||reg.contextVersion===version)continue;const message=s.messages.find(m=>m.id===reg.messageId);if(!message)continue;
+    shared ||= {messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}})),characterVariables:currentCard()?.variables || {},globalVariables:state.library.globalVariables || {}};
+    reg.frame.contentWindow?.postMessage({meowFrame:true,nonce,type:'context-refresh',...shared,current:message.runtime?.after || {stat_data:{}},localVariables:message.runtime?.localVariables || {}},'*');reg.contextVersion=version;
+  }
+}
+window.addEventListener('pagehide',()=>{framePageClosing=true;const nonces=[...frameRegistry.keys()];frameRegistry.clear();releaseFrameNonces(nonces,true);});
 function storyCard(s=session()){const card=state.library?.characters.find(c=>c.id===s?.characterId);return card || (s?.detachedCharacter?{...s.detachedCharacter,name:s.profile.name,profile:s.profile}:null);}
 function currentCard(){return storyCard();}
 function cardSnapshot(card){return {id:card.id,name:card.profile.name,origin:card.origin || 'deleted-card',variables:structuredClone(card.variables || {}),enabledWorldbookIds:[...(card.enabledWorldbookIds || [])],createdAt:card.createdAt,updatedAt:Date.now()};}
@@ -156,8 +173,9 @@ async function openVariables(){
 }
 function cardFrame(html,message){
   const frame=element('iframe','card-frame');frame.setAttribute('sandbox','allow-scripts');frame.setAttribute('title','角色卡界面');frame.height='260';frame.setAttribute('loading','lazy');
+  frame.addEventListener('load',()=>{if(!frame.getAttribute('src'))return;frame.dataset.loaded='true';for(const reg of frameRegistry.values())if(reg.frame===frame)reg.contextVersion='';settleMessageLayout(frame);syncCardFrameContext();});const contextVersion=cardContextVersion();
   const s=session(),index=s.messages.findIndex(m=>m.id===message.id),seed={messageId:index,current:message.runtime?.after || {stat_data:{}},characterVariables:currentCard()?.variables || {},localVariables:message.runtime?.localVariables || {},globalVariables:state.library.globalVariables || {},messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}}))};
-  api('card-frame',{html,seed}).then(data=>{if(!frame.isConnected)return;frame.src=data.url;frameRegistry.set(data.nonce,{frame,sessionId:s.id,messageId:message.id});for(const [k,v] of frameRegistry)if(!v.frame.isConnected)frameRegistry.delete(k);}).catch(e=>{frame.replaceWith(element('div','notice','卡片界面加载出错：'+e.message));});return frame;
+  api('card-frame',{html,seed}).then(data=>{if(framePageClosing||!frame.isConnected){releaseFrameNonces([data.nonce]);return;}frame.src=data.url;frameRegistry.set(data.nonce,{frame,sessionId:s.id,messageId:message.id,contextVersion});releaseDisconnectedCardFrames();}).catch(e=>{if(frame.isConnected){const box=frame.closest('.message');frame.replaceWith(element('div','notice','卡片界面加载出错：'+e.message));if(box)box.style.minHeight='';restoreReadingAnchor();}});return frame;
 }
 function splitCardDisplay(raw){
   const blocks=[];let text=String(raw).replace(/```(?:html)?\s*\n([\s\S]*?)```/gi,(all,body)=>{if(!/<(?:html|style|script|div|section|table)\b/i.test(body))return all;blocks.push(body);return '';});
@@ -165,8 +183,9 @@ function splitCardDisplay(raw){
 }
 window.addEventListener('message',async event=>{
   const data=event.data;if(!data?.meowFrame)return;const reg=frameRegistry.get(data.nonce);if(!reg || event.source!==reg.frame.contentWindow)return;
-  if(data.type==='resize'){reg.frame.height=String(Math.max(100,Math.min(2000,Number(data.height)||260)));if(followLatest&&reg.sessionId===state.activeId)requestAnimationFrame(scrollBottom);return;}
-  if(data.type==='scroll'){if(reg.sessionId===state.activeId){followLatest=false;$('#chat-scroll').scrollBy({top:Math.max(-2000,Math.min(2000,Number(data.deltaY)||0)),behavior:'instant'});}return;}
+  if(data.type==='resize'){reg.frame.height=String(Math.max(100,Math.min(2000,Number(data.height)||260)));settleMessageLayout(reg.frame);return;}
+  if(data.type==='interaction'){readingAnchor=null;followLatest=false;return;}
+  if(data.type==='scroll'){if(reg.sessionId===state.activeId){readingAnchor=null;followLatest=false;$('#chat-scroll').scrollBy({top:Math.max(-2000,Math.min(2000,Number(data.deltaY)||0)),behavior:'instant'});}return;}
   if(data.type==='error'){toast('卡片界面：'+data.error);return;}
   if(data.type!=='request')return;
   const respond=(value,error)=>reg.frame.contentWindow?.postMessage({meowFrame:true,nonce:data.nonce,type:'response',id:data.id,value,error},'*');

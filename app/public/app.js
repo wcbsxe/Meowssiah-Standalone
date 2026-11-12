@@ -3,6 +3,9 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 let state,preset,keyConfigured=false,dataDir='',busy=false,jobId='',liveText='',liveMessageId='',saveTimer,toastTimer;
 let saveChain=Promise.resolve(),lastDiagnostics=null,modalContext='',connectionFlush=null,followLatest=false;
 const chatDrafts=new Map();
+const MESSAGE_PAGE_SIZE=20;
+let messageWindowStory='',messageWindowEnd=null;
+let readingAnchor=null;
 const session=()=>state.sessions.find(s=>s.id===state.activeId);
 const element=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
 const uid=()=>crypto.randomUUID();
@@ -50,7 +53,7 @@ function render(){
   $('#message-count').textContent=s.messages.length+' 条消息';$('#composer-model').textContent=state.settings.model || '尚未配置模型';
   $('#connection-dot').classList.toggle('green',!!state.settings.baseUrl&&!!state.settings.model);
   const count=preset.prompts.filter(p=>(state.promptStates[p.id]?.enabled ?? p.enabled)).length;$('#preset-count').textContent=count+' / 53';
-  renderShelf();renderMessages();
+  renderShelf();renderMessages();fitComposer();
 }
 function renderShelf(){
   const list=$('#story-list');list.replaceChildren();$('#story-count').textContent=state.sessions.length;
@@ -86,10 +89,11 @@ function parse(raw){
   parts.story=games.length?games.map(m=>m[1].trim()).join('\n\n'):value.replace(/<(summary|comment|background|options)\b[^>]*>[\s\S]*?(?:<\/\1>|$)/gi,'').replace(/<\/?game\b[^>]*>/gi,'').trim();
   return parts;
 }
-function renderMessage(m,isLive=false){
+function renderMessage(m,isLive=false,index=null){
   const box=element('article','message '+m.role);box.dataset.id=m.id;
   const head=element('div','message-heading'),avatar=element('span','avatar',m.role==='user'?'⌁':'✧');
   head.append(avatar,element('strong','',m.role==='user'?session().profile.userName:'小猫之神'),element('time','',new Date(m.timestamp).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'})));
+  if(index!==null){box.dataset.floor=String(index+1);head.append(element('span','message-floor',`#${index+1}`));}
   if(m.mode==='chat')head.append(element('span','pill','场外'));box.append(head);
   const body=element('div','message-body');
   if(m.role==='user')body.append(rich(m.content));else{
@@ -105,25 +109,75 @@ function renderMessage(m,isLive=false){
   }
   box.append(body);
   if(!isLive){const tools=element('div','message-actions');tools.append(button('复制',()=>navigator.clipboard.writeText(m.content).then(()=>toast('已复制原文')),'text-button'));
-    tools.append(button('编辑',()=>editMessage(m),'text-button'));
+    tools.append(button('编辑',()=>{const current=session().messages.find(x=>x.id===m.id);if(current)editMessage(current);},'text-button'));
     if(m.status!=='complete')tools.append(element('span','',m.status==='stopped'?'已停止 · 保留收到的内容':'响应出错 · 保留收到的内容'));
     if(m.usage?.total_tokens)tools.append(element('span','',m.usage.total_tokens+' tokens'));box.append(tools);
   }return box;
 }
+function messageRange(){
+  const s=session();if(messageWindowStory!==s.id){messageWindowStory=s.id;messageWindowEnd=null;}
+  const total=s.messages.length,end=messageWindowEnd===null?total:Math.max(0,Math.min(total,messageWindowEnd));
+  return {total,start:Math.max(0,end-MESSAGE_PAGE_SIZE),end,latest:messageWindowEnd===null};
+}
+function captureReadingAnchor(){
+  const scroll=$('#chat-scroll'),top=scroll.getBoundingClientRect().top,node=[...$('#messages').children].find(n=>n.getBoundingClientRect().bottom>top);
+  return node?{storyId:session().id,messageId:node.dataset.id,offset:node.getBoundingClientRect().top-top,windowEnd:messageWindowEnd}:null;
+}
+function restoreReadingAnchor(){
+  const anchor=readingAnchor;if(!anchor||session().id!==anchor.storyId)return;
+  const node=[...$('#messages').children].find(n=>n.dataset.id===anchor.messageId);if(!node)return;
+  const scroll=$('#chat-scroll'),offset=Math.max(anchor.offset,-Math.max(0,node.getBoundingClientRect().height-48)),delta=node.getBoundingClientRect().top-scroll.getBoundingClientRect().top-offset;
+  if(Math.abs(delta)>.5)scroll.scrollTop+=delta;
+}
+function settleMessageLayout(frame){
+  const message=frame.closest('.message');if(message?.style.minHeight&&[...message.querySelectorAll('iframe')].every(f=>f.dataset.loaded==='true'))message.style.minHeight='';
+  requestAnimationFrame(()=>{restoreReadingAnchor();if(followLatest&&messageRange().latest)scrollBottom();});
+}
+function showMessageWindow(direction,target){
+  const range=messageRange();followLatest=false;readingAnchor=null;
+  if(direction==='previous'){if(!range.start)return;messageWindowEnd=range.start;}
+  else if(direction==='next'){const end=Math.min(range.total,range.end+MESSAGE_PAGE_SIZE);messageWindowEnd=end===range.total?null:end;}
+  else if(direction==='first')messageWindowEnd=Math.min(range.total,MESSAGE_PAGE_SIZE);
+  else if(direction==='jump'){
+    const floor=Number(target);if(!Number.isInteger(floor)||floor<1||floor>range.total)return toast(`请输入 1 到 ${range.total} 之间的消息序号。`);
+    const end=Math.min(range.total,floor-1+MESSAGE_PAGE_SIZE);messageWindowEnd=end===range.total?null:end;
+  }else messageWindowEnd=null;
+  renderMessages();
+  if(direction==='latest')scrollBottom();else {if(direction==='jump')$('#messages [data-floor="'+Number(target)+'"]')?.scrollIntoView({block:'start',behavior:'instant'});else $('#chat-scroll').scrollTo({top:0,behavior:'instant'});readingAnchor=captureReadingAnchor();}
+}
+function renderMessageNavigation(range){
+  for(const id of ['history-before','history-after']){
+    const nav=$('#'+id);if(!nav)continue;nav.hidden=range.total<=MESSAGE_PAGE_SIZE;const signature=[range.start,range.end,range.total,range.latest].join(':');if(nav.dataset.range===signature)continue;nav.dataset.range=signature;nav.replaceChildren();
+    nav.append(element('span','history-range',`显示第 ${range.start+1}–${range.end} 层 / 共 ${range.total} 层`));
+    const controls=element('div','history-controls'),previous=button(`← 更早 ${MESSAGE_PAGE_SIZE} 层`,()=>showMessageWindow('previous')),next=button(`较新 ${MESSAGE_PAGE_SIZE} 层 →`,()=>showMessageWindow('next')),latest=button('回到最新',()=>showMessageWindow('latest'));
+    previous.disabled=range.start===0;next.disabled=range.end===range.total;latest.hidden=range.latest;controls.append(previous,next,latest);nav.append(controls);
+    if(id==='history-before'){
+      const form=element('form','history-jump'),input=element('input');input.type='number';input.min='1';input.max=String(range.total);input.placeholder='消息序号';input.setAttribute('aria-label','跳转消息序号');
+      const go=button('跳转',()=>showMessageWindow('jump',input.value));form.append(input,go);form.onsubmit=e=>{e.preventDefault();showMessageWindow('jump',input.value);};nav.append(form,element('small','history-note','旧消息和界面按页载入；完整聊天、模型上下文与变量快照继续保留。'));
+    }
+  }
+}
 function renderMessages(){
   const s=session(),list=$('#messages'),existing=new Map([...list.children].map(e=>[e.dataset.id,e]));$('#welcome').hidden=s.messages.length>0||busy;
-  const nodes=s.messages.map(m=>{
-    const old=existing.get(m.id);
-    if(old?._storyId===s.id&&old._content===m.content&&old._display===m.displayContent&&old._rendered===m.renderedContent&&old._runtime===m.runtime&&old._status===m.status)return old;
-    const node=renderMessage(m);Object.assign(node,{_storyId:s.id,_content:m.content,_display:m.displayContent,_rendered:m.renderedContent,_runtime:m.runtime,_status:m.status});return node;
+  const range=messageRange(),frameContext=JSON.stringify([s.profile.userName,s.profile.compat?.cardHtml,currentCard()?.variables || {},state.library.globalVariables || {}]);renderMessageNavigation(range);
+  const nodes=s.messages.slice(range.start,range.end).map((m,offset)=>{
+    const old=existing.get(m.id),runtimeKey=JSON.stringify(m.runtime || null);
+    if(old?._storyId===s.id&&old._content===m.content&&old._display===m.displayContent&&old._rendered===m.renderedContent&&old._runtimeKey===runtimeKey&&old._frameContext===frameContext&&old._status===m.status){old.dataset.floor=String(range.start+offset+1);old.querySelector('.message-floor').textContent='#'+(range.start+offset+1);return old;}
+    const node=renderMessage(m,false,range.start+offset);Object.assign(node,{_storyId:s.id,_content:m.content,_display:m.displayContent,_rendered:m.renderedContent,_runtimeKey:runtimeKey,_frameContext:frameContext,_status:m.status});
+    if(old?.querySelector('iframe')&&node.querySelector('iframe'))node.style.minHeight=old.getBoundingClientRect().height+'px';return node;
   });
-  if(busy && liveMessageId)nodes.push(renderMessage({id:liveMessageId,role:'assistant',content:liveText,timestamp:Date.now(),mode:s.mode},true));
+  if(busy && liveMessageId && range.latest)nodes.push(renderMessage({id:liveMessageId,role:'assistant',content:liveText,timestamp:Date.now(),mode:s.mode},true,range.total));
   let cursor=list.firstChild;for(const node of nodes){if(node===cursor)cursor=cursor.nextSibling;else list.insertBefore(node,cursor);}while(cursor){const next=cursor.nextSibling;cursor.remove();cursor=next;}
+  releaseDisconnectedCardFrames();syncCardFrameContext();
   $('#retry-message').hidden=!s.messages.some(m=>m.role==='user')||busy;
-  const latest=[...s.messages].reverse().find(m=>m.role==='assistant'&&parse(m.content).summary);
+  const latest=s.messages.findLast(m=>m.role==='assistant'&&parse(m.content).summary);
   $('#latest-summary').textContent=latest?parse(latest.content).summary:'故事开始后，模型返回的场记会留在这里，方便接着写。';
 }
-function scrollBottom(){followLatest=true;const e=$('#chat-scroll');e.scrollTo({top:e.scrollHeight,behavior:'instant'});}
+function scrollBottom(){followLatest=messageRange().latest;if(followLatest)readingAnchor=null;const e=$('#chat-scroll');e.scrollTo({top:e.scrollHeight,behavior:'instant'});}
+function fitComposer(){
+  const input=$('#message-input');if(!input||input._fitValue===input.value&&input._fitWidth===input.clientWidth)return;
+  input.style.height='auto';input.style.height=Math.max(42,Math.min(120,input.scrollHeight))+'px';input._fitValue=input.value;input._fitWidth=input.clientWidth;
+}
 function blankProfile(){return {name:'小猫之神',userName:'旅人',description:'',personality:'',scenario:'',persona:'',firstMessage:'',examples:'',worldBefore:'',worldAfter:'',worldbook:[]};}
 function newStory(p=null,characterId=null,save=true){
   if(busy)return;
@@ -195,7 +249,7 @@ async function send(retry=false){
   if(temporaryChatReplay)s.mode='chat';
   if(retry){const last=s.messages.findLastIndex(m=>m.role==='user');if(last<0)return;const old=s.messages[last+1];if(old?.runtime?.beforeGlobals)state.library.globalVariables=structuredClone(old.runtime.beforeGlobals);s.messages.splice(last+1);}
   else{s.messages.push({id:uid(),role:'user',content:value,timestamp:Date.now(),mode:s.mode,status:'complete',extra:{}});input.value='';}
-  s.updatedAt=Date.now();liveText='';liveMessageId=uid();jobId='';setBusy(true);$('#generation-status').textContent='正在按原预设重写请求并连接模型…';$('#error-banner').hidden=true;renderMessages();scrollBottom();
+  s.updatedAt=Date.now();messageWindowStory=s.id;messageWindowEnd=null;liveText='';liveMessageId=uid();jobId='';setBusy(true);$('#generation-status').textContent='正在按原预设重写请求并连接模型…';$('#error-banner').hidden=true;renderMessages();scrollBottom();
   try {
     const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state,temporaryChatReplay})});
     if(!res.ok){const j=await res.json();throw Error(j.error || '生成请求出错。');}
@@ -208,12 +262,12 @@ async function send(retry=false){
       case 'error':if(!e.stopped)showError(e.error);else toast('生成已停止，已收到的内容留在故事里。');break;
       case 'done':state=e.state;receivedDone=true;break;
     }
-    if((e.type==='delta'||e.type==='replace')&&Date.now()-renderAt>90){const near=$('#chat-scroll').scrollHeight-$('#chat-scroll').scrollTop-$('#chat-scroll').clientHeight<140;renderMessages();if(near)scrollBottom();renderAt=Date.now();$('#generation-status').textContent='小猫正在写下一幕…';}}
+    if((e.type==='delta'||e.type==='replace')&&Date.now()-renderAt>90){const near=followLatest&&messageRange().latest&&$('#chat-scroll').scrollHeight-$('#chat-scroll').scrollTop-$('#chat-scroll').clientHeight<140;renderMessages();if(near)scrollBottom();renderAt=Date.now();$('#generation-status').textContent='小猫正在写下一幕…';}}
     while(true){const {value,done}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});let n;
       while((n=buffer.indexOf('\n\n'))!==-1){const event=buffer.slice(0,n);buffer=buffer.slice(n+2);const data=event.split('\n').filter(l=>l.startsWith('data:')).map(l=>l.slice(5).trimStart()).join('\n');if(data)handle(data);}}
     if(!receivedDone){const boot=await api('bootstrap');state=boot.state;throw Error('本机连接中断。已重新载入存档，请检查最后一条回复。');}
   }catch(e){showError(e.message);}
-  finally{if(temporaryChatReplay)session().mode='theater';setBusy(false);liveText='';liveMessageId='';jobId='';render();persist();scrollBottom();$('#message-input').focus();}
+  finally{if(temporaryChatReplay)session().mode='theater';setBusy(false);liveText='';liveMessageId='';jobId='';render();persist();if(followLatest&&messageRange().latest)scrollBottom();$('#message-input').focus();}
 }
 function openConnection(){
   const body=openModal('模型连接','connection');body.append(notice('地址、模型和生成选项自动保存在“Meowssiah-Data / 连接”。密钥保留到本次退出。'));
@@ -288,10 +342,19 @@ function openBackup(){
   ]){const card=element('section','backup-card');card.append(element('h3','',title),element('p','',desc),button(label,fn));grid.append(card);}body.append(grid,element('p','about-prose','本机数据目录：'+dataDir),actions(button('打开聊天管理',openChats),button('删除当前聊天',()=>deleteStory(),'danger')));
 }
 function confirmAction(title,description,fn){const body=openModal(title,'confirm');body.append(notice(description),actions(button('确认',async()=>{closeModal();await fn();},'primary'),button('取消',closeModal)));}
-function editMessage(m){if(busy)return;const body=openModal('编辑这条消息','edit-message'),f=field('原文',m.content,'textarea',true);f.input.rows=14;body.append(notice('保留后续消息原文，保存后只重算本故事从此处开始的变量快照与动态显示，不调用模型。'),f.wrap,actions(button('保存编辑',async()=>{try{m.content=f.input.value;delete m.providerCall;const r=await api('runtime/recalculate',{state,fromIndex:session().messages.indexOf(m)});state=r.state;render();closeModal();}catch(e){toast(e.message);}},'primary'),button('取消',closeModal)));}
+function editMessage(m){
+  if(busy)return;const anchor=captureReadingAnchor(),storyId=session().id,messageId=m.id,body=openModal('编辑这条消息','edit-message'),f=field('原文',m.content,'textarea',true),result=element('p','about-prose');f.input.rows=14;let saving=false;
+  const save=button('保存编辑',async()=>{
+    if(saving)return;saving=true;clearTimeout(saveTimer);save.disabled=true;f.input.disabled=true;result.textContent='正在保存并重算受影响的变量…';setBusy(true,'edit');$('#generation-status').textContent='正在重算编辑后的变量…';
+    try{await saveChain.catch(()=>{});const draft=structuredClone(state),story=draft.sessions.find(s=>s.id===storyId),index=story.messages.findIndex(x=>x.id===messageId);if(index<0)throw Error('这条消息已移出当前聊天。');story.messages[index].content=f.input.value;delete story.messages[index].providerCall;
+      const r=await api('runtime/recalculate',{state:draft,fromIndex:index});state=r.state;followLatest=false;messageWindowStory=storyId;messageWindowEnd=anchor?.windowEnd ?? messageWindowEnd;readingAnchor=anchor;render();closeModal();restoreReadingAnchor();requestAnimationFrame(restoreReadingAnchor);toast('编辑已保存，阅读位置已保留。');
+    }catch(e){result.textContent=e.message;}finally{setBusy(false);save.disabled=false;f.input.disabled=false;saving=false;restoreReadingAnchor();}
+  },'primary');
+  body.append(notice('保留后续消息原文，重算必要的变量与动态显示；保存后回到当前阅读位置。'),f.wrap,actions(save,button('取消',()=>{if(!saving)closeModal();})),result);
+}
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.4：MVU 随对话自动更新'),element('p','','修正变量世界书被正则标记过滤的问题。当前对话模型在同一轮回复中生成变量更新，本地 MVU 执行并保存，变量面板显示最近一次执行结果。世界书分区、暖金 / 玫红灯、角色卡删除与聊天快照继续保留。原 Meowssiah 请求处理、工具、签名字段与输出处理保持原样。'),
+  prose.append(element('h3','','1.1.5：宽屏布局、最近 20 层与编辑定位'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏铺宽；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
     element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
     element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);
@@ -323,18 +386,19 @@ function bind(){
   const auto=check('场外聊天完成后自动回到剧场',session().chatAutoReturn!==false);auto.input.id='chat-auto-return';$('#note-auto-clear').closest('label').after(auto.wrap);auto.input.onchange=e=>{session().chatAutoReturn=e.target.checked;persist();};
   $('#new-story').onclick=()=>startCardStory();$('#open-chats').onclick=$('#manage-chats').onclick=openChats;$('#search-stories').oninput=renderShelf;$('#open-connection').onclick=openConnection;$('#open-profile').onclick=openProfile;$('#open-presets').onclick=()=>openPresets();$('#open-backup').onclick=openBackup;$('#open-about').onclick=openAbout;$('#open-request').onclick=openRequest;
   $('#close-modal').onclick=closeModal;$('#modal').addEventListener('click',e=>{if(e.target===$('#modal')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal();}});
-  $('#toggle-details').onclick=()=>document.body.classList.toggle('details-hidden');$('#theme-toggle').onclick=()=>{state.ui.theme=state.ui.theme==='dark'?'light':'dark';render();persist();};
-  $('#jump-start').onclick=()=>{followLatest=false;$('#chat-scroll').scrollTo({top:0,behavior:'instant'});};$('#jump-latest').onclick=scrollBottom;
-  for(const event of ['wheel','pointerdown','keydown'])$('#chat-scroll').addEventListener(event,()=>{followLatest=false;},{passive:true});
+  $('#toggle-details').onclick=()=>{const open=document.body.classList.toggle('details-open');$('#toggle-details').setAttribute('aria-expanded',String(open));};$('#theme-toggle').onclick=()=>{state.ui.theme=state.ui.theme==='dark'?'light':'dark';render();persist();};
+  $('#jump-start').onclick=()=>showMessageWindow('first');$('#jump-latest').onclick=()=>showMessageWindow('latest');
+  for(const event of ['wheel','pointerdown','keydown'])$('#chat-scroll').addEventListener(event,()=>{followLatest=false;readingAnchor=null;},{passive:true});
   $('#rename-story').onclick=()=>renameStory();
   $$('[data-mode]').forEach(b=>b.onclick=()=>{session().mode=b.dataset.mode;render();persist();});$('#deep-think').onchange=e=>{session().deepThink=e.target.checked;persist();};
   $('#director-note').oninput=e=>{session().note=e.target.value;$('#note-indicator').textContent=e.target.value.trim()?'本轮生效':'';persist();};$('#note-auto-clear').onchange=e=>{session().noteAutoClear=e.target.checked;persist();};
   $('#composer').onsubmit=e=>{e.preventDefault();send().catch(e=>showError(e.message));};$('#message-input').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send().catch(e=>showError(e.message));}};
+  $('#message-input').addEventListener('input',fitComposer);new ResizeObserver(()=>{document.documentElement.style.setProperty('--topbar-height',$('.topbar').offsetHeight+'px');fitComposer();}).observe($('.topbar'));
   $('#stop-generation').onclick=async()=>{if(jobId)await api('stop',{jobId});else toast('请求正在准备中，稍候即可停止。');};$('#retry-message').onclick=()=>send(true).catch(e=>showError(e.message));
   $('#import-character').onclick=$('#welcome-import').onclick=()=>$('#character-file').click();$('#character-file').onchange=e=>{importCharacter(e.target.files[0]).catch(e=>toast(e.message));e.target.value='';};
   $('#worldbook-file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const j=await api('library/import-worldbook',{name:file.name.replace(/\.json$/i,''),json:JSON.parse(await file.text())});state.library.worldbooks.push(j.worldbook);currentCard().enabledWorldbookIds.push(j.worldbook.id);await persist(true);updateLibraryBadges();openProfile();toast(`已加入总库，并为当前卡启用 ${j.worldbook.entries.length} 条资料。`);}catch(e){toast(e.message);}finally{e.target.value='';}};
   $('#backup-file').onchange=e=>{importBackup(e.target.files[0]).catch(e=>toast(e.message));e.target.value='';};$('#load-demo').onclick=loadDemo;
   $$('[data-starter]').forEach(b=>b.onclick=()=>{$('#message-input').value=b.dataset.starter;$('#message-input').focus();});
 }
-async function boot(){try{const b=await api('bootstrap');state=b.state;preset=b.preset;keyConfigured=b.keyConfigured;dataDir=b.dataDir;bind();render();if(b.notice)showError(b.notice);await repairStory();}catch(e){showError('载入出错：'+e.message);}}
+async function boot(){try{const b=await api('bootstrap');state=b.state;preset=b.preset;keyConfigured=b.keyConfigured;dataDir=b.dataDir;bind();render();if(b.notice)showError(b.notice);await repairStory();if(session().messages.length)scrollBottom();}catch(e){showError('载入出错：'+e.message);}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

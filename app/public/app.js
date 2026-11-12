@@ -6,6 +6,7 @@ const chatDrafts=new Map();
 const MESSAGE_PAGE_SIZE=20;
 let messageWindowStory='',messageWindowEnd=null;
 let readingAnchor=null;
+let undoPoint=null;
 const session=()=>state.sessions.find(s=>s.id===state.activeId);
 const element=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;};
 const uid=()=>crypto.randomUUID();
@@ -13,13 +14,13 @@ function toast(message){$('#toast').textContent=message;$('#toast').hidden=false
 function showError(message){$('#error-banner').textContent=message;$('#error-banner').hidden=false;}
 async function api(path,body){
   const r=await fetch('/api/'+path,{method:body===undefined?'GET':'POST',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
-  let j;try{j=await r.json();}catch{throw Error('本机服务没有返回有效数据。请重新打开程序。');}if(!r.ok)throw Error(j.error || '本机请求出错。');return j;
+  let j;try{j=await r.json();}catch{throw Error('本机服务没有返回有效数据。请重新打开程序。');}if(Object.hasOwn(j,'undo')){undoPoint=j.undo;updateComposerActions();}if(!r.ok)throw Error(j.error || '本机请求出错。');return j;
 }
-function persist(immediate=false){
+function persist(immediate=false,allowBusy=false){
   clearTimeout(saveTimer);$('#save-status').textContent='保存中…';
   const write=()=>{
     const snapshot=structuredClone(state);
-    saveChain=saveChain.catch(()=>{}).then(async()=>{if(busy)return;const result=await api('state',{state:snapshot});state.revision=result.state.revision;$('#save-status').textContent='已保存在本机';}).catch(e=>{showError('保存出错：'+e.message);$('#save-status').textContent='保存失败';throw e;});
+    saveChain=saveChain.catch(()=>{}).then(async()=>{if(busy&&!allowBusy)return;const result=await api('state',{state:snapshot});state.revision=result.state.revision;$('#save-status').textContent='已保存在本机';}).catch(e=>{showError('保存出错：'+e.message);$('#save-status').textContent='保存失败';throw e;});
     return saveChain;
   };
   if(immediate)return write();saveTimer=setTimeout(()=>write().catch(()=>{}),350);
@@ -169,7 +170,7 @@ function renderMessages(){
   if(busy && liveMessageId && range.latest)nodes.push(renderMessage({id:liveMessageId,role:'assistant',content:liveText,timestamp:Date.now(),mode:s.mode},true,range.total));
   let cursor=list.firstChild;for(const node of nodes){if(node===cursor)cursor=cursor.nextSibling;else list.insertBefore(node,cursor);}while(cursor){const next=cursor.nextSibling;cursor.remove();cursor=next;}
   releaseDisconnectedCardFrames();syncCardFrameContext();
-  $('#retry-message').hidden=!s.messages.some(m=>m.role==='user')||busy;
+  updateComposerActions();
   const latest=s.messages.findLast(m=>m.role==='assistant'&&parse(m.content).summary);
   $('#latest-summary').textContent=latest?parse(latest.content).summary:'故事开始后，模型返回的场记会留在这里，方便接着写。';
 }
@@ -192,7 +193,23 @@ function newStory(p=null,characterId=null,save=true){
   state.sessions.push(s);state.activeId=s.id;render();if(save)persist();$('#message-input').value='';$('#message-input').focus();
 }
 function setBusy(value,kind='generation'){busy=value;document.body.classList.toggle('busy',value);$('#send-message').hidden=value;$('#stop-generation').hidden=!value||kind!=='generation';$('#message-input').disabled=value;$('#generation-status').hidden=!value;
-  for(const id of ['deep-think','director-note','note-auto-clear','chat-auto-return','rename-story','new-story','theme-toggle'])$('#'+id).disabled=value;}
+  for(const id of ['deep-think','director-note','note-auto-clear','chat-auto-return','rename-story','new-story','theme-toggle'])$('#'+id).disabled=value;if(state)$('#welcome').hidden=session().messages.length>0||value;updateComposerActions();}
+function updateComposerActions(){
+  const s=state?session():null,retry=$('#retry-message'),undo=$('#undo-generation');
+  if(retry){retry.hidden=!s?.messages.some(m=>m.role==='user');retry.disabled=busy;}
+  if(undo){const available=!!undoPoint&&undoPoint.storyId===s?.id;undo.hidden=false;undo.disabled=busy||!available;undo.title=busy?'生成结束或停止后，可撤回到本轮开始前。':available?'撤回最近一次发送或重新生成，恢复聊天、变量、账本与原输入；只保留一步。':undoPoint?'最新回撤点属于另一段聊天。':'下一次发送或重新生成会记录一个回撤点；使用后清除。';}
+}
+function captureGenerationView(){return {draft:$('#message-input').value,windowEnd:messageWindowEnd,anchor:captureReadingAnchor(),scrollTop:$('#chat-scroll').scrollTop,followLatest,diagnostics:lastDiagnostics};}
+function restoreGenerationView(view={}){
+  const input=$('#message-input');input.value=typeof view.draft==='string'?view.draft:'';chatDrafts.set(state.activeId,input.value);
+  messageWindowStory=state.activeId;messageWindowEnd=Number.isInteger(view.windowEnd)?view.windowEnd:null;readingAnchor=view.anchor || null;followLatest=view.followLatest===true;lastDiagnostics=view.diagnostics || null;
+  render();const position=()=>{if(readingAnchor)restoreReadingAnchor();else $('#chat-scroll').scrollTop=view.scrollTop || 0;};position();requestAnimationFrame(position);input.focus({preventScroll:true});
+}
+async function undoGeneration(){
+  if(busy||!undoPoint||undoPoint.storyId!==state.activeId)return;const point=undoPoint;clearTimeout(saveTimer);setBusy(true,'undo');$('#generation-status').textContent='正在恢复本轮开始前的状态…';
+  try{await persist(true,true);await saveChain;const reply=await api('undo',{id:point.id,storyId:state.activeId});state=reply.state;undoPoint=reply.undo;liveText='';liveMessageId='';jobId='';$('#error-banner').hidden=true;restoreGenerationView(reply.view);toast('本轮已撤回，原输入已放回输入框，可修改后重新发送。');}
+  catch(e){showError(e.message);}finally{setBusy(false);}
+}
 async function initializeStory(fromIndex){
   clearTimeout(saveTimer);await saveChain.catch(()=>{});setBusy(true,'opening');$('#generation-status').textContent='正在初始化角色与开场白…';
   try{const r=await api('runtime/recalculate',{state,fromIndex});state=r.state;}
@@ -244,23 +261,25 @@ async function send(retry=false){
   if(!state.settings.baseUrl||!state.settings.model){openConnection();toast('先填模型连接，再开始生成。');return;}
   const input=$('#message-input'),value=input.value.trim(),s=session();
   if(!retry&&!value)return;
-  await persist(true).catch(()=>{});await saveChain.catch(()=>{});
+  if(retry&&!s.messages.some(m=>m.role==='user'))return;
+  const undoView=captureGenerationView();setBusy(true,'prepare');$('#generation-status').textContent='正在保存本轮开始前的状态…';
+  try{await persist(true,true);await saveChain;}catch(e){setBusy(false);showError(e.message);return;}
   const temporaryChatReplay=retry&&s.mode==='theater'&&s.messages.at(-1)?.role==='assistant'&&s.messages.at(-1)?.mode==='chat';
   if(temporaryChatReplay)s.mode='chat';
   if(retry){const last=s.messages.findLastIndex(m=>m.role==='user');if(last<0)return;const old=s.messages[last+1];if(old?.runtime?.beforeGlobals)state.library.globalVariables=structuredClone(old.runtime.beforeGlobals);s.messages.splice(last+1);}
   else{s.messages.push({id:uid(),role:'user',content:value,timestamp:Date.now(),mode:s.mode,status:'complete',extra:{}});input.value='';}
   s.updatedAt=Date.now();messageWindowStory=s.id;messageWindowEnd=null;liveText='';liveMessageId=uid();jobId='';setBusy(true);$('#generation-status').textContent='正在按原预设重写请求并连接模型…';$('#error-banner').hidden=true;renderMessages();scrollBottom();
   try {
-    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state,temporaryChatReplay})});
-    if(!res.ok){const j=await res.json();throw Error(j.error || '生成请求出错。');}
+    const res=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({state,temporaryChatReplay,retry,undoView})});
+    if(!res.ok){const j=await res.json();if(Object.hasOwn(j,'undo'))undoPoint=j.undo;throw Error(j.error || '生成请求出错。');}
     const reader=res.body.getReader(),decoder=new TextDecoder();let buffer='',receivedDone=false,renderAt=0;
     function handle(data){const e=JSON.parse(data);switch(e.type){
-      case 'start':jobId=e.jobId;liveMessageId=e.messageId;lastDiagnostics=e.diagnostics;$('#generation-status').textContent=`原版请求已生成 · ${e.diagnostics.characters.toLocaleString()} 字符 · 等待模型回复…`;break;
+      case 'start':jobId=e.jobId;liveMessageId=e.messageId;lastDiagnostics=e.diagnostics;undoPoint=e.undo;$('#generation-status').textContent=`原版请求已生成 · ${e.diagnostics.characters.toLocaleString()} 字符 · 等待模型回复…`;break;
       case 'delta':liveText+=e.text;break;
       case 'replace':liveText=e.text;break;
       case 'warning':toast(e.text);break;
       case 'error':if(!e.stopped)showError(e.error);else toast('生成已停止，已收到的内容留在故事里。');break;
-      case 'done':state=e.state;receivedDone=true;break;
+      case 'done':state=e.state;undoPoint=e.undo;receivedDone=true;break;
     }
     if((e.type==='delta'||e.type==='replace')&&Date.now()-renderAt>90){const near=followLatest&&messageRange().latest&&$('#chat-scroll').scrollHeight-$('#chat-scroll').scrollTop-$('#chat-scroll').clientHeight<140;renderMessages();if(near)scrollBottom();renderAt=Date.now();$('#generation-status').textContent='小猫正在写下一幕…';}}
     while(true){const {value,done}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});let n;
@@ -354,8 +373,8 @@ function editMessage(m){
 }
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.7：角色卡表单保存修复'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏以适中宽度居中；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
-    element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。表单保存按钮现可触发原卡的本机变量写入，服装资料按原卡规则保存。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
+  prose.append(element('h3','','1.1.8：单步回撤与编辑重生成'),element('p','','撤回最近一次发送或重新生成，直接恢复本轮开始前的聊天、变量、账本、模式和便笺，并放回原输入。只保留一个回撤点，下次生成覆盖，使用后清除；从新版首次生成起记录。编辑保存后，重新生成按钮保持可见。'),element('p','','启动和切换聊天只渲染最近 20 层，翻页时卸载旧界面。标题收进顶部，聊天和状态栏以适中宽度居中；模式、深思、模型名留在底部，输入框压薄。保存编辑只刷新受影响的可见楼层并保持阅读位置。完整存档、MVU 与原预设的发送历史滚动继续保留。'),
+    element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。表单保存按钮可触发原卡的本机变量写入，服装资料按原卡规则保存。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
     element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);
 }
@@ -394,11 +413,11 @@ function bind(){
   $('#director-note').oninput=e=>{session().note=e.target.value;$('#note-indicator').textContent=e.target.value.trim()?'本轮生效':'';persist();};$('#note-auto-clear').onchange=e=>{session().noteAutoClear=e.target.checked;persist();};
   $('#composer').onsubmit=e=>{e.preventDefault();send().catch(e=>showError(e.message));};$('#message-input').onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send().catch(e=>showError(e.message));}};
   $('#message-input').addEventListener('input',fitComposer);new ResizeObserver(()=>{document.documentElement.style.setProperty('--topbar-height',$('.topbar').offsetHeight+'px');fitComposer();}).observe($('.topbar'));
-  $('#stop-generation').onclick=async()=>{if(jobId)await api('stop',{jobId});else toast('请求正在准备中，稍候即可停止。');};$('#retry-message').onclick=()=>send(true).catch(e=>showError(e.message));
+  $('#stop-generation').onclick=async()=>{if(jobId)await api('stop',{jobId});else toast('请求正在准备中，稍候即可停止。');};$('#retry-message').onclick=()=>send(true).catch(e=>showError(e.message));$('#undo-generation').onclick=undoGeneration;
   $('#import-character').onclick=$('#welcome-import').onclick=()=>$('#character-file').click();$('#character-file').onchange=e=>{importCharacter(e.target.files[0]).catch(e=>toast(e.message));e.target.value='';};
   $('#worldbook-file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const j=await api('library/import-worldbook',{name:file.name.replace(/\.json$/i,''),json:JSON.parse(await file.text())});state.library.worldbooks.push(j.worldbook);currentCard().enabledWorldbookIds.push(j.worldbook.id);await persist(true);updateLibraryBadges();openProfile();toast(`已加入总库，并为当前卡启用 ${j.worldbook.entries.length} 条资料。`);}catch(e){toast(e.message);}finally{e.target.value='';}};
   $('#backup-file').onchange=e=>{importBackup(e.target.files[0]).catch(e=>toast(e.message));e.target.value='';};$('#load-demo').onclick=loadDemo;
   $$('[data-starter]').forEach(b=>b.onclick=()=>{$('#message-input').value=b.dataset.starter;$('#message-input').focus();});
 }
-async function boot(){try{const b=await api('bootstrap');state=b.state;preset=b.preset;keyConfigured=b.keyConfigured;dataDir=b.dataDir;bind();render();if(b.notice)showError(b.notice);await repairStory();if(session().messages.length)scrollBottom();}catch(e){showError('载入出错：'+e.message);}}
+async function boot(){try{const b=await api('bootstrap');state=b.state;preset=b.preset;keyConfigured=b.keyConfigured;dataDir=b.dataDir;bind();render();if(b.notice)showError(b.notice);await repairStory();if(b.restoredView)restoreGenerationView(b.restoredView);else if(session().messages.length)scrollBottom();}catch(e){showError('载入出错：'+e.message);}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

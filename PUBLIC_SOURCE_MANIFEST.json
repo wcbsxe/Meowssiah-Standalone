@@ -1,6 +1,6 @@
 {
-  "version": "1.1.7",
-  "source": "local delivered source snapshot",
+  "version": "1.1.8",
+  "source": "maintained release source",
   "applicationFiles": [
     {
       "file": "app/core/card-frame.cjs",
@@ -19,6 +19,10 @@
       "sha256": "31815c5f47d18bbe85be02ab05799329f946abaa2466bfc5e50e0172d7f70494"
     },
     {
+      "file": "app/core/generation-undo.cjs",
+      "sha256": "4397fe7c049bf8b246372d1bb3f16cd4341c4561e535a9fde6f960796b966e10"
+    },
+    {
       "file": "app/core/library.cjs",
       "sha256": "efef0b84af3f317ad25c5e742e0e38669442460512cc6c0123d7e4178f120e77"
     },
@@ -32,7 +36,7 @@
     },
     {
       "file": "app/core/store.cjs",
-      "sha256": "cfda30e6e140752baa3b8f3567e9ec4e168f7144c406264b337a5713611722c2"
+      "sha256": "5533041eb5967a6feab9d08623168e77a4206f858d4aed9d4d0c8726df6c6825"
     },
     {
       "file": "app/core/worldbook.cjs",
@@ -72,7 +76,7 @@
     },
     {
       "file": "app/public/app.js",
-      "sha256": "26113abd45cf6c09c72768f4b3ecc3351205106e6cfa7ccdf0af64293d66a7c3"
+      "sha256": "fb370366ea2dd695db8d15f696d839726c79939d44f567e643fb1f638523378e"
     },
     {
       "file": "app/public/frame-vendor.js",
@@ -84,7 +88,7 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "c85a31a22194bbbf2e8235e13cba4180739cc613ff35d0f78402a52271bd0246"
+      "sha256": "b8bce326f828cdb30950edba6fc4f3498f47bbc5dce4d09543aab6c53ede534c"
     },
     {
       "file": "app/public/library-ui.js",
@@ -96,11 +100,11 @@
     },
     {
       "file": "app/public/style.css",
-      "sha256": "67db46fe669fdfcabac5311157024f45d9a49e9e8ab6df11e8b3269d858d5e27"
+      "sha256": "183125bdad60eff3003d7f38cc78679375aa0c7d732c952e9ab22ae4073bff93"
     },
     {
       "file": "app/server.cjs",
-      "sha256": "3c18d17287c1d9cce3f6f2e7de5e23f1cb5e39015501c4843b29827ce9683a69"
+      "sha256": "1f47157fb79aa93904dddd8f7db7f187c88c2f10f1b32ecf7cc7ae46269975cc"
     },
     {
       "file": "app/vendor/card-runtime.js",

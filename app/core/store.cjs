@@ -1,6 +1,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {defaultState,normalizeState,normalizeSettings}=require('./engine.cjs');
+const Undo=require('./generation-undo.cjs');
 const clone=x=>structuredClone(x);
 const filename=id=>/^[a-z0-9_-]{1,72}$/i.test(id)&&!/^(con|prn|aux|nul|com\d|lpt\d)$/i.test(id)?id+'.json':crypto.createHash('sha256').update(String(id)).digest('hex').slice(0,32)+'.json';
 class Store {
@@ -11,6 +12,7 @@ class Store {
     this.file=path.join(this.paths.workspace,'设置.json');this.previous=path.join(this.paths.backups,'自动','上一份工作区.json');
     this.connectionFile=path.join(this.paths.connection,'设置.json');this.connectionPrevious=path.join(this.paths.backups,'自动','上一份连接.json');
     this.journal=path.join(this.paths.workspace,'待完成写入.json');
+    this.undoFile=path.join(this.paths.backups,'回撤','最近一次生成.json');this.undoPoint=null;this.restoredUndoView=null;
     const legacy=path.join(this.dir,'workspace.json');let migrated=false,recovered=false;
     if(fs.existsSync(this.journal)){
       try{this.state=normalizeState(this.read(this.journal));recovered=true;this.notice='已恢复上次中断的本地保存。';}
@@ -38,9 +40,16 @@ class Store {
         this.notice=[this.notice,'连接文件读取出错，已恢复最近保存的设置。'].filter(Boolean).join('\n');
       }
     }
-    this.writeConnection(this.state.settings);
+    this.state.settings=normalizeSettings(this.state.settings);this.writeConnection(this.state.settings);
     if(migrated||recovered||!fs.existsSync(this.file))this.writeState(this.state,false);
     if(fs.existsSync(legacy))this.archiveLegacy();
+    if(fs.existsSync(this.undoFile+'.pending'))fs.unlinkSync(this.undoFile+'.pending');
+    if(fs.existsSync(this.undoFile)){
+      try{const point=this.read(this.undoFile);if(!Undo.validate(point))throw Error('回撤点校验失败');this.undoPoint=point;}
+      catch{this.clearUndo();this.notice=[this.notice,'回撤点读取出错，现有聊天保持原样。'].filter(Boolean).join('\n');}
+      if(this.undoPoint?.status==='restoring'){const restored=this.restoreUndo(this.undoPoint.id,this.undoPoint.storyId);this.restoredUndoView=restored.view;}
+      else if(this.undoPoint&&!this.undoInfo())this.clearUndo();
+    }
   }
   read(file){return JSON.parse(fs.readFileSync(file,'utf8'));}
   assetPath(kind,file){
@@ -100,7 +109,20 @@ class Store {
   save(input){
     const state=normalizeState(input);state.revision=this.state.revision+1;
     // Chat imports and autosaves leave this computer's connection selection intact.
-    state.settings=clone(this.state.settings);this.writeState(state);this.state=state;return this.snapshot();
+    state.settings=clone(this.state.settings);this.writeState(state);this.state=state;if(this.undoPoint&&!this.undoInfo())this.clearUndo();return this.snapshot();
+  }
+  undoInfo(){return Undo.info(this.state,this.undoPoint);}
+  captureUndo(storyId,view,kind){
+    const point=Undo.capture(this.state,storyId,view,kind);this.atomic(this.undoFile,point);this.undoPoint=point;this.restoredUndoView=null;return this.undoInfo();
+  }
+  clearUndo(){if(fs.existsSync(this.undoFile))fs.unlinkSync(this.undoFile);this.undoPoint=null;}
+  restoreUndo(id,storyId){
+    const info=this.undoInfo();if(!info||info.id!==id||info.storyId!==storyId)throw Error('没有对应的单步回撤点。');
+    const point=this.undoPoint,next=Undo.restore(this.state,point);next.revision=this.state.revision+1;
+    this.atomic(this.undoFile,{...point,status:'restoring'});
+    // Do not make the discarded reply the automatic recovery backup.
+    this.writeState(next,false);this.atomic(this.previous,next);this.state=next;this.clearUndo();
+    return {state:this.snapshot(),view:clone(point.view),undo:null};
   }
   snapshot(){return clone(this.state);}
 }

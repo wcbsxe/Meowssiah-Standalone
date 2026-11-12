@@ -38,14 +38,22 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
       if(!String(req.headers.cookie || '').split(';').some(c=>c.trim()===`meow_session=${token}`))return json(res,403,{error:'请在程序窗口操作。'});
       if(req.headers.origin && req.headers.origin!==origin)return json(res,403,{error:'来源地址不匹配。'});
       if(req.headers['sec-fetch-site']==='cross-site')return json(res,403,{error:'请在程序窗口操作。'});
-      if(req.method==='GET' && url.pathname==='/api/bootstrap')return json(res,200,{state:store.snapshot(),preset:E.preset,notice:store.notice,keyConfigured:!!apiKey,dataDir});
+      if(req.method==='GET' && url.pathname==='/api/bootstrap'){
+        const restoredView=store.restoredUndoView;store.restoredUndoView=null;return json(res,200,{state:store.snapshot(),undo:store.undoInfo(),restoredView,preset:E.preset,notice:store.notice,keyConfigured:!!apiKey,dataDir});
+      }
+      if(req.method==='GET' && url.pathname==='/api/undo')return json(res,200,{undo:store.undoInfo()});
       if(req.method!=='POST')return json(res,405,{error:'请求方法不匹配。'});
       if(!String(req.headers['content-type']).startsWith('application/json'))return json(res,415,{error:'请使用 JSON 请求。'});
       const body=await readBody(req);
       switch(url.pathname){
         case '/api/state': {
           if(jobs.size||preparing)throw new Error('生成进行中，请停止或等待生成结束再保存改动。');
-          return json(res,200,{state:store.save(body.state)});
+          const state=store.save(body.state);return json(res,200,{state,undo:store.undoInfo()});
+        }
+        case '/api/undo': {
+          if(jobs.size||preparing)throw Error('请先停止生成，再撤回本轮。');
+          if(body.storyId!==store.state.activeId)throw Error('请在对应聊天中使用回撤。');
+          return json(res,200,store.restoreUndo(String(body.id || ''),String(body.storyId || '')));
         }
         case '/api/key':apiKey=String(body.key || '').slice(0,10000).trim();return json(res,200,{configured:!!apiKey});
         case '/api/connection':return json(res,200,{settings:store.saveConnection(body.settings)});
@@ -63,7 +71,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           if(jobs.size||preparing)throw Error('请在当前回复完成后删除角色卡。');
           const state=E.normalizeState(body.state || store.snapshot()),result=Library.deleteCharacter(state,String(body.characterId),body.deleteChats===true);
           if(!state.sessions.length){const blank=E.newSession();blank.characterId='';blank.detachedCharacter=Library.detachedCharacter({id:'blank-'+blank.id,profile:blank.profile},'blank-chat');state.sessions.push(blank);state.activeId=blank.id;}
-          return json(res,200,{...result,state:store.save(state)});
+          const saved=store.save(state);return json(res,200,{...result,state:saved,undo:store.undoInfo()});
         }
         case '/api/runtime/inspect': {
           const state=E.normalizeState(body.state || store.snapshot()),s=state.sessions.find(s=>s.id===state.activeId);
@@ -104,7 +112,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             }
             s.messages.push(message);
           }
-          return json(res,200,{state:store.save(state)});
+          const saved=store.save(state);return json(res,200,{state:saved,undo:store.undoInfo()});
         }
         case '/api/preview': {
           const state=E.normalizeState(body.state || store.snapshot()),s=state.sessions.find(s=>s.id===state.activeId);
@@ -117,6 +125,8 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           const state=E.normalizeState(body.state),session=state.sessions.find(s=>s.id===state.activeId);
           if(session.messages.at(-1)?.role!=='user')throw new Error('请先输入一条消息。');
           if(!state.settings.baseUrl || !state.settings.model)throw new Error('请先在“模型连接”里填写接口地址与模型名。');
+          if(session.id!==store.state.activeId||state.revision!==store.state.revision)throw Error('聊天状态刚有更新，请重新载入后再发送。');
+          store.captureUndo(session.id,body.undoView,body.retry?'retry':'send');
           let prepared;preparing=true;try{prepared=await Runtime.prepare(state,session,E.effectivePrompts(state));}finally{preparing=false;}
           const compiled=E.compile(state,session,prepared),urlCheck=provider.endpoint(state.settings.baseUrl,'chat/completions');void urlCheck;
           if(prepared.current && !session.runtime?.initial)session.runtime={...(session.runtime || {}),initial:prepared.current};
@@ -131,7 +141,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           res.writeHead(200,{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'no-cache','Connection':'keep-alive'});
           res.on('close',()=>{if(!res.writableEnded){disconnected=true;controller.abort();}});
           const emit=e=>{if(!disconnected)res.write(`data: ${JSON.stringify(e)}\n\n`);};
-          emit({type:'start',jobId,messageId:answer.id,diagnostics:compiled.diagnostics});
+          emit({type:'start',jobId,messageId:answer.id,diagnostics:compiled.diagnostics,undo:store.undoInfo()});
           try {
             const result=await provider.generate(state.settings,apiKey,compiled.request,controller.signal,e=>{if(e.type==='delta')answer.content+=e.text;if(e.type==='replace')answer.content=e.text;emit(e);});
             answer.content=result.content;answer.usage=result.usage;
@@ -157,13 +167,13 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             if(answer.content.trim())session.messages.push(answer);
             session.updatedAt=Date.now();
             if(session.title==='未命名的故事')session.title=session.messages.find(m=>m.role==='user')?.content.slice(0,24).replace(/\n/g,' ')||session.title;
-            const saved=store.save(state);emit({type:'done',state:saved});res.end();
+            const saved=store.save(state);emit({type:'done',state:saved,undo:store.undoInfo()});res.end();
           }
           return;
         }
         default:return json(res,404,{error:'接口不存在。'});
       }
-    } catch(error){if(!res.headersSent)json(res,400,{error:provider.cleanError(error.message,apiKey)});else res.end();}
+    } catch(error){if(!res.headersSent)json(res,400,{error:provider.cleanError(error.message,apiKey),undo:store.undoInfo()});else res.end();}
   });
   return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,'127.0.0.1',()=>{
     origin=`http://127.0.0.1:${server.address().port}`;

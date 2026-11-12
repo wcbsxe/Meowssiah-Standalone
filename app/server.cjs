@@ -94,7 +94,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
               const beforeGlobals=structuredClone(state.library.globalVariables || {}),result=await Runtime.complete(state,s,message.content,prepared);
               const card=Library.characterState(state,s);if(card&&result.characterVariables)card.variables=result.characterVariables;
               message.renderedContent=result.renderedContent;message.displayContent=result.displayContent;
-              message.runtime={before:result.before,after:result.current,errors:result.errors,warnings:result.warnings,commands:result.commands,
+              message.runtime={before:result.before,after:result.current,errors:result.errors,warnings:result.warnings,commands:result.commands,mvuUpdate:result.mvuUpdate,
                 localVariables:result.localVariables || {},beforeGlobals,globalVariables:result.globalVariables || {}};
               state.library.globalVariables=result.globalVariables || state.library.globalVariables;
             }
@@ -135,10 +135,12 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
             const beforeGlobals=structuredClone(state.library.globalVariables || {}),processed=await Runtime.complete(state,session,answer.content,prepared);
             const card=Library.characterState(state,session);if(card&&processed.characterVariables)card.variables=processed.characterVariables;
             answer.renderedContent=processed.renderedContent;answer.displayContent=processed.displayContent;
-            answer.runtime={before:processed.before,after:processed.current,errors:processed.errors,warnings:processed.warnings,commands:processed.commands,
+            answer.runtime={before:processed.before,after:processed.current,errors:processed.errors,warnings:processed.warnings,commands:processed.commands,mvuUpdate:processed.mvuUpdate,
               localVariables:processed.localVariables || {},beforeGlobals,globalVariables:processed.globalVariables || {}};
             state.library.globalVariables=processed.globalVariables || state.library.globalVariables;
             if(processed.errors?.length)emit({type:'warning',text:'本轮变量更新存在错误，已在变量面板保留详情。'});
+            else if(processed.mvuUpdate?.status==='missing')emit({type:'warning',text:'本轮回复没有变量更新块，变量沿用上一轮。'});
+            else if(processed.mvuUpdate?.status==='invalid')emit({type:'warning',text:'本轮变量更新块没有有效指令，请在变量面板查看原文。'});
             if(result.finishReason==='length')emit({type:'warning',text:'模型达到本轮输出上限，正文可能未结束；可调大输出上限后重试。'});
             if(session.noteAutoClear)session.note='';
             if(session.mode==='chat' && session.chatAutoReturn!==false)session.mode='theater';

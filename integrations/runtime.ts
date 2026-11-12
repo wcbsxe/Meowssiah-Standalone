@@ -10,6 +10,7 @@ import ejs from '../upstream/prompt-template/src/3rdparty/ejs.js';
 import * as z from 'zod';
 import * as jsonpatch from 'fast-json-patch';
 import {jsonPatch as templateJsonPatch,patchVariables as templatePatchVariables,parseJSON as templateParseJSON} from '../upstream/prompt-template/src/function/json-patch';
+import {selectEntries} from '../app/core/worldbook.cjs';
 
 let current:any, listeners:Map<string,Function[]>, ready:Promise<any>[], scope:any, entryDepth=0;
 const clone=(x:any)=>_.cloneDeep(x);
@@ -165,12 +166,7 @@ export async function execute(seed:any){
     await (globalThis as any).__meowEmit((globalThis as any).tavern_events.GENERATION_AFTER_COMMANDS);
     const profile={...seed.profile},books=clone(seed.books),promptStates=clone(seed.promptStates || {});
     for(const key of ['description','personality','scenario','persona','examples','worldBefore','worldAfter'])profile[key]=await render(profile[key]||'',key);
-    const hay=chat.slice(-8).map(m=>m.mes).join('\n');
-    for(const book of books)for(const entry of book.entries){
-      const includes=(key:string)=>entry.caseSensitive?hay.includes(key):hay.toLowerCase().includes(key.toLowerCase());
-      const active=entry.enabled!==false&&(entry.constant || (entry.keys || []).some(includes))&&(!entry.selective || !entry.secondary?.length || entry.secondary.some(includes));
-      if(active && !/\[initvar\]|\[InitialVariables\]/i.test(entry.name))entry.content=await render(entry.content,`${book.name} / ${entry.name}`);
-    }
+    for(const book of books)for(const entry of selectEntries(book.entries,chat,{mvu:ENV.compat.mvu,warnings:ENV.warnings}))entry.content=await render(entry.content,`${book.name} / ${entry.name}`);
     for(const row of seed.prompts || [])if(row.enabled)promptStates[row.id]={...(promptStates[row.id]||{}),content:await render(promptStates[row.id]?.content ?? row.content,row.name)};
     const bindings:any[]=[];
     for(const key of ['description','personality','scenario','persona','examples','worldBefore','worldAfter'])bindings.push({get:()=>profile[key]||'',set:(value:string)=>profile[key]=value});
@@ -194,5 +190,7 @@ export async function execute(seed:any){
   if(ENV.compat.mvu&&!/<StatusPlaceHolderImpl\s*\/>/i.test(visible))visible+='\n<StatusPlaceHolderImpl/>';
   V.STATE.cacheVars.stat_data=clone(current.stat_data);V.STATE.isDryRun=true;
   const display=await render(regexOutput(visible),'角色卡显示模板');
-  return finish({before,renderedContent:updateContext.message_content,displayContent:display,commands:commands.map(c=>({type:c.type,path:c.args[0]}))});
+  const hasBlock=/<(?:UpdateVariable|VariableUpdate|update)\b/i.test(rendered)||commands.length>0,emptyPatch=/<JSONPatch>\s*\[\s*\]\s*<\/JSONPatch>/i.test(rendered);
+  const mvuUpdate=ENV.compat.mvu?{status:ENV.errors.length?'error':!hasBlock?'missing':!commands.length&&!emptyPatch?'invalid':_.isEqual(before.stat_data,current.stat_data)?'unchanged':'updated',commands:commands.length}:null;
+  return finish({before,renderedContent:updateContext.message_content,displayContent:display,mvuUpdate,commands:commands.map(c=>({type:c.type,path:c.args[0]}))});
 }

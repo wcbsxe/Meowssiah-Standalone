@@ -291,7 +291,7 @@ function confirmAction(title,description,fn){const body=openModal(title,'confirm
 function editMessage(m){if(busy)return;const body=openModal('编辑这条消息','edit-message'),f=field('原文',m.content,'textarea',true);f.input.rows=14;body.append(notice('保留后续消息原文，保存后只重算本故事从此处开始的变量快照与动态显示，不调用模型。'),f.wrap,actions(button('保存编辑',async()=>{try{m.content=f.input.value;delete m.providerCall;const r=await api('runtime/recalculate',{state,fromIndex:session().messages.indexOf(m)});state=r.state;render();closeModal();}catch(e){toast(e.message);}},'primary'),button('取消',closeModal)));}
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.3：世界书分区与主题灯'),element('p','','世界书条目分为已启用、未启用两区，按插入顺序排列；暖金灯表示常驻，玫红灯表示关键词激活。角色卡选书也分为已启用、未启用两区。角色卡删除、聊天管理与保留快照继续提供；MVU 与 EJS 按消息保存变量和显示结果。原 Meowssiah 请求处理、工具、签名字段与输出处理继续保留。'),
+  prose.append(element('h3','','1.1.4：MVU 随对话自动更新'),element('p','','修正变量世界书被正则标记过滤的问题。当前对话模型在同一轮回复中生成变量更新，本地 MVU 执行并保存，变量面板显示最近一次执行结果。世界书分区、暖金 / 玫红灯、角色卡删除与聊天快照继续保留。原 Meowssiah 请求处理、工具、签名字段与输出处理保持原样。'),
     element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
     element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);

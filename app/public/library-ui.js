@@ -87,7 +87,7 @@ function openCardSettings(id){
   if(state.library.worldbooks.length)body.append(bindWorldbooks(state.library.worldbooks,selected,b=>{if(b.entries.some(e=>/\[initvar\]/i.test(e.name)))mvu.input.checked=true;if(b.entries.some(e=>e.content.includes('<%')))ejs.input.checked=true;}));
   if(!state.library.worldbooks.length)body.append(notice('总库还是空的。先到“世界书总库”创建或导入。'));
   body.append(element('h3','library-heading','运行框架'));
-  const mvu=check('运行 MVU：InitVar 初始化、更新指令、每条消息变量快照',p.compat?.mvu),ejs=check('运行提示词模板：EJS 条件、循环、getvar / setvar',p.compat?.ejs),html=check('显示角色卡的 HTML 状态栏',p.compat?.cardHtml!==false);
+  const mvu=check('运行 MVU：由当前对话模型随回复更新，保存每条消息变量快照',p.compat?.mvu),ejs=check('运行提示词模板：EJS 条件、循环、getvar / setvar',p.compat?.ejs),html=check('显示角色卡的 HTML 状态栏',p.compat?.cardHtml!==false);
   for(const c of [mvu,ejs,html]){c.wrap.classList.add('book-binding');body.append(c.wrap);}
   const scripts=field('卡片脚本 JSON（原有内容保留，可启用/停用）',JSON.stringify(p.helperScripts || [],null,2),'textarea',true,'MVU 核心与 mvu_zod 已本地化；已知模块引用会映射到本地，未知远程依赖会显示具体错误。'),regexes=field('角色卡显示正则 JSON',JSON.stringify(p.regexes || [],null,2),'textarea',true);
   const advanced=element('details','message-extra');advanced.append(element('summary','','查看 / 编辑卡片脚本与正则'),scripts.wrap,regexes.wrap);body.append(advanced);
@@ -144,7 +144,10 @@ async function openVariables(){
   const area=element('div','about-prose','正在读取本地框架状态…');body.append(area);
   try{const result=await api('runtime/inspect',{state}),last=session().messages.findLast(m=>m.role==='assistant'&&m.runtime),stats=element('div','stats');
     for(const [value,label] of [[result.compat.mvu?'开启':'关闭','MVU'],[result.compat.ejs?'开启':'关闭','EJS 提示词模板'],[result.schemaRegistered?'已注册':'未注册','Zod 变量结构'],[result.books.length,'启用世界书']]){const stat=element('div','stat');stat.append(element('strong','',value),document.createTextNode(label));stats.append(stat);}area.replaceChildren(stats);
-    const current=last?.runtime.after || result.current || {stat_data:{}};area.append(element('h3','','当前 stat_data'),element('pre','code-view',JSON.stringify(current.stat_data || {},null,2)));
+    const current=last?.runtime.after || result.current || {stat_data:{}},update=last?.runtime.mvuUpdate;
+    area.append(element('p','about-prose','更新方式：当前对话模型随回复输出指令，本地 MVU 执行；每轮一条模型请求。'));
+    if(update){const labels={updated:'已更新',unchanged:'已检查，无字段变化',missing:'未收到更新指令',invalid:'更新块没有有效指令',error:'执行出错'};const line=element('p','about-prose',`最近一条消息的变量更新：${labels[update.status] || update.status} · ${update.commands} 条指令`);line.id='mvu-update-result';area.append(line);}
+    area.append(element('h3','','当前 stat_data'),element('pre','code-view',JSON.stringify(current.stat_data || {},null,2)));
     const errors=[...(result.errors || []),...(last?.runtime.errors || [])],warnings=[...(result.warnings || []),...(last?.runtime.warnings || [])];if(errors.length)area.append(notice('更新错误：\n'+errors.join('\n')));if(warnings.length)area.append(notice('运行提示：\n'+warnings.join('\n')));
     area.append(element('p','about-prose','已选世界书：'+result.books.map(b=>`${b.name}（${b.entries} 条）`).join('、')));
     const edit=field('手动编辑当前 stat_data（JSON）',JSON.stringify(current.stat_data || {},null,2),'textarea',true,'提交时通过当前卡的 MVU/Zod 规则计算。已有消息会保留更新前后的快照。');area.append(edit.wrap);

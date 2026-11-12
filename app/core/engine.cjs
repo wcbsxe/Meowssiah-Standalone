@@ -5,6 +5,8 @@ const preset = require('../data/preset.json');
 const Original=require('./original-runtime.cjs');
 const L=require('./library.cjs');
 const Runtime=require('./card-runtime.cjs');
+const Worldbook=require('./worldbook.cjs'),vm=require('node:vm');
+const keywordRegex=new vm.Script('new RegExp(pattern,flags).test(value)');
 const text = (v, max=200000) => String(v ?? '').slice(0,max);
 const number = (v, fallback, min, max) => Number.isFinite(Number(v)) ? Math.max(min,Math.min(max,Number(v))) : fallback;
 const own = (o,k) => Object.prototype.hasOwnProperty.call(o || {},k);
@@ -113,14 +115,12 @@ function expandMacros(raw,p,lastUser,warnings) {
 function stripAuxiliary(raw) {
   return String(raw).replace(/<(think_nya|report_nya|think|thinking)~?\b[^>]*>[\s\S]*?<\/\1~?>/gi,'').trim();
 }
-function selectWorldbook(entries,messages) {
-  const hay=messages.slice(-8).map(m=>m.content).join('\n');
-  return entries.filter(e=>{
-    if(!e.enabled || /\[initvar\]|\[InitialVariables\]/i.test(e.name) || e.regex) return false;
-    if(e.constant) return true;
-    const includes=k=>e.caseSensitive?hay.includes(k):hay.toLowerCase().includes(k.toLowerCase());
-    return e.keys.some(includes) && (!e.selective || !e.secondary.length || e.secondary.some(includes));
-  }).sort((a,b)=>a.order-b.order);
+function selectWorldbook(entries,messages,options={}) {
+  const deadline=Date.now()+2000;
+  return Worldbook.selectEntries(entries,messages,{...options,testRegex:({source,flags},value)=>{
+    if(Date.now()>deadline)throw Error('本轮关键词正则匹配超过时间预算');
+    return keywordRegex.runInNewContext({pattern:source,flags,value},{timeout:25,contextCodeGeneration:{strings:false,wasm:false}});
+  }});
 }
 function compileOriginal(state,session,prepared=null){
   const p=profile(prepared?.profile || L.resolveProfile(state,session)), warnings=[...(prepared?.warnings || [])], lastUser=session.messages.findLast(m=>m.role==='user')?.content || '';
@@ -131,7 +131,7 @@ function compileOriginal(state,session,prepared=null){
   const order=settings.prompt_order.find(o=>o.character_id===100001).order;
   for(const row of order){const value=byId.get(row.identifier);if(value)row.enabled=value.enabled;}
   settings.extensions.SPreset.LogUpload={enabled:false,url:''};
-  const active=selectWorldbook(p.worldbook,session.messages);
+  const active=selectWorldbook(p.worldbook,session.messages,{mvu:p.compat.mvu,warnings});
   const slots={personaDescription:p.persona,charDescription:p.description,charPersonality:p.personality,scenario:p.scenario,dialogueExamples:p.examples,
     worldInfoBefore:[p.worldBefore,...active.filter(e=>e.originalPosition===0).map(e=>e.content)].filter(Boolean).join('\n\n'),
     worldInfoAfter:[p.worldAfter,...active.filter(e=>e.originalPosition===1).map(e=>e.content)].filter(Boolean).join('\n\n')};
@@ -152,6 +152,11 @@ function compileOriginal(state,session,prepared=null){
   const worldEntries=active.map(e=>({uid:e.id,world:e.sourceBook || '独立工作台',comment:e.name,content:expandMacros(e.content,p,lastUser,warnings),constant:e.constant,
     position:e.originalPosition,depth:e.depth,role:e.role}));
   for(const entry of prepared?.injectedPrompts || [])if(typeof entry.content==='string')worldEntries.push({uid:'script-'+entry.id,world:'卡片脚本',comment:String(entry.id || '脚本注入'),content:entry.content,constant:true,position:4,depth:Number(entry.depth)||0,role:entry.role==='user'?1:entry.role==='assistant'?2:0});
+  if(p.compat.mvu){
+    const current=prepared?.current || Runtime.snapshot(session).current;
+    const snapshot=current?.stat_data?`\n<mvu_current_snapshot>${JSON.stringify(current.stat_data)}</mvu_current_snapshot>`:'';
+    worldEntries.push({uid:'standalone-mvu-contract',world:'独立工作台',comment:'MVU 随本轮回复更新 · 当前权威快照',content:Worldbook.mvuContract()+snapshot,constant:true,position:4,depth:0,role:0});
+  }
   if(p.worldBefore)worldEntries.push({uid:'manual-before',comment:'前置世界资料',content:p.worldBefore,constant:true,position:0,depth:4,role:0});
   if(p.worldAfter)worldEntries.push({uid:'manual-after',comment:'后置世界资料',content:p.worldAfter,constant:true,position:1,depth:4,role:0});
   const chat=cleanHistory.map(m=>({mes:m.content,is_user:m.role==='user',is_system:false,name:m.role==='user'?p.userName:p.name,extra:m.extra || {}}));
@@ -165,7 +170,7 @@ function compileOriginal(state,session,prepared=null){
   return {request:result.request,hostMetadata:result.metadata,extras:result.extras,diagnostics:{compiler:'original-spreset-v1',characters:chars,
     enabledPreferences:order.filter(x=>x.enabled).length,retainedMessages:cleanHistory.length,activeWorldbook:active.map(e=>e.name),
     warnings:[...new Set(warnings)],sourceScriptSHA256:Original.hashes.FinalRequestProcessing,
-    selectedWorldbooks:L.selectedBooks(state,session).map(b=>b.name),skippedWorldbookRegexEntries:p.worldbook.filter(e=>e.regex).map(e=>e.name),runtime:{mvu:p.compat.mvu,ejs:p.compat.ejs,schemaRegistered:!!prepared?.schemaRegistered},
+    selectedWorldbooks:L.selectedBooks(state,session).map(b=>b.name),matchedWorldbookRegexEntries:active.filter(e=>e.regex).map(e=>e.name),runtime:{mvu:p.compat.mvu,ejs:p.compat.ejs,schemaRegistered:!!prepared?.schemaRegistered,mvuUpdateMode:p.compat.mvu?'same-response':'off'},
     signatures:JSON.stringify(result.request).split('skip_thought_signature_validator').length-1}};
 }
 function parseReply(raw) {

@@ -291,7 +291,7 @@ function confirmAction(title,description,fn){const body=openModal(title,'confirm
 function editMessage(m){if(busy)return;const body=openModal('编辑这条消息','edit-message'),f=field('原文',m.content,'textarea',true);f.input.rows=14;body.append(notice('保留后续消息原文，保存后只重算本故事从此处开始的变量快照与动态显示，不调用模型。'),f.wrap,actions(button('保存编辑',async()=>{try{m.content=f.input.value;delete m.providerCall;const r=await api('runtime/recalculate',{state,fromIndex:session().messages.indexOf(m)});state=r.state;render();closeModal();}catch(e){toast(e.message);}},'primary'),button('取消',closeModal)));}
 function openAbout(){
   const body=openModal('小猫之神，走出酒馆','about');const prose=element('div','about-prose');
-  prose.append(element('h3','','1.1.2：角色卡删除与聊天保留'),element('p','','角色卡库支持删除，已有聊天可保留独立快照或随卡删除。聊天管理支持新建、切换、重命名、创建副本、导入、导出和删除。世界书总库统一保存资料，每张角色卡自行选书；MVU 与 EJS 按消息保存变量和显示结果。原 Meowssiah 请求处理、工具、签名字段与输出处理继续保留。'),
+  prose.append(element('h3','','1.1.3：世界书分区与主题灯'),element('p','','世界书条目分为已启用、未启用两区，按插入顺序排列；暖金灯表示常驻，玫红灯表示关键词激活。角色卡选书也分为已启用、未启用两区。角色卡删除、聊天管理与保留快照继续提供；MVU 与 EJS 按消息保存变量和显示结果。原 Meowssiah 请求处理、工具、签名字段与输出处理继续保留。'),
     element('h3','','角色卡界面'),element('p','','卡片 HTML 在独立页面中显示，读取对应聊天的消息变量和角色配置。jQuery、lodash、Zod、YAML 与变量框架随程序提供。'),
     element('h3','','本机存储'),element('p','','数据位于程序旁的 Meowssiah-Data，按聊天、连接、角色卡、世界书、工作台、备份分文件夹保存。密钥在退出时清除。日志上传关闭。'),
     element('h3','','原作者声明（保留原文）'),element('pre','',preset.originalNotice),element('p','','原始 JSON SHA256：'+preset.sourceSHA256));body.append(prose);

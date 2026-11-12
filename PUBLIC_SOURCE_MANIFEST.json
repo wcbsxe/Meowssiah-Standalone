@@ -1,5 +1,5 @@
 {
-  "version": "1.1.2",
+  "version": "1.1.3",
   "source": "local delivered source snapshot",
   "applicationFiles": [
     {
@@ -68,7 +68,7 @@
     },
     {
       "file": "app/public/app.js",
-      "sha256": "6ee6e1203b10dc1b0d89747fe353c17c7ec9c0d60361d003559c41ba0f9424c7"
+      "sha256": "1e1939818ef1bb9ff1afe3c22a1d392107c1bd9478127d1235cf695f77c685cf"
     },
     {
       "file": "app/public/frame-vendor.js",
@@ -80,11 +80,11 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "8fa58521de3d50e59156e4e1eeb2dbee41fdfe6b0b4e33248824cb4a98834adf"
+      "sha256": "3f653e14e264fb3c74c618cda9346f869ccfede200235fc9321e9fbd6d465e97"
     },
     {
       "file": "app/public/library-ui.js",
-      "sha256": "16bb8c76eed061d900df70ffbad10612d0c256de78e597bfeb01fd665d3734f6"
+      "sha256": "495c9ebd3b8e5995234434b3f03de7ca5d9259a9acd316e7248d28920698ce1c"
     },
     {
       "file": "app/public/logo.svg",
@@ -92,7 +92,7 @@
     },
     {
       "file": "app/public/style.css",
-      "sha256": "384834ac627564fdf9415e179eecd81308ab3a9054232efeada6586a55243ba0"
+      "sha256": "33c84811776b63c464de602174e5ea894c234d7d9289b51aba5c786adb1f1020"
     },
     {
       "file": "app/server.cjs",

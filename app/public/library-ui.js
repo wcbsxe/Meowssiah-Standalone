@@ -54,6 +54,29 @@ function openDeleteCharacter(id){
     }catch(e){deleting=false;result.textContent=e.message;}
   },'danger'),button('取消',openCharacters)),result);
 }
+function worldbookGroup(title,enabled,kind){
+  const section=element('section','worldbook-group'+(enabled?'':' worldbook-group--off')),head=element('div','worldbook-group-heading'),count=element('span','worldbook-count','0'),items=element('div','worldbook-group-items'),empty=element('p','worldbook-group-empty',enabled?'这里还没有已启用的'+kind+'。':'这里没有未启用的'+kind+'。');
+  section.dataset.enabled=String(enabled);head.append(element('h3','',title),count);section.append(head,items,empty);
+  return {section,items,update(n){count.textContent=String(n);empty.hidden=n>0;}};
+}
+function bindWorldbooks(books,selected,onEnable){
+  const wrap=element('div','worldbook-groups book-binding-groups'),on=worldbookGroup('已启用世界书',true,'世界书'),off=worldbookGroup('未启用世界书',false,'世界书');wrap.append(on.section,off.section);
+  const rows=books.map(book=>{
+    const choice=check('',selected.has(book.id));choice.wrap.classList.add('book-binding');choice.wrap.dataset.bookId=book.id;choice.input.setAttribute('aria-label',book.name);
+    const info=element('span','book-binding-info'),badge=element('span','worldbook-state');info.append(element('strong','',book.name),element('small','',book.entries.length+' 条'));choice.wrap.append(info,badge);
+    choice.input.onchange=()=>{if(choice.input.checked){selected.add(book.id);onEnable(book);}else selected.delete(book.id);arrange();};
+    return {book,...choice,badge};
+  });
+  function arrange(){let active=0;const focus=document.activeElement;
+    for(const row of rows){const enabled=selected.has(row.book.id);row.input.checked=enabled;row.badge.textContent=enabled?'已启用':'未启用';row.wrap.dataset.enabled=String(enabled);(enabled?on:off).items.append(row.wrap);if(enabled)active++;}
+    on.update(active);off.update(rows.length-active);if(focus&&wrap.contains(focus))focus.focus({preventScroll:true});
+  }
+  arrange();return wrap;
+}
+function worldbookMode(constant,tag='span'){
+  const badge=element(tag,'worldbook-mode'),lamp=element('span','worldbook-lamp'),label=element('span');lamp.setAttribute('aria-hidden','true');badge.append(lamp,label);
+  const update=value=>{badge.dataset.activation=value?'constant':'keyword';label.textContent=value?'常驻':'关键词激活';};update(constant);return {badge,update};
+}
 function openCardSettings(id){
   const card=state.library.characters.find(c=>c.id===id) || (currentCard()?.id===id?currentCard():null);if(!card)return;const draft=structuredClone(card),p=draft.profile,inLibrary=state.library.characters.some(c=>c.id===id);
   const body=openModal((inLibrary?'角色设置 · ':'聊天角色快照 · ')+p.name,'card-settings'),grid=element('div','form-grid'),fields={};
@@ -61,7 +84,7 @@ function openCardSettings(id){
   body.append(element('h3','library-heading','为这张卡启用世界书'));
   body.append(element('p','about-prose','只勾选这张卡要用的书，不会自动给其他角色启用。修改后对该卡后续请求生效，已有消息的变量快照保留。'));
   const selected=new Set(draft.enabledWorldbookIds);
-  for(const b of state.library.worldbooks){const c=check(`${b.name}（${b.entries.length} 条）`,selected.has(b.id));c.wrap.classList.add('book-binding');c.input.onchange=()=>{if(c.input.checked){selected.add(b.id);if(b.entries.some(e=>/\[initvar\]/i.test(e.name)))mvu.input.checked=true;if(b.entries.some(e=>e.content.includes('<%')))ejs.input.checked=true;}else selected.delete(b.id);};body.append(c.wrap);}
+  if(state.library.worldbooks.length)body.append(bindWorldbooks(state.library.worldbooks,selected,b=>{if(b.entries.some(e=>/\[initvar\]/i.test(e.name)))mvu.input.checked=true;if(b.entries.some(e=>e.content.includes('<%')))ejs.input.checked=true;}));
   if(!state.library.worldbooks.length)body.append(notice('总库还是空的。先到“世界书总库”创建或导入。'));
   body.append(element('h3','library-heading','运行框架'));
   const mvu=check('运行 MVU：InitVar 初始化、更新指令、每条消息变量快照',p.compat?.mvu),ejs=check('运行提示词模板：EJS 条件、循环、getvar / setvar',p.compat?.ejs),html=check('显示角色卡的 HTML 状态栏',p.compat?.cardHtml!==false);
@@ -82,26 +105,39 @@ function openWorldbooks(searchText=''){
   const list=element('div','library-list');body.append(list);
   const draw=()=>{list.replaceChildren();for(const b of state.library.worldbooks.filter(b=>(b.name+' '+b.entries.map(e=>e.name).join(' ')).toLowerCase().includes(search.value.toLowerCase()))){
     const row=element('section','library-card'),bound=state.library.characters.filter(c=>c.enabledWorldbookIds.includes(b.id));
-    const h=element('div','section-heading');h.append(element('h3','',b.name),element('span','pill',b.entries.length+' 条'));row.append(h,element('p','about-prose',bound.length?'已绑定：'+bound.map(c=>c.name).join('、'):'尚未绑定角色'),
+    row.dataset.bookId=b.id;const h=element('div','section-heading'),enabled=b.entries.filter(e=>e.enabled!==false).length;h.append(element('h3','',b.name),element('span','pill',b.entries.length+' 条'));row.append(h,element('p','worldbook-overview',`已启用 ${enabled} 条 · 未启用 ${b.entries.length-enabled} 条`),element('p','about-prose',bound.length?'已绑定：'+bound.map(c=>c.name).join('、'):'尚未绑定角色'),
       actions(button('编辑条目',()=>editWorldbook(b)),button('导出',()=>download(b.name+'.json',JSON.stringify({name:b.name,entries:Object.fromEntries(b.entries.map((e,i)=>[i,{...e,uid:i,key:e.keys,keysecondary:e.secondary,comment:e.name,disable:!e.enabled,position:e.originalPosition}]))},null,2),'application/json')),button('删除',()=>confirmAction('删除世界书？',`将从总库移除「${b.name}」，并解除 ${bound.length} 张卡的绑定。已保存消息不受影响。`,()=>{state.library.worldbooks=state.library.worldbooks.filter(v=>v.id!==b.id);for(const c of bound)c.enabledWorldbookIds=c.enabledWorldbookIds.filter(id=>id!==b.id);persist();updateLibraryBadges();openWorldbooks();}),'text-button')));list.append(row);
   }if(!list.childElementCount)list.append(element('div','empty','总库中还没有世界书。可以导入独立世界书 JSON，或导入带内置世界书的角色卡。'));};search.oninput=draw;draw();
 }
 function editWorldbook(book,isNew=false){
   const draft=structuredClone(book),body=openModal('编辑世界书','book-edit'),name=field('世界书名称',draft.name);body.append(name.wrap);
-  const list=element('div');body.append(list);
-  function draw(){list.replaceChildren();for(const [index,row] of draft.entries.entries()){
-    const details=element('details','entry-editor');if(draft.entries.length<4)details.open=true;details.append(element('summary','',row.name || '新条目'));
+  const legend=element('div','worldbook-legend');legend.append(worldbookMode(true).badge,element('span','','不检查关键词'),worldbookMode(false).badge,element('span','','匹配关键词后激活'));body.append(legend,element('p','about-prose worldbook-sort-note','已启用在上，未启用在下；各区按插入顺序从小到大排列，同号保留原先次序。点灯切换常驻 / 关键词，修改后点击“保存世界书”。'));
+  const list=element('div','worldbook-groups entry-groups'),on=worldbookGroup('已启用条目',true,'条目'),off=worldbookGroup('未启用条目',false,'条目'),editors=new Map();list.append(on.section,off.section);body.append(list);
+  const orderValue=row=>Number.isFinite(Number(row.order))?Number(row.order):100;
+  function arrange(){const focus=document.activeElement;let count=0;
+    const sorted=draft.entries.map((row,index)=>({row,index})).sort((a,b)=>orderValue(a.row)-orderValue(b.row)||a.index-b.index);
+    for(const {row} of sorted){const editor=editors.get(row);editor.refresh();const enabled=row.enabled!==false;(enabled?on:off).items.append(editor.details);if(enabled)count++;}
+    on.update(count);off.update(draft.entries.length-count);if(focus&&list.contains(focus))focus.focus({preventScroll:true});
+  }
+  function addEditor(row,open=false){
+    const details=element('details','entry-editor'),summary=element('summary'),heading=element('span','entry-heading'),titleText=element('strong','entry-title'),hint=element('small','entry-hint'),meta=element('span','entry-meta'),orderBadge=element('span','entry-order'),mode=worldbookMode(row.constant,'button'),toggle=element('button','entry-toggle');details.open=open;details.dataset.entryId=String(row.id);mode.badge.type=toggle.type='button';mode.badge.classList.add('entry-mode');heading.append(titleText,hint);meta.append(orderBadge,mode.badge,toggle);summary.append(heading,meta);details.append(summary);
     const grid=element('div','form-grid'),title=field('条目标题',row.name),keys=field('触发关键词（逗号分隔）',(row.keys || []).join(', ')),secondary=field('辅助关键词',(row.secondary || []).join(', ')),order=field('插入顺序',row.order ?? 100,'number'),content=field('条目正文 / EJS 模板 / InitVar YAML',row.content,'textarea',true);
+    order.input.min='-10000';order.input.max='10000';order.input.step='any';
     const pos=selectField('插入位置',String(row.originalPosition ?? 0),[['0','角色资料之前'],['1','角色资料之后'],['4','聊天深度位置']]),depth=field('深度（位置为深度时生效）',row.depth ?? 4,'number');
     for(const f of [title,keys,secondary,order,pos,depth,content])grid.append(f.wrap);details.append(grid);
     const enabled=check('启用条目',row.enabled!==false),constant=check('常驻（忽略关键词）',row.constant),selective=check('同时匹配辅助关键词',row.selective);
-    details.append(actions(enabled.wrap,constant.wrap,selective.wrap,button('移除此条',()=>{draft.entries.splice(index,1);draw();},'text-button')));
-    title.input.oninput=()=>{row.name=title.input.value;details.querySelector('summary').textContent=row.name;};keys.input.oninput=()=>row.keys=keys.input.value.split(/[,，\n]/).map(v=>v.trim()).filter(Boolean);secondary.input.oninput=()=>row.secondary=secondary.input.value.split(/[,，\n]/).map(v=>v.trim()).filter(Boolean);
-    content.input.oninput=()=>row.content=content.input.value;order.input.oninput=()=>row.order=Number(order.input.value);pos.input.onchange=()=>{row.originalPosition=Number(pos.input.value);row.position=row.originalPosition===1?'after':'before';};depth.input.oninput=()=>row.depth=Number(depth.input.value);
-    enabled.input.onchange=()=>row.enabled=enabled.input.checked;constant.input.onchange=()=>row.constant=constant.input.checked;selective.input.onchange=()=>row.selective=selective.input.checked;list.append(details);
-  }}draw();
-  body.append(actions(button('新增条目',()=>{draft.entries.push({id:uid(),name:'新条目',content:'',keys:[],secondary:[],enabled:true,constant:true,order:100,originalPosition:0,depth:4,position:'before'});draw();}),
-    button('保存世界书',async()=>{draft.name=name.input.value.trim()||'未命名世界书';draft.updatedAt=Date.now();if(isNew)state.library.worldbooks.push(draft);else Object.assign(book,draft);await persist(true);updateLibraryBadges();openWorldbooks();toast('世界书已保存，绑定它的角色会共用这份内容。');},'primary'),button('返回',openWorldbooks)));
+    details.append(actions(enabled.wrap,constant.wrap,selective.wrap,button('移除此条',()=>{draft.entries.splice(draft.entries.indexOf(row),1);editors.delete(row);details.remove();arrange();},'text-button')));
+    function refresh(){const active=row.enabled!==false,label=row.name || '新条目';details.dataset.enabled=String(active);titleText.textContent=label;hint.textContent=row.constant?'不检查关键词':(row.keys?.length?'触发词：'+row.keys.join('、'):'尚未设置触发关键词');orderBadge.textContent='顺序 '+orderValue(row);mode.update(row.constant);mode.badge.title=row.constant?'常驻，不检查关键词；点击切换为关键词激活':'匹配关键词后激活；点击切换为常驻';mode.badge.setAttribute('aria-label',`${row.constant?'常驻':'关键词激活'}：${label}，点击切换模式`);mode.badge.setAttribute('aria-pressed',String(!!row.constant));toggle.textContent=active?'已启用':'未启用';toggle.setAttribute('aria-pressed',String(active));toggle.setAttribute('aria-label',`${active?'停用':'启用'}条目：${label}`);enabled.input.checked=active;constant.input.checked=!!row.constant;}
+    function setEnabled(value){row.enabled=value;row.disable=!value;arrange();}
+    for(const control of [mode.badge,toggle])control.onclick=event=>{event.preventDefault();event.stopPropagation();if(control===toggle)setEnabled(row.enabled===false);else {row.constant=!row.constant;refresh();}};
+    title.input.oninput=()=>{row.name=title.input.value;refresh();};keys.input.oninput=()=>{row.keys=keys.input.value.split(/[,，\n]/).map(v=>v.trim()).filter(Boolean);refresh();};secondary.input.oninput=()=>row.secondary=secondary.input.value.split(/[,，\n]/).map(v=>v.trim()).filter(Boolean);
+    content.input.oninput=()=>row.content=content.input.value;order.input.oninput=()=>{row.order=Math.max(-10000,Math.min(10000,Number(order.input.value)||0));refresh();};order.input.onchange=()=>{order.input.value=orderValue(row);arrange();};pos.input.onchange=()=>{row.originalPosition=Number(pos.input.value);row.position=row.originalPosition===1?'after':'before';};depth.input.oninput=()=>row.depth=Number(depth.input.value);
+    enabled.input.onchange=()=>setEnabled(enabled.input.checked);constant.input.onchange=()=>{row.constant=constant.input.checked;refresh();};selective.input.onchange=()=>row.selective=selective.input.checked;
+    editors.set(row,{details,refresh});
+  }
+  for(const row of draft.entries)addEditor(row,draft.entries.length<4);arrange();
+  const footer=actions(button('新增条目',()=>{const row={id:uid(),name:'新条目',content:'',keys:[],secondary:[],enabled:true,constant:true,order:100,originalPosition:0,depth:4,position:'before'};draft.entries.push(row);addEditor(row,true);arrange();const editor=editors.get(row).details;editor.scrollIntoView({block:'nearest'});editor.querySelector('input').focus({preventScroll:true});}),
+    button('保存世界书',async()=>{draft.name=name.input.value.trim()||'未命名世界书';draft.updatedAt=Date.now();if(isNew)state.library.worldbooks.push(draft);else Object.assign(book,draft);await persist(true);updateLibraryBadges();openWorldbooks();toast('世界书已保存，绑定它的角色会共用这份内容。');},'primary'),button('返回',openWorldbooks));footer.classList.add('worldbook-editor-actions');body.append(footer);
 }
 async function openVariables(){
   const body=openModal('当前聊天 · 变量与运行','variables');body.append(notice('每段聊天单独保存变量。下方显示最近一条消息的变量快照，空白聊天显示初始化结果。'));

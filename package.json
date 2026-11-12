@@ -1,0 +1,48 @@
+{
+  "name": "meowssiah-standalone",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Meowssiah 独立桌面写作工作台",
+  "main": "app/electron.cjs",
+  "author": "Local standalone adaptation; original preset: SoliUmbra",
+  "scripts": {
+    "prepare:data": "node scripts/prepare.cjs",
+    "start": "electron .",
+    "web": "node app/server.cjs",
+    "test": "node --test tests/*.test.cjs",
+    "build": "electron-builder --win portable --x64"
+  },
+  "devDependencies": {
+    "electron": "45.3.0",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "local.meowssiah.standalone",
+    "productName": "Meowssiah",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "app/**/*",
+      "package.json",
+      "README.md",
+      "THIRD_PARTY_NOTICES.md"
+    ],
+    "extraFiles": [
+      {
+        "from": "source/Meowssiah-2.0.9.original.json",
+        "to": "original/Meowssiah-2.0.9.json"
+      }
+    ],
+    "win": {
+      "target": "portable",
+      "signExecutable": false,
+      "icon": "app/public/icon.ico"
+    },
+    "portable": {
+      "artifactName": "Meowssiah-1.0.0-Windows-x64.exe"
+    },
+    "npmRebuild": false
+  }
+}

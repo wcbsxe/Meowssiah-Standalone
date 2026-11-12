@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "source": "local delivered source snapshot",
+  "applicationFiles": [
+    {
+      "file": "app/core/engine.cjs",
+      "sha256": "4f6c1669cce3c73b1e0a60513f28ffb880441585f9e5be30f8311f838d3e48b7"
+    },
+    {
+      "file": "app/core/original-runtime.cjs",
+      "sha256": "ed7d5516a2b3d70e4d1bcb1c01968b6081c6d0b5499574ea81a4d9d2ef9d7529"
+    },
+    {
+      "file": "app/core/provider.cjs",
+      "sha256": "928588d42057112037576d5f40fa420c097918c2cdf02e28b548a598f1b90f26"
+    },
+    {
+      "file": "app/core/store.cjs",
+      "sha256": "d9e6260c261953ef5deaccc5145ad68b8b265c9fcb73c184fd5183f442479ac7"
+    },
+    {
+      "file": "app/data/original.json",
+      "sha256": "d5acc6d0c03e9cd945fd799905477b061b4985ac9d7951e39b9b208a3f1ef7ff"
+    },
+    {
+      "file": "app/data/preset.json",
+      "sha256": "28c04470df86294a2881d3a38cc54b01ace2278c6142fa0ccdcf40a49fb8c628"
+    },
+    {
+      "file": "app/data/script-hashes.json",
+      "sha256": "27af4413358c3ce801b90b4b9d0332a383de183d4316ca3ba790179873c54879"
+    },
+    {
+      "file": "app/electron.cjs",
+      "sha256": "d142fde6ee269fb74151fd7995b9ec80369ae1df2e1ffba37726c419aba86905"
+    },
+    {
+      "file": "app/public/app.js",
+      "sha256": "dc374386c3c864f850f8cded65d28248d6b6a83dd2030df035dccec323369fea"
+    },
+    {
+      "file": "app/public/icon.ico",
+      "sha256": "1d8cdccf1fd6f11d4a6cbe9c42116f7f0d85476c06157841ea1d37b002ba1332"
+    },
+    {
+      "file": "app/public/index.html",
+      "sha256": "cfea2b5b19c10fe585d8e0cbdb957a2cc3502f4b6fca44ee7a5d37d7b5ab1407"
+    },
+    {
+      "file": "app/public/logo.svg",
+      "sha256": "8e17493875c3b478e4feb4db86a01b041b106f2518a8cd1ed2d38a94ce598f61"
+    },
+    {
+      "file": "app/public/style.css",
+      "sha256": "d5d5ec0b5031133427393f4502b21554d204b43661f562180dd9f96f634a081e"
+    },
+    {
+      "file": "app/server.cjs",
+      "sha256": "c34dd7d77300da193faa1c56b172ca7e1061904f2929582b6b1ee05691511d5b"
+    }
+  ]
+}

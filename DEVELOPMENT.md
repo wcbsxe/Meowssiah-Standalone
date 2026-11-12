@@ -1,17 +1,23 @@
-# 开发与发布
+# 个人源码维护与备份
 
-本仓库保存可维护源码，历史程序在 Releases，源码快照在同名标签。Git 归档提交由本地交付源码重建，没有倒填开发时间。
+本仓库只用 Git 留存代码，保留提交历史和版本标签，不发布安装包，不设置自动打包/发布工作流。
 
-## 本地
+## 日常修改
 
-使用 Node.js 24：npm ci，npm start。可用 npm run build 生成 Windows x64 便携程序。测试按本次改动选择，默认不会在发布工作流中运行全量测试，也不会调用模型服务。
+修改所需源码后，只运行与本次改动有关的检查。使用 npm run check:source 检查已跟踪的文件、应用文件清单、语法与常见密钥形状；这不是全量功能测试，也不会调用模型。
 
-## 发布新版本
+需要更新版本号时，执行 npm run version:set -- X.Y.Z，同步版本和应用校验清单。完成后查看 git diff，提交源码，再 git push。版本标签仅标记可找回的源码快照，不触发程序发布。
 
-完成修改后执行 npm run release:version -- 1.1.8（版本按实际修改），这会同步程序版本和应用文件校验清单。然后运行 npm run check:publish，查看 git diff 并提交。最后创建 v1.1.8 标签并推送 main 和该标签。GitHub Actions 会构建 EXE，生成启动脚本、说明、第三方声明和 SHA256 清单，并发到同名 Release。
+## 找回代码
 
-Actions 中也能手动运行 Release Windows；手动运行只检查与构建，不发布或覆盖历史程序。推送新的版本标签才发布，历史标签保留不移动。仓库不把个人存档、模型密钥、构建目录、依赖缓存或 EXE 放进 Git。
+GitHub 的 Tags 和 versions/index.json 保存 v1.0.0 至 v1.1.7 的归档源码。可以查看指定标签、比较版本差异，或在单独目录检出旧源码。历史提交是本次整理时重建的归档，没有倒填开发时间。
 
-## 原作者与许可
+## 本机运行
 
-本仓库由 wcbsxe 维护独立宿主适配；SoliUmbra 原预设和第三方代码分别保留原署名与许可。不把各部分统一改为 MIT。上游源码和固定提交随仓库保留，具体见 THIRD_PARTY_NOTICES.md。
+npm ci 安装依赖，npm start 启动开发版。需要自用程序时再执行 npm run build；构建目录和 EXE 不加入 Git、不上传。npm run build:runtime 用于有需要时重新生成固定上游运行库。
+
+## 个人数据
+
+Meowssiah-Data、evidence、backups、node_modules、dist 和密钥不加入 Git。代码备份不等于个人存档备份；个人聊天与配置继续在本机保留。
+
+原作者和第三方代码分别保留原署名与许可，见 THIRD_PARTY_NOTICES.md。

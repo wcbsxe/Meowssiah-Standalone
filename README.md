@@ -1,42 +1,41 @@
-# Meowssiah 独立工作台
+# Meowssiah 独立工作台 · 源码备份
 
-由 [wcbsxe](https://github.com/wcbsxe) 维护的 Windows 独立桌面适配。基于 SoliUmbra 的 Meowssiah 2.0.9 预设，不是原作者官方独立版。原作者署名、原始声明和第三方许可随源码保留，未对原预设或第三方代码重新授予许可。
+由 [wcbsxe](https://github.com/wcbsxe) 维护的个人项目代码仓库，用 Git 保存源码、记录版本，避免代码丢失。**本仓库不发布安装包，也不自动构建或对外分发程序。**
 
-当前源码版本：**1.1.7**。本版：角色卡独立页面的表单保存修复。
+基于 SoliUmbra 的 Meowssiah 2.0.9 预设进行独立宿主适配，不是原作者官方独立版。原作者署名、原始声明和第三方许可随源码保留，未对原预设或第三方代码重新授予许可。
 
-## 下载与使用
+当前源码版本：**1.1.7**。
 
-在 [Releases](https://github.com/wcbsxe/Meowssiah-Standalone/releases) 选择版本，下载 Windows x64 EXE。双击 EXE 即可；Start.cmd 是可选启动脚本。
+## 找回历史代码
 
-升级前退出旧程序，保留自己的 Meowssiah-Data 文件夹，再使用新版程序。源码下载不含你的聊天或连接设置。
+- [版本标签](https://github.com/wcbsxe/Meowssiah-Standalone/tags)：v1.0.0 至 v1.1.7 的源码快照。
+- [源码版本索引](versions/index.json)：版本、源码提交与主要改动。
+- [提交记录](https://github.com/wcbsxe/Meowssiah-Standalone/commits/main)：后续修改与备份记录。
+- [变更记录](CHANGELOG.md)：已有功能变化。
+
+历史归档提交来自本地已交付源码，提交时间为本次归档时间，没有倒填原开发日期。应用文件保留原字节，公开说明和开发辅助文件作了整理。
 
 ## 功能
 
-- 保留原预设请求改写、工具、签名字段和输出处理，日志上传关闭。
-- 1.1 系列提供共享世界书库、角色卡独立选书、MVU 变量和 EJS 提示词模板。
-- 1.1.1 起本机数据按聊天、连接、角色卡、世界书等目录分别保存。模型密钥只在程序内存中保留，退出清除。
-- 1.1.5 起页面默认渲染最近 20 层，可翻页查看全部存档；页面显示与原有模型历史滚动分开。
-- 1.1.7 修复角色卡页面使用表单的保存按钮。
+保留原预设请求改写、工具、签名字段和输出处理，日志上传关闭。独立宿主提供世界书总库、角色卡独立选书、MVU 变量、EJS 模板、聊天管理和分页界面。
 
-## 本地开发
+## 本地开发与自用
 
-需要 Node.js 24 和 npm。
+使用 Node.js 24：
 
 ```powershell
 npm ci
 npm start
-# Windows 便携程序
+# 需要时在自己本机生成程序
 npm run build
 ```
 
-上游运行库源码和固定版本在 upstream/、integrations/；已生成的本地运行库在 app/。重新生成运行库时可执行 npm run build:runtime。
+上游源码和固定版本在 upstream/、integrations/，已生成的运行库在 app/；重新生成可用 npm run build:runtime。日常备份和维护方法见 [DEVELOPMENT.md](DEVELOPMENT.md)。
 
-## 数据与许可
+## 不进入仓库的内容
 
-公开仓库与历史安装包不包含个人聊天、导入角色卡、世界书、连接设置或模型密钥。第三方和原预设声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，依赖原文许可见 app/licenses 和上游目录。各部分按原声明分别使用，本仓库不作统一 MIT 授权声明。
+个人聊天、导入角色卡、世界书、连接配置、模型密钥、测试副本、依赖缓存和安装包都留在本地，不纳入 Git。Meowssiah-Data 是个人存档目录，更新代码或生成程序时应保留。
 
-历史版本的 Git 提交是从本地已交付源码重建的归档提交，提交时间为本次归档时间，不冒充原开发时间。应用文件保留原字节，公开说明和开发辅助文件作了整理。
+## 原作者与许可
 
-## 后续更新与维护
-
-公开历史索引见 [releases/index.json](releases/index.json)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。新的版本标签触发 Windows EXE 自动构建与发布；手动运行工作流只构建、不覆盖旧包。开发和发布方法见 [DEVELOPMENT.md](DEVELOPMENT.md)。
+见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)、app/licenses 和上游目录。各部分按原声明分别使用，本仓库不作统一 MIT 授权声明。

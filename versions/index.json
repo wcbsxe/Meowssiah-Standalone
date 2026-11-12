@@ -1,0 +1,69 @@
+{
+  "repository": "wcbsxe/Meowssiah-Standalone",
+  "purpose": "Source backup and code history only. No installer distribution.",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "tag": "v1.0.0",
+      "sourceCommit": "a34463b6c9488708ac09d1dc336f6dcc0e3fd666",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.0.0",
+      "feature": "首个独立桌面版，保留原预设请求处理流程"
+    },
+    {
+      "version": "1.1.0",
+      "tag": "v1.1.0",
+      "sourceCommit": "5024d96a201cf3bf28b4d13b009ea3ae0a1eacc3",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.0",
+      "feature": "世界书总库、角色卡选书、MVU 与 EJS 运行框架"
+    },
+    {
+      "version": "1.1.1",
+      "tag": "v1.1.1",
+      "sourceCommit": "fa9bfd1513e46958b30f84ceaf8c5d4a81157da5",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.1",
+      "feature": "聊天管理、存储分目录、连接设置保留"
+    },
+    {
+      "version": "1.1.2",
+      "tag": "v1.1.2",
+      "sourceCommit": "21a74511ac7aed2445d22d2db78c63c283b14a38",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.2",
+      "feature": "角色卡删除与已有聊天保留"
+    },
+    {
+      "version": "1.1.3",
+      "tag": "v1.1.3",
+      "sourceCommit": "82bba5127cd98e159885d8a566818eaf092b1079",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.3",
+      "feature": "世界书启用分区、插入顺序和主题状态灯"
+    },
+    {
+      "version": "1.1.4",
+      "tag": "v1.1.4",
+      "sourceCommit": "a76e6da64a57ad2350d76e2a079f8b5f765cd5bc",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.4",
+      "feature": "MVU 更新请求与本地执行修复"
+    },
+    {
+      "version": "1.1.5",
+      "tag": "v1.1.5",
+      "sourceCommit": "2f7bdecdfc881de262466da5b966449251c3f6ae",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.5",
+      "feature": "最近 20 层、编辑定位和紧凑页面布局"
+    },
+    {
+      "version": "1.1.6",
+      "tag": "v1.1.6",
+      "sourceCommit": "b3b398cc15712147ded70719f4d0d31e69f2c7a2",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.6",
+      "feature": "适中宽度居中布局"
+    },
+    {
+      "version": "1.1.7",
+      "tag": "v1.1.7",
+      "sourceCommit": "f0e68b9076d3d833664fdaaaa02cb90a01362b43",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.7",
+      "feature": "角色卡独立页面的表单保存修复"
+    }
+  ]
+}

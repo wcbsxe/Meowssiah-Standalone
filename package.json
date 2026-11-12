@@ -13,9 +13,8 @@
     "build": "electron-builder --win portable --x64",
     "build:runtime": "node scripts/build-runtime.cjs",
     "check:features": "node scripts/check-1.1.cjs",
-    "check:publish": "node scripts/public-check.cjs",
-    "release:version": "node scripts/set-version.cjs",
-    "release:assets": "node scripts/release-assets.cjs"
+    "check:source": "node scripts/source-check.cjs",
+    "version:set": "node scripts/set-version.cjs"
   },
   "devDependencies": {
     "electron": "45.3.0",

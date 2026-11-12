@@ -36,3 +36,7 @@ npm run build
 公开仓库与历史安装包不包含个人聊天、导入角色卡、世界书、连接设置或模型密钥。第三方和原预设声明见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)，依赖原文许可见 app/licenses 和上游目录。各部分按原声明分别使用，本仓库不作统一 MIT 授权声明。
 
 历史版本的 Git 提交是从本地已交付源码重建的归档提交，提交时间为本次归档时间，不冒充原开发时间。应用文件保留原字节，公开说明和开发辅助文件作了整理。
+
+## 后续更新与维护
+
+公开历史索引见 [releases/index.json](releases/index.json)，变更记录见 [CHANGELOG.md](CHANGELOG.md)。新的版本标签触发 Windows EXE 自动构建与发布；手动运行工作流只构建、不覆盖旧包。开发和发布方法见 [DEVELOPMENT.md](DEVELOPMENT.md)。

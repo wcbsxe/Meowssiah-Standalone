@@ -172,7 +172,7 @@ async function openVariables(){
   }catch(e){area.textContent=e.message;}
 }
 function cardFrame(html,message){
-  const frame=element('iframe','card-frame');frame.setAttribute('sandbox','allow-scripts');frame.setAttribute('title','角色卡界面');frame.height='260';frame.setAttribute('loading','lazy');
+  const frame=element('iframe','card-frame');frame.setAttribute('sandbox','allow-scripts allow-forms');frame.setAttribute('title','角色卡界面');frame.height='260';frame.setAttribute('loading','lazy');
   frame.addEventListener('load',()=>{if(!frame.getAttribute('src'))return;frame.dataset.loaded='true';for(const reg of frameRegistry.values())if(reg.frame===frame)reg.contextVersion='';settleMessageLayout(frame);syncCardFrameContext();});const contextVersion=cardContextVersion();
   const s=session(),index=s.messages.findIndex(m=>m.id===message.id),seed={messageId:index,current:message.runtime?.after || {stat_data:{}},characterVariables:currentCard()?.variables || {},localVariables:message.runtime?.localVariables || {},globalVariables:state.library.globalVariables || {},messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}}))};
   api('card-frame',{html,seed}).then(data=>{if(framePageClosing||!frame.isConnected){releaseFrameNonces([data.nonce]);return;}frame.src=data.url;frameRegistry.set(data.nonce,{frame,sessionId:s.id,messageId:message.id,contextVersion});releaseDisconnectedCardFrames();}).catch(e=>{if(frame.isConnected){const box=frame.closest('.message');frame.replaceWith(element('div','notice','卡片界面加载出错：'+e.message));if(box)box.style.minHeight='';restoreReadingAnchor();}});return frame;

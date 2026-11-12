@@ -4,11 +4,11 @@
 
 基于 SoliUmbra 的 Meowssiah 2.0.9 预设进行独立宿主适配，不是原作者官方独立版。原作者署名、原始声明和第三方许可随源码保留，未对原预设或第三方代码重新授予许可。
 
-当前源码版本：**1.1.9**。
+当前分支：**绯月专属版 1.0.0**，基于通用版 **1.1.9**。专属功能、分开的本地数据与构建方法见 [专属版说明](SPECIAL_EDITION.md)。通用版继续保留在 main 和 v1.1.9 标签。
 
 ## 找回历史代码
 
-- [版本标签](https://github.com/wcbsxe/Meowssiah-Standalone/tags)：v1.0.0 至 v1.1.7 的源码快照。
+- [版本标签](https://github.com/wcbsxe/Meowssiah-Standalone/tags)：通用版及专属版的源码快照。
 - [源码版本索引](versions/index.json)：版本、源码提交与主要改动。
 - [提交记录](https://github.com/wcbsxe/Meowssiah-Standalone/commits/main)：后续修改与备份记录。
 - [变更记录](CHANGELOG.md)：已有功能变化。

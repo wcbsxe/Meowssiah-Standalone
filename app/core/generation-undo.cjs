@@ -12,6 +12,7 @@ function capture(state,storyId,view={},kind='send'){
     scrollTop:Number.isFinite(view.scrollTop)?Math.max(0,view.scrollTop):0,followLatest:view.followLatest===true,
     anchor:anchor?.storyId===storyId&&typeof anchor.messageId==='string'&&Number.isFinite(anchor.offset)?{storyId,messageId:anchor.messageId,offset:anchor.offset,windowEnd:Number.isInteger(anchor.windowEnd)?anchor.windowEnd:null}:null,
     diagnostics:view.diagnostics&&typeof view.diagnostics==='object'?clone(view.diagnostics):null};
+  if(view.special&&typeof view.special==='object')ui.special={page:typeof view.special.page==='string'?view.special.page.slice(0,30):'story',messageId:typeof view.special.messageId==='string'?view.special.messageId.slice(0,100):null};
   const point={version:1,id:crypto.randomUUID(),status:'ready',storyId,characterId:characterId(story),createdAt:Date.now(),kind:kind==='retry'?'retry':'send',
     configuration:configuration(state,story),story:clone(story),characterVariables:clone(card?.variables || {}),globalVariables:clone(state.library.globalVariables || {}),view:ui};
   point.checksum=checksum(point);return point;

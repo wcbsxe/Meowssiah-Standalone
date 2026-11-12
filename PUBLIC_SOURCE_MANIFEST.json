@@ -1,6 +1,6 @@
 {
   "version": "1.1.9",
-  "source": "maintained release source",
+  "source": "special-seraphina; based on general 1.1.9",
   "applicationFiles": [
     {
       "file": "app/core/api-key-store.cjs",
@@ -8,7 +8,7 @@
     },
     {
       "file": "app/core/card-frame.cjs",
-      "sha256": "dac4e1cf2ee9f4105272b083c7bdf2786493f4eee5040c6534c9b0ad62b73b64"
+      "sha256": "07bc06b0026fe83c62e3f62cdc8b538657e98f115284796b93ce20c375143b62"
     },
     {
       "file": "app/core/card-runtime.cjs",
@@ -20,11 +20,11 @@
     },
     {
       "file": "app/core/engine.cjs",
-      "sha256": "31815c5f47d18bbe85be02ab05799329f946abaa2466bfc5e50e0172d7f70494"
+      "sha256": "33166379db50a3e8dde6d112eaac814defa5f976d9d93e6db762ed77e0b7c005"
     },
     {
       "file": "app/core/generation-undo.cjs",
-      "sha256": "4397fe7c049bf8b246372d1bb3f16cd4341c4561e535a9fde6f960796b966e10"
+      "sha256": "e908d8d454823206f780c0dd2ac38fc74ecb2c9cda3a32491a97087b3c7118c1"
     },
     {
       "file": "app/core/library.cjs",
@@ -37,6 +37,14 @@
     {
       "file": "app/core/provider.cjs",
       "sha256": "928588d42057112037576d5f40fa420c097918c2cdf02e28b548a598f1b90f26"
+    },
+    {
+      "file": "app/core/special-card-ui.cjs",
+      "sha256": "9a305f8da6db08ab4e4006f77988861db30a060966ab68d0f1241adc285c6cb9"
+    },
+    {
+      "file": "app/core/special-edition.cjs",
+      "sha256": "762672bdff2bb20197e26776622cd86bfab675fb1e8ec8a9ac686a32bd839bae"
     },
     {
       "file": "app/core/store.cjs",
@@ -64,15 +72,15 @@
     },
     {
       "file": "app/electron.cjs",
-      "sha256": "52383d787c0ca0823d46cec384d125d7364385a0b885934d6e82babc8eedb659"
-    },
-    {
-      "file": "app/licenses/MagVarUpdate-MIT.txt",
-      "sha256": "47f7767a9980ac6664216671b531088a796df557a6bdffd23f4d8bac6af73c55"
+      "sha256": "680ed677b09fc6c42b468b0e78dc03f810184f3c21b9bbd0a17329388777e54f"
     },
     {
       "file": "app/licenses/MVU-Zod-PolyForm-Noncommercial.txt",
       "sha256": "ffcca38841adb694b6f380647e15f17c446a4d1656fed51a1e2041d064c94cc8"
+    },
+    {
+      "file": "app/licenses/MagVarUpdate-MIT.txt",
+      "sha256": "47f7767a9980ac6664216671b531088a796df557a6bdffd23f4d8bac6af73c55"
     },
     {
       "file": "app/licenses/ST-Prompt-Template-AGPL-3.0.txt",
@@ -80,7 +88,7 @@
     },
     {
       "file": "app/public/app.js",
-      "sha256": "ee14ad94ffc2252ee208e7d46a6aac5c73c740b44b090b6a1f8fb9499a327f32"
+      "sha256": "245db0f859f567f865333343fe85daf1e0a6241d7eb6e4f33cb9700381d97b57"
     },
     {
       "file": "app/public/frame-vendor.js",
@@ -92,15 +100,31 @@
     },
     {
       "file": "app/public/index.html",
-      "sha256": "f47082698a937721f3e4aff934d9fab664fa67dc185b7d4799521689f70daf40"
+      "sha256": "30908715d212e5327fbe6ba2c807220ab2e32a04ddb5da85c6edaf24025e74a9"
     },
     {
       "file": "app/public/library-ui.js",
-      "sha256": "9d4b9e5a82944116fb1cf9f0e96f4da401b2852440aaa618ef6987f305733bb5"
+      "sha256": "59b19924f9bb36f594873f78427fd225302bf3246dbf6fa6133d68d5b6e03f8b"
     },
     {
       "file": "app/public/logo.svg",
       "sha256": "8e17493875c3b478e4feb4db86a01b041b106f2518a8cd1ed2d38a94ce598f61"
+    },
+    {
+      "file": "app/public/special-card.css",
+      "sha256": "9c25d92f165464421f6186bcb69b18e6c77c2f66336d10ca30934eaa22a694e6"
+    },
+    {
+      "file": "app/public/special-data.js",
+      "sha256": "ae4ac69c39e966e9f1fe71056bbb4348140a45e8519dfb8f4043e90f41aa6532"
+    },
+    {
+      "file": "app/public/special.css",
+      "sha256": "eeba8a993863b06d530327c0840bb4b049b50a96ed9db16cdfa882fb962dd64a"
+    },
+    {
+      "file": "app/public/special.js",
+      "sha256": "d0bd3954951b334d770f8ef9db0d07f026fc1e1e87ef42e2022345e2ceb202d3"
     },
     {
       "file": "app/public/style.css",
@@ -108,11 +132,16 @@
     },
     {
       "file": "app/server.cjs",
-      "sha256": "313afd02a402862d86dba202b94b7ce06426b2e6a7efe23d3d89a197163f1eda"
+      "sha256": "07eca46a28f4804858521041c848106f7adaa46456aad410d95c7d49953cf81f"
     },
     {
       "file": "app/vendor/card-runtime.js",
       "sha256": "0064552c558bba6ac11295b2c74fe4367d49e00b4ddd56992c0487c72d6f316d"
     }
-  ]
+  ],
+  "specialEdition": {
+    "id": "seraphina",
+    "version": "1.0.0",
+    "baseVersion": "1.1.9"
+  }
 }

@@ -1,4 +1,5 @@
 const fs=require('node:fs'),path=require('node:path');
+const SpecialCardUI=require('./special-card-ui.cjs');
 let vendor;
 const safe=x=>JSON.stringify(x).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029');
 function bridge(seed){
@@ -10,11 +11,13 @@ function bridge(seed){
   const emit=async(name,...args)=>{for(const fn of events.get(name)||[])await fn(...args);};
   window.addEventListener('message',e=>{
     if(e.source!==parent || !e.data?.meowFrame || e.data.nonce!==seed.nonce)return;
-    if(e.data.type==='context-refresh'){seed.messages=copy(e.data.messages);seed.characterVariables=copy(e.data.characterVariables);seed.globalVariables=copy(e.data.globalVariables);seed.localVariables=copy(e.data.localVariables);current=copy(e.data.current);return;}
+    if(e.data.type==='context-refresh'){seed.messages=copy(e.data.messages);seed.characterVariables=copy(e.data.characterVariables);seed.globalVariables=copy(e.data.globalVariables);seed.localVariables=copy(e.data.localVariables);seed.generating=!!e.data.generating;seed.readOnly=!!e.data.readOnly;current=copy(e.data.current);window.dispatchEvent(new Event('meow-context-refresh'));return;}
+    if(e.data.type==='presentation-close'){window.dispatchEvent(new Event('meow-presentation-close'));return;}
     if(e.data.type==='response'){const cb=callbacks.get(e.data.id);if(!cb)return;callbacks.delete(e.data.id);e.data.error?cb.reject(Error(e.data.error)):cb.resolve(e.data.value);}
   });
   window.addEventListener('error',e=>notify('error',{error:e.message}));window.addEventListener('unhandledrejection',e=>notify('error',{error:String(e.reason?.message || e.reason)}));
   window.addEventListener('pointerdown',()=>notify('interaction'));
+  if(seed.surface==='special-dock')window.MeowFrameUI={readOnly:()=>!!seed.readOnly||!!seed.generating,generating:()=>!!seed.generating,present:({open,kind,title})=>{if(open)document.body.dataset.meowPresentation=kind==='portrait'?'portrait':'panel';else delete document.body.dataset.meowPresentation;notify('presentation',{open:!!open,kind:kind==='portrait'?'portrait':'panel',title:String(title||'角色界面').slice(0,120)});}};
   const id=()=>seed.messageId;
   const messageIndex=options=>{let n=options?.message_id ?? seed.messageId;if(n==='latest')n=seed.messages.length-1;n=Number(n);return n<0?seed.messages.length+n:n;};
   const getVars=(options={})=>{
@@ -67,7 +70,7 @@ function bridge(seed){
 }
 function htmlDocument(html,seed){
   vendor ||= fs.readFileSync(path.join(__dirname,'../public/frame-vendor.js'),'utf8');
-  let body=String(html).replace(/^\s*```(?:html)?\s*\n?/i,'').replace(/\n?```\s*$/,'');
+  let body=(seed.surface==='special-dock'?SpecialCardUI.adapt(html):String(html)).replace(/^\s*```(?:html)?\s*\n?/i,'').replace(/\n?```\s*$/,'');
   body=body.replace(/<script\b[^>]*\bsrc=["'][^"']*(?:jquery|lodash|zod|yaml)[^"']*["'][^>]*>\s*<\/script>/gi,'');
   const code=vendor+'\n;('+bridge.toString()+')('+safe(seed)+');';
   const head=`<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:transparent;color:inherit;font:14px/1.8 system-ui,"Microsoft YaHei",sans-serif}body{padding:8px}game{display:block;white-space:pre-wrap}UpdateVariable,JSONPatch,StatusPlaceHolderImpl{display:none}img{max-width:100%}</style><script>${code.replace(/<\/script/gi,'<\\/script')}</script>`;

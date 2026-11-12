@@ -10,9 +10,10 @@ const provider=require('./core/provider.cjs');
 const Runtime=require('./core/card-runtime.cjs');
 const Library=require('./core/library.cjs');
 const {htmlDocument}=require('./core/card-frame.cjs');
+const SpecialEdition=require('./core/special-edition.cjs');
 const MIME={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.ico':'image/x-icon'};
 const publicDir=path.join(__dirname,'public');
-function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
+function startServer({dataDir=path.join(__dirname,'../Data'),port=0,edition=process.env.MEOW_SPECIAL_EDITION||''}={}) {
   const store=new Store(dataDir),keys=new ApiKeyStore(dataDir),token=crypto.randomBytes(32).toString('hex');let apiKey='',apiKeyOrigin='',origin='',preparing=false;const jobs=new Map(),frames=new Map();
   const selectKey=base=>{const target=keyOrigin(base);if(apiKey&&!apiKeyOrigin){apiKeyOrigin=target;return apiKey;}if(target===apiKeyOrigin)return apiKey;apiKeyOrigin=target;apiKey='';if(target)try{apiKey=keys.load(base);}catch(e){store.notice=e.message;}return apiKey;};
   const keyStatus=()=>{const configured=!!selectKey(store.state.settings.baseUrl);let remembered=false;try{remembered=keys.has(store.state.settings.baseUrl);}catch{}return {keyConfigured:configured,keyRemembered:remembered};};
@@ -31,7 +32,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
       }
       if(!url.pathname.startsWith('/api/')) {
         if(!['GET','HEAD'].includes(req.method))return json(res,405,{error:'请求方法不匹配。'});
-        const files={'/':'index.html','/app.js':'app.js','/library-ui.js':'library-ui.js','/frame-vendor.js':'frame-vendor.js','/style.css':'style.css','/logo.svg':'logo.svg','/icon.ico':'icon.ico'};
+        const files={'/':'index.html','/app.js':'app.js','/library-ui.js':'library-ui.js','/frame-vendor.js':'frame-vendor.js','/style.css':'style.css','/logo.svg':'logo.svg','/icon.ico':'icon.ico','/special-data.js':'special-data.js','/special.js':'special.js','/special.css':'special.css'};
         const file=files[url.pathname];if(!file)return json(res,404,{error:'页面不存在。'});
         if(req.headers['sec-fetch-site']==='cross-site')return json(res,403,{error:'请从程序窗口打开。'});
         res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
@@ -43,7 +44,7 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
       if(req.headers.origin && req.headers.origin!==origin)return json(res,403,{error:'来源地址不匹配。'});
       if(req.headers['sec-fetch-site']==='cross-site')return json(res,403,{error:'请在程序窗口操作。'});
       if(req.method==='GET' && url.pathname==='/api/bootstrap'){
-        const restoredView=store.restoredUndoView;store.restoredUndoView=null;return json(res,200,{state:store.snapshot(),undo:store.undoInfo(),restoredView,preset:E.preset,notice:store.notice,...keyStatus(),dataDir});
+        const restoredView=store.restoredUndoView;store.restoredUndoView=null;return json(res,200,{state:store.snapshot(),undo:store.undoInfo(),restoredView,preset:E.preset,notice:store.notice,...keyStatus(),edition:SpecialEdition.info(edition,store.state),dataDir});
       }
       if(req.method==='GET' && url.pathname==='/api/undo')return json(res,200,{undo:store.undoInfo()});
       if(req.method!=='POST')return json(res,405,{error:'请求方法不匹配。'});
@@ -148,7 +149,8 @@ function startServer({dataDir=path.join(__dirname,'../Data'),port=0}={}) {
           store.save(state);
           const jobId=crypto.randomUUID(),controller=new AbortController();jobs.set(jobId,controller);
           const timer=setTimeout(()=>controller.abort(new Error('请求超时，请检查接口连接或调大超时时间。')),state.settings.timeoutSeconds*1000);
-          const answer={id:crypto.randomUUID(),role:'assistant',content:'',timestamp:Date.now(),mode:session.mode,status:'complete',usage:null};
+          const answer={id:crypto.randomUUID(),role:'assistant',content:'',timestamp:Date.now(),mode:session.mode,status:'complete',usage:null,
+            turnContext:{userMessageId:session.messages.at(-1).id,directorNote:session.note||'',deepThink:!!session.deepThink,mode:session.mode}};
           let disconnected=false;
           res.writeHead(200,{'Content-Type':'text/event-stream; charset=utf-8','Cache-Control':'no-cache','Connection':'keep-alive'});
           res.on('close',()=>{if(!res.writableEnded){disconnected=true;controller.abort();}});

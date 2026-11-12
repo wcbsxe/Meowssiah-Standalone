@@ -11,6 +11,7 @@
     "web": "node app/server.cjs",
     "test": "node --test tests/*.test.cjs",
     "build": "electron-builder --win portable --x64",
+    "build:special": "electron-builder --config build.special.cjs --win portable --x64",
     "build:runtime": "node scripts/build-runtime.cjs",
     "check:features": "node scripts/check-1.1.cjs",
     "check:source": "node scripts/source-check.cjs",

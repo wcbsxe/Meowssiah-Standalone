@@ -83,6 +83,7 @@ function normalizeState(input) {
       content:text(m.content,1000000),timestamp:number(m.timestamp,Date.now(),0,1e15),mode:m.mode==='chat'?'chat':'theater',
       status:['complete','stopped','error'].includes(m.status)?m.status:'complete',usage:sanitizeUsage(m.usage),
       ...(m.extra && typeof m.extra==='object'?{extra:JSON.parse(JSON.stringify(m.extra))}:{}),
+      ...(m.turnContext&&typeof m.turnContext==='object'?{turnContext:{userMessageId:text(m.turnContext.userMessageId,100),directorNote:text(m.turnContext.directorNote),deepThink:!!m.turnContext.deepThink,mode:m.turnContext.mode==='chat'?'chat':'theater'}}:{}),
       ...(m.runtime && typeof m.runtime==='object'?{runtime:JSON.parse(JSON.stringify(m.runtime))}:{}),
       ...(m.variables && typeof m.variables==='object'?{variables:JSON.parse(JSON.stringify(m.variables))}:{}),
       ...(typeof m.renderedContent==='string'?{renderedContent:text(m.renderedContent,2000000)}:{}),

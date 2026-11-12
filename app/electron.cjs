@@ -3,7 +3,9 @@ const path=require('node:path');
 const {startServer}=require('./server.cjs');
 const {resolveDataDir}=require('./core/data-dir.cjs');
 let runtime;
+const edition=process.env.MEOW_SPECIAL_EDITION||require('../package.json').specialEdition||'';
 if(process.env.MEOW_USER_DATA_DIR)app.setPath('userData',process.env.MEOW_USER_DATA_DIR);
+else if(edition==='seraphina')app.setPath('userData',path.join(app.getPath('appData'),'Meowssiah-Seraphina'));
 if(!app.requestSingleInstanceLock())app.quit();
 else {
   let win;
@@ -11,9 +13,9 @@ else {
   app.whenReady().then(async()=>{
     const portable=process.env.PORTABLE_EXECUTABLE_DIR;
     const dataDir=resolveDataDir({override:process.env.MEOW_DATA_DIR,portableDir:portable,exeDir:app.isPackaged?path.dirname(app.getPath('exe')):null,developmentDir:path.join(__dirname,'../Data')});
-    runtime=await startServer({dataDir});
-    win=new BrowserWindow({width:1440,height:960,minWidth:860,minHeight:640,title:'Meowssiah · 小猫之神',
-      backgroundColor:'#f7f4ef',icon:path.join(__dirname,'public/icon.ico'),
+    runtime=await startServer({dataDir,edition});
+    win=new BrowserWindow({width:edition?1600:1440,height:edition?1020:960,minWidth:edition?1000:860,minHeight:edition?720:640,title:edition==='seraphina'?'Meowssiah · 绯月专属版':'Meowssiah · 小猫之神',
+      backgroundColor:edition?'#211d29':'#f7f4ef',icon:path.join(__dirname,'public/icon.ico'),
       show:false,webPreferences:{nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true}});
     win.once('ready-to-show',()=>win.show());
     win.webContents.setWindowOpenHandler(()=>({action:'deny'}));

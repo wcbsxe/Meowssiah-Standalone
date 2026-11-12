@@ -8,12 +8,17 @@ function releaseFrameNonces(nonces,keepalive=false){
 function releaseDisconnectedCardFrames(){
   const nonces=[];for(const [nonce,reg] of frameRegistry)if(!reg.frame.isConnected){frameRegistry.delete(nonce);nonces.push(nonce);}return releaseFrameNonces(nonces);
 }
-function cardContextVersion(){return session().id+':'+state.revision+':'+session().messages.length;}
+function cardContextVersion(){return session().id+':'+state.revision+':'+session().messages.length+':'+busy+':'+(typeof Special!=='undefined'&&Special.active&&Special.history());}
+function cardFrameSnapshot(s,message,surface=''){
+  if(message.runtime?.after||surface!=='special-dock')return {current:message.runtime?.after||{stat_data:{}},localVariables:message.runtime?.localVariables||{}};
+  const previous=s.messages.slice(0,s.messages.indexOf(message)).findLast(m=>m.runtime?.after);return {current:previous?.runtime.after||s.runtime?.initial||{stat_data:{}},localVariables:previous?.runtime.localVariables||{}};
+}
 function syncCardFrameContext(){
   const s=session(),version=cardContextVersion();let shared;
   for(const [nonce,reg] of frameRegistry){if(!reg.frame.isConnected||reg.sessionId!==s.id||reg.contextVersion===version)continue;const message=s.messages.find(m=>m.id===reg.messageId);if(!message)continue;
     shared ||= {messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}})),characterVariables:currentCard()?.variables || {},globalVariables:state.library.globalVariables || {}};
-    reg.frame.contentWindow?.postMessage({meowFrame:true,nonce,type:'context-refresh',...shared,current:message.runtime?.after || {stat_data:{}},localVariables:message.runtime?.localVariables || {}},'*');reg.contextVersion=version;
+    reg.readOnly=reg.surface==='special-dock'&&Special.history();
+    reg.frame.contentWindow?.postMessage({meowFrame:true,nonce,type:'context-refresh',...shared,...cardFrameSnapshot(s,message,reg.surface),generating:busy,readOnly:reg.readOnly},'*');reg.contextVersion=version;
   }
 }
 window.addEventListener('pagehide',()=>{framePageClosing=true;const nonces=[...frameRegistry.keys()];frameRegistry.clear();releaseFrameNonces(nonces,true);});
@@ -171,11 +176,12 @@ async function openVariables(){
     area.append(actions(button('提交变量修改',async()=>{try{const value=JSON.parse(edit.input.value),reply=await api('runtime/parse',{state,old:current,text:'<UpdateVariable><JSONPatch>'+JSON.stringify([{op:'replace',path:'',value}])+'</JSONPatch></UpdateVariable>'});if(reply.errors.length)throw Error(reply.errors.join('\n'));const m=session().messages.findLast(m=>m.role==='assistant');if(m)m.runtime={...(m.runtime || {}),after:reply.current};else session().runtime={...(session().runtime || {}),initial:reply.current};await persist(true);openVariables();toast('变量已按当前规则更新。');}catch(e){toast(e.message);}},'primary'),button('按当前资料重算本故事',()=>confirmAction('重新计算本故事变量？','仅重算当前故事，保留消息原文。已有变量快照会按当前选书、脚本与规则重新生成；不调用模型。',async()=>{try{const r=await api('runtime/recalculate',{state,fromIndex:0});state=r.state;render();openVariables();toast('本故事的变量与显示结果已重算。');}catch(e){toast(e.message);}}))));
   }catch(e){area.textContent=e.message;}
 }
-function cardFrame(html,message){
+function cardFrame(html,message,options={}){
   const frame=element('iframe','card-frame');frame.setAttribute('sandbox','allow-scripts allow-forms');frame.setAttribute('title','角色卡界面');frame.height='260';frame.setAttribute('loading','lazy');
-  frame.addEventListener('load',()=>{if(!frame.getAttribute('src'))return;frame.dataset.loaded='true';for(const reg of frameRegistry.values())if(reg.frame===frame)reg.contextVersion='';settleMessageLayout(frame);syncCardFrameContext();});const contextVersion=cardContextVersion();
-  const s=session(),index=s.messages.findIndex(m=>m.id===message.id),seed={messageId:index,current:message.runtime?.after || {stat_data:{}},characterVariables:currentCard()?.variables || {},localVariables:message.runtime?.localVariables || {},globalVariables:state.library.globalVariables || {},messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}}))};
-  api('card-frame',{html,seed}).then(data=>{if(framePageClosing||!frame.isConnected){releaseFrameNonces([data.nonce]);return;}frame.src=data.url;frameRegistry.set(data.nonce,{frame,sessionId:s.id,messageId:message.id,contextVersion});releaseDisconnectedCardFrames();}).catch(e=>{if(frame.isConnected){const box=frame.closest('.message');frame.replaceWith(element('div','notice','卡片界面加载出错：'+e.message));if(box)box.style.minHeight='';restoreReadingAnchor();}});return frame;
+  frame.addEventListener('load',()=>{if(!frame.getAttribute('src'))return;frame.dataset.loaded='true';for(const reg of frameRegistry.values())if(reg.frame===frame)reg.contextVersion='';if(!options.surface)settleMessageLayout(frame);syncCardFrameContext();});const contextVersion=cardContextVersion();
+  const s=session(),index=s.messages.findIndex(m=>m.id===message.id),seed={messageId:index,...cardFrameSnapshot(s,message,options.surface),characterVariables:currentCard()?.variables || {},globalVariables:state.library.globalVariables || {},messages:s.messages.map(m=>({id:m.id,role:m.role,content:m.content,data:m.runtime?.after || {}})),surface:options.surface||'',readOnly:!!options.readOnly,generating:busy};
+  if(options.surface){frame.setAttribute('title','绯月 · 角色与功能');frame.setAttribute('loading','eager');frame.dataset.surface=options.surface;}
+  api('card-frame',{html,seed}).then(data=>{if(framePageClosing||!frame.isConnected){releaseFrameNonces([data.nonce]);return;}frame.src=data.url;frameRegistry.set(data.nonce,{frame,sessionId:s.id,messageId:message.id,contextVersion,surface:options.surface||'',readOnly:!!options.readOnly});releaseDisconnectedCardFrames();}).catch(e=>{if(frame.isConnected){const box=frame.closest('.message');frame.replaceWith(element('div','notice','卡片界面加载出错：'+e.message));if(box)box.style.minHeight='';restoreReadingAnchor();}});return frame;
 }
 function splitCardDisplay(raw){
   const blocks=[];let text=String(raw).replace(/```(?:html)?\s*\n([\s\S]*?)```/gi,(all,body)=>{if(!/<(?:html|style|script|div|section|table)\b/i.test(body))return all;blocks.push(body);return '';});
@@ -183,6 +189,8 @@ function splitCardDisplay(raw){
 }
 window.addEventListener('message',async event=>{
   const data=event.data;if(!data?.meowFrame)return;const reg=frameRegistry.get(data.nonce);if(!reg || event.source!==reg.frame.contentWindow)return;
+  if(data.type==='presentation'&&reg.surface==='special-dock'){Special.presentation(reg,data);return;}
+  if(reg.surface==='special-dock'&&(data.type==='resize'||data.type==='scroll'||data.type==='interaction'))return;
   if(data.type==='resize'){reg.frame.height=String(Math.max(100,Math.min(2000,Number(data.height)||260)));settleMessageLayout(reg.frame);return;}
   if(data.type==='interaction'){readingAnchor=null;followLatest=false;return;}
   if(data.type==='scroll'){if(reg.sessionId===state.activeId){readingAnchor=null;followLatest=false;$('#chat-scroll').scrollBy({top:Math.max(-2000,Math.min(2000,Number(data.deltaY)||0)),behavior:'instant'});}return;}
@@ -191,19 +199,21 @@ window.addEventListener('message',async event=>{
   const respond=(value,error)=>reg.frame.contentWindow?.postMessage({meowFrame:true,nonce:data.nonce,type:'response',id:data.id,value,error},'*');
   try{
     if(busy)throw Error('生成期间先保留当前状态，完成后再修改变量。');
+    if(reg.surface==='special-dock'&&(reg.readOnly||Special.history()))throw Error('旧楼层只查看；回到最新后再修改。');
     const story=state.sessions.find(s=>s.id===reg.sessionId),message=story?.messages.find(m=>m.id===reg.messageId);if(!message || story.id!==state.activeId)throw Error('这条卡片界面已离开当前故事。');
     if(data.action==='parse'){const r=await api('runtime/parse',{state,old:data.old,text:data.text});if(r.errors.length)throw Error(r.errors.join('\n'));return respond(r.current);}
     if(data.action==='replace'){
       const type=data.options?.type || 'message';
       if(!data.value || typeof data.value!=='object' || Array.isArray(data.value))throw Error('变量内容应为 JSON 对象。');
-      if(type==='character'){const card=currentCard();card.variables=structuredClone(data.value);if(session().detachedCharacter)session().detachedCharacter.variables=card.variables;await persist(true);return respond(card.variables);}
-      if(type==='global'){state.library.globalVariables=structuredClone(data.value);await persist(true);return respond(state.library.globalVariables);}
-      if(type==='chat'){message.runtime={...(message.runtime || {}),localVariables:structuredClone(data.value)};await persist(true);return respond(message.runtime.localVariables);}
+      const refresh=()=>{if(reg.surface==='special-dock')requestAnimationFrame(()=>{if(state.activeId===reg.sessionId)renderMessages();});};
+      if(type==='character'){const card=currentCard();card.variables=structuredClone(data.value);if(session().detachedCharacter)session().detachedCharacter.variables=card.variables;await persist(true);respond(card.variables);refresh();return;}
+      if(type==='global'){state.library.globalVariables=structuredClone(data.value);await persist(true);respond(state.library.globalVariables);refresh();return;}
+      if(type==='chat'){message.runtime={...(message.runtime || {}),localVariables:structuredClone(data.value)};await persist(true);respond(message.runtime.localVariables);refresh();return;}
       if(type!=='message')throw Error('未识别的变量类型。');
       let index=data.options?.message_id ?? story.messages.indexOf(message);if(index==='latest')index=story.messages.length-1;index=Number(index);if(index<0)index+=story.messages.length;
       const target=story.messages[index];if(!target)throw Error('消息楼层不存在。');
-      const reply=await api('runtime/parse',{state,old:target.runtime?.after || {stat_data:{}},text:'<UpdateVariable><JSONPatch>'+JSON.stringify([{op:'replace',path:'',value:data.value.stat_data || {}}])+'</JSONPatch></UpdateVariable>'});
-      if(reply.errors.length)throw Error(reply.errors.join('\n'));target.runtime={...(target.runtime || {}),after:reply.current};await persist(true);return respond(reply.current);
+      const reply=await api('runtime/parse',{state,old:cardFrameSnapshot(story,target,reg.surface).current,text:'<UpdateVariable><JSONPatch>'+JSON.stringify([{op:'replace',path:'',value:data.value.stat_data || {}}])+'</JSONPatch></UpdateVariable>'});
+      if(reply.errors.length)throw Error(reply.errors.join('\n'));target.runtime={...(target.runtime || {}),after:reply.current};await persist(true);respond(reply.current);refresh();return;
     }throw Error('未识别的卡片状态操作。');
   }catch(e){respond(null,e.message);}
 });

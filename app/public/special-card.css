@@ -1,0 +1,49 @@
+html,body{height:100%;overflow:hidden;margin:0;padding:0!important;background:transparent}
+#app,.card,.inner{height:100%;min-height:0}
+.card{width:100%;max-width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.inner{display:flex;flex-direction:column;padding:0 14px;border:0;border-radius:0;min-height:0}
+.corner,.ornament{display:none}
+.portrait-area{order:0;flex:1;min-height:210px;height:auto;width:100%;margin:8px 0 0;border-radius:0;contain:paint}
+.identity{order:1;flex:none;display:flex;flex-wrap:wrap;flex-direction:row;align-items:baseline;justify-content:flex-start;gap:4px 8px;height:auto;padding:10px 3px 5px;text-align:left}
+.identity h1{font-size:25px;line-height:1.3;letter-spacing:.06em}
+.identity p{font-size:10px;letter-spacing:0}
+.identity .special-worn{flex-basis:100%;font-size:10px;line-height:1.6;color:#baa08e;margin:3px 0 6px}
+.footer{order:2;flex:none;padding:2px 3px 12px;min-width:0}
+.progress-line{font-size:11px;margin-bottom:5px}.progress{height:6px}
+.stage{display:inline-block;margin:7px 6px 0 0;text-align:left;font-size:10px;letter-spacing:0}
+.eye-pill{display:inline-flex;width:auto;min-height:28px;margin-top:7px;padding:5px 7px;float:right;font-size:10px}
+.eye-pill svg{width:15px;height:15px;stroke:#d7bb91;fill:none}
+.special-card-entries{clear:both;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:11px}
+.special-card-entries button{display:flex;align-items:center;justify-content:flex-start;gap:9px;min-width:0;min-height:48px;padding:10px;border:1px solid #c8a87970;border-radius:9px;background:#c8a87908;color:#ead2b0;font-size:12px;line-height:1.4;text-align:left}
+.special-card-entries button:hover,.special-card-entries button:focus-visible{background:#a52f482b;border-color:#d8b88c}
+.special-card-entries svg{width:20px;height:20px;flex:none;stroke:#d7bb91;fill:none;stroke-width:1.6}
+.menu-toggle{display:none!important}
+body[data-meow-presentation] #app,body[data-meow-presentation] .card,body[data-meow-presentation] .inner{height:100%;min-height:0}
+body[data-meow-presentation] .inner{padding:0}
+body[data-meow-presentation] .identity{display:none}
+body[data-meow-presentation="panel"] .portrait-area,body[data-meow-presentation="panel"] .progress-line,body[data-meow-presentation="panel"] .progress,body[data-meow-presentation="panel"] .stage,body[data-meow-presentation="panel"] .eye-pill{display:none!important}
+body[data-meow-presentation="panel"] .footer{order:-1;flex:none;padding:0 10px 10px}
+body[data-meow-presentation="panel"] .special-card-entries{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-top:8px}
+body[data-meow-presentation="panel"] .special-card-entries button{min-height:40px;justify-content:center;padding:7px;gap:6px}
+body[data-meow-presentation="panel"] .sheet{position:static;inset:auto;max-height:none;min-height:0;margin:0 8px 8px;flex:1;border-radius:10px;animation:none;box-shadow:none}
+body[data-meow-presentation="panel"] .sheet-head{flex:none;min-height:42px;padding:6px 12px}
+body[data-meow-presentation="panel"] .sheet-head:not(:has([data-view="wardrobe"])){display:none}
+body[data-meow-presentation="panel"] .sheet-head h2,body[data-meow-presentation="panel"] .sheet-head [data-view="close"]{display:none}
+body[data-meow-presentation="panel"] .sheet-head [data-view="wardrobe"]{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;width:auto;min-width:40px;padding:5px 12px;font-size:14px;white-space:nowrap}
+body[data-meow-presentation="panel"] .sheet-head [data-view="wardrobe"]:after{content:' 返回服装管理';margin-left:6px}
+body[data-meow-presentation="panel"] .sheet-body{padding:16px;flex:1;min-height:0;overflow-y:auto;font-size:14px}
+body[data-meow-presentation="panel"] .sheet-actions{flex:none;padding:12px 16px}
+body[data-meow-presentation="panel"] .wardrobe-toolbar{padding:12px 16px 0}
+body[data-meow-presentation="panel"] .editor-field{font-size:13px}
+body[data-meow-presentation="panel"] .editor-field input,body[data-meow-presentation="panel"] .editor-field select{min-height:42px;font-size:14px}
+body[data-meow-presentation="panel"] .editor-field textarea{display:block;width:100%;min-height:90px;resize:vertical;margin-top:5px;padding:9px 10px;border:1px solid #c8a87960;border-radius:8px;background:#100d15;color:#f1e7db;font-family:inherit;font-size:14px;line-height:1.6}
+body[data-meow-presentation="panel"] .editor-preview img{height:160px}
+body[data-meow-presentation="panel"] .save{min-height:44px}
+body[data-meow-presentation="panel"] .outfit h3{font-size:15px}
+body[data-meow-presentation="panel"] .outfit p{font-size:12px}
+body[data-meow-presentation="panel"] .edit-outfit,body[data-meow-presentation="panel"] .delete-outfit,body[data-meow-presentation="panel"] .add-outfit{min-height:38px;font-size:12px;padding:8px 12px}
+body[data-meow-presentation="portrait"] .footer,body[data-meow-presentation="portrait"] .sheet{display:none!important}
+body[data-meow-presentation="portrait"] .portrait-area{height:auto;flex:1;min-height:0;margin:0}
+body[data-meow-presentation="portrait"] .portrait-controls{order:1;flex:none;padding:8px 16px;margin:8px 12px}
+body[data-meow-presentation] .toast{position:fixed;left:20px;right:20px;bottom:20px;pointer-events:none}
+@media(max-width:600px){body[data-meow-presentation="panel"] .special-card-entries{grid-template-columns:repeat(3,minmax(0,1fr))}}

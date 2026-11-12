@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),vm=require('node:vm');
 const E=require('../app/core/engine.cjs'),O=require('../app/core/original-runtime.cjs');
-function sample(){const state=E.defaultState(),session=state.sessions[0];session.profile.description='一位山间书店店主';session.profile.worldBefore='山路有一座书店。';session.messages.push({id:'u1',role:'user',content:'我推开书店的门。',status:'complete'});return {state,session};}
+function sample(){const state=E.defaultState(),session=state.sessions[0];session.profile.description='一位山间书店店主';session.profile.worldBefore='山路有一座书店。';Object.assign(state.library.characters.find(c=>c.id===session.characterId).profile,session.profile);session.messages.push({id:'u1',role:'user',content:'我推开书店的门。',status:'complete'});return {state,session};}
 function commit(s,c){s.hostMetadata=c.hostMetadata;s.messages.forEach((m,i)=>m.extra=c.extras[i]);}
 test('E1: source backup and all original request/output functions are byte-identical',()=>{
   const data=fs.readFileSync(path.join(__dirname,'../source/Meowssiah-2.0.9.original.json'));

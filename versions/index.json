@@ -77,5 +77,17 @@
       "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/v1.1.9",
       "feature": "本机加密记住密钥、重启自动读取与服务隔离；保持正文同轮 MVU"
     }
+  ],
+  "specialEditions": [
+    {
+      "version": "seraphina-1.0.0",
+      "tag": "seraphina-v1.0.0",
+      "branch": "special-seraphina",
+      "baseVersion": "1.1.9",
+      "baseCommit": "6bc247ad16907e14671ccf8bdb28f114ae57a90d",
+      "sourceUrl": "https://github.com/wcbsxe/Meowssiah-Standalone/tree/seraphina-v1.0.0",
+      "feature": "绯月专属单层阅读、独立左侧角色界面和导演台",
+      "distribution": "local build only; source backup only"
+    }
   ]
 }
